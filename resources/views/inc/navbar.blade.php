@@ -17,20 +17,9 @@
                   <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/about">About</a>
+                  <a class="nav-link" href="/about">Contact us</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="/services">Services</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/posts">Plog</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link disabled" href="#">Disabled</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link"href="/posts/create">Add Post</a>
-                </li>
               </ul>
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">

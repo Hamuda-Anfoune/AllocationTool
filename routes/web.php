@@ -17,7 +17,7 @@
 // });
 
 // Calling index() from PagesController
-Route::get('/', 'PreferencesController@index'); // the '/' sets the home page
+Route::get('/', 'HomeController@index'); // the '/' sets the home page
 
 Auth::routes();
 
