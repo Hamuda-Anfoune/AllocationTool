@@ -1,4 +1,4 @@
-TODO:
+## TODO:
 -----------------
 1.  Turn on Vue production mode when deploying for production, as it's currently running in development mode.
     See more tips at https://vuejs.org/guide/deployment.html
@@ -7,6 +7,6 @@ TODO:
 
 ****************************
 
-Notes:
+## Notes:
 -----------------
 1. 
