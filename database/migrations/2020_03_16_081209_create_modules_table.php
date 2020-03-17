@@ -14,8 +14,8 @@ class CreateModulesTable extends Migration
     public function up()
     {
         Schema::create('modules', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->string('module_id', 15)->primary();
+            $table->string('module_name', 150);
         });
     }
 

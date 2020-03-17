@@ -14,8 +14,16 @@ class CreateTaPreferencesTable extends Migration
     public function up()
     {
         Schema::create('ta_preferences', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->string('preference_id', 45)->primary();
+            $table->string('ta_user_id', 50);
+            $table->mediumInteger('max_hours')->nullable();
+            $table->mediumInteger('max_modules')->nullable();
+            $table->string('academic_year', 15);
+            $table->mediumInteger('semester');
+            $table->boolean('have_tiear4_visa');
+
+            // RELATIONSHIPS
+            $table->foreign('ta_user_id')->references('user_id')->on('users'); //relationship  one to one between users & ta_preferences tables
         });
     }
 

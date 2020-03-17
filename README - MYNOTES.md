@@ -1,9 +1,13 @@
 ## TODO:
 -----------------
-1.  Turn on Vue production mode when deploying for production, as it's currently running in development mode.
+*  Turn on Vue production mode when deploying for production, as it's currently running in development mode.
     See more tips at https://vuejs.org/guide/deployment.html
 
-2. Edit Login view to add welcome content
+* Edit Login view to add welcome content
+
+* Add password reset table to database
+
+* Add foreign key drop statements to down() in the migrations
 
 ****************************
 

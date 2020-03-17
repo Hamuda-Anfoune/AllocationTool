@@ -14,8 +14,8 @@ class CreateUniversityUsersTable extends Migration
     public function up()
     {
         Schema::create('university_users', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->string('user_id',50)->primary(); // PrimaryKey
+            $table->string('account_type_id', 10); //10: length of string
         });
     }
 

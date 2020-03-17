@@ -14,8 +14,17 @@ class CreateTaModuleChoicesTable extends Migration
     public function up()
     {
         Schema::create('ta_module_choices', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->bigIncrements('field_id');
+            $table->string('preference_id', 45);
+            $table->string('ta_user_id');
+            $table->string('module_id', 15);
+            $table->smallInteger('priority');
+            $table->tinyInteger('did_before');
+
+            // RELATIONSHIPS
+            $table->foreign('preference_id')->references('preference_id')->on('ta_preferences'); //relationship  one to one between users & university_users tables
+            $table->foreign('ta_user_id')->references('user_id')->on('users');
+            $table->foreign('module_id')->references('module_id')->on('modules');
         });
     }
 
