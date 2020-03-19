@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'user_id', 'account_type_id', 'password',
     ];
 
     /**
@@ -34,6 +34,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        // 'email_verified_at' => 'datetime',
     ];
+
+    protected $primaryKey = 'user_id'; // Setting PrimaryKey
+
+    public $incrementing = false; // To stop Eloquent from assuming primaryKey is auto incrementing
+
+    protected $keyType = 'string'; // To stop Eloquent from assuming primaryKey is an int
+
 }

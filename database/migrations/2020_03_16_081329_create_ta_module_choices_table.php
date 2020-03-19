@@ -19,7 +19,7 @@ class CreateTaModuleChoicesTable extends Migration
             $table->string('ta_user_id');
             $table->string('module_id', 15);
             $table->smallInteger('priority');
-            $table->tinyInteger('did_before');
+            $table->boolean('did_before'); // used ti=inyInteger in the test
 
             // RELATIONSHIPS
             $table->foreign('preference_id')->references('preference_id')->on('ta_preferences'); //relationship  one to one between users & university_users tables

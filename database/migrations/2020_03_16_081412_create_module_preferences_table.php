@@ -14,7 +14,7 @@ class CreateModulePreferencesTable extends Migration
     public function up()
     {
         Schema::create('module_preferences', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->bigIncrements('field_id');
             $table->string('module_id', 15);
             $table->string('convenor_user_id', 50);
             $table->mediumInteger('no_of_assistants')->nullable();
