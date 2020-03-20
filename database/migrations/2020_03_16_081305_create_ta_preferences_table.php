@@ -15,7 +15,7 @@ class CreateTaPreferencesTable extends Migration
     {
         Schema::create('ta_preferences', function (Blueprint $table) {
             $table->string('preference_id', 45)->primary();
-            $table->string('ta_user_id', 50);
+            $table->string('ta_email', 50);
             $table->mediumInteger('max_hours')->nullable();
             $table->mediumInteger('max_modules')->nullable();
             $table->string('academic_year', 15);
@@ -23,7 +23,7 @@ class CreateTaPreferencesTable extends Migration
             $table->boolean('have_tiear4_visa');
 
             // RELATIONSHIPS
-            $table->foreign('ta_user_id')->references('user_id')->on('users'); //relationship  one to one between users & ta_preferences tables
+            $table->foreign('ta_email')->references('email')->on('users'); //relationship  one to one between users & ta_preferences tables
         });
     }
 

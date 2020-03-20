@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             // $table->string('password');
             // $table->rememberToken();
             // $table->timestamps();
-            $table->string('user_id', 50)->primary();
+            $table->string('email', 50)->primary();
             $table->string('name');
             $table->string('account_type_id',10); // 10: is the length of hte string
             $table->string('password');
@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
             // $table->boolean('booll');
 
             // RELATIONSHIP
-            $table->foreign('user_id')->references('user_id')->on('university_users'); //relationship  one to one between users & university_users tables
+            $table->foreign('email')->references('email')->on('university_users'); //relationship  one to one between users & university_users tables
             $table->foreign('account_type_id')->references('account_type_id')->on('account_types');
         });
     }

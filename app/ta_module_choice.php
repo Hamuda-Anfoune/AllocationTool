@@ -12,7 +12,7 @@ class ta_module_choice extends Model
      * @var array
      */
     protected $fillable = [
-        'field_id', 'ta_user_id', 'module_id', 'priority', 'did_before',
+        'field_id', 'ta_email', 'module_id', 'priority', 'did_before',
     ];
 
     /**

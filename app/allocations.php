@@ -12,7 +12,7 @@ class allocations extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'academic_year', 'semester', 'password', 'module_id', 'ta_user_id', 'creator_user_id',
+        'allocation_id', 'academic_year', 'semester', 'password', 'module_id', 'ta_email', 'creator_email',
     ];
 
     /**
@@ -33,7 +33,7 @@ class allocations extends Model
         // 'email_verified_at' => 'datetime',
     ];
 
-    protected $primaryKey = 'user_id'; // Setting PrimaryKey
+    protected $primaryKey = 'allocation_id'; // Setting PrimaryKey
 
     public $incrementing = false; // To stop Eloquent from assuming primaryKey is auto incrementing
 

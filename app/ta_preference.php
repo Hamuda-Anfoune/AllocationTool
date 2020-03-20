@@ -12,7 +12,7 @@ class ta_preference extends Model
      * @var array
      */
     protected $fillable = [
-        'ta_user_id', 'max_hours', 'max_modules', 'academic_year', 'semester', 'have_tier4_visa',
+        'ta_email', 'max_hours', 'max_modules', 'academic_year', 'semester', 'have_tier4_visa',
     ];
 
     /**
@@ -33,7 +33,7 @@ class ta_preference extends Model
         'have_tier4_visa' => 'boolean', // cast to bool as it's saved in DB as integer
     ];
 
-    protected $primaryKey = 'ta_user_id'; // Setting PrimaryKey
+    protected $primaryKey = 'ta_email'; // Setting PrimaryKey
 
     public $incrementing = false; // To stop Eloquent from assuming primaryKey is auto incrementing
 

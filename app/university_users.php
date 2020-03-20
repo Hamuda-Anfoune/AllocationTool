@@ -12,7 +12,7 @@ class university_users extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'account_type_id',
+        'email', 'account_type_id',
     ];
 
     /**
@@ -33,7 +33,7 @@ class university_users extends Model
         // 'email_verified_at' => 'datetime',
     ];
 
-    protected $primaryKey = 'user_id'; // Setting PrimaryKey
+    protected $primaryKey = 'email'; // Setting PrimaryKey
 
     public $incrementing = false; // To stop Eloquent from assuming primaryKey is auto incrementing
 

@@ -14,4 +14,5 @@
 ## Notes:
 -----------------
 1. Set default database engine:
-    config -> database,php -> {search: engine} -> change from null to 'InnoDB'
+    config -> database.php -> {search: engine} -> change from null to 'InnoDB'
+

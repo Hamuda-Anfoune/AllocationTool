@@ -16,7 +16,7 @@ class CreateModulePreferencesTable extends Migration
         Schema::create('module_preferences', function (Blueprint $table) {
             $table->bigIncrements('field_id');
             $table->string('module_id', 15);
-            $table->string('convenor_user_id', 50);
+            $table->string('convenor_email', 50);
             $table->mediumInteger('no_of_assistants')->nullable();
             $table->mediumInteger('no_of_contact_hours');
             $table->mediumInteger('no_of_marking_hours');
@@ -25,7 +25,7 @@ class CreateModulePreferencesTable extends Migration
 
             //REALTIONSHIPS
             $table->foreign('module_id')->references('module_id')->on('modules');
-            $table->foreign('convenor_user_id')->references('user_id')->on('users');
+            $table->foreign('convenor_email')->references('email')->on('users');
         });
     }
 
