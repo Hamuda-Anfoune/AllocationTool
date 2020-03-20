@@ -10,3 +10,5 @@
 08. allocations:            2020_03_16_081429_create_allocations_table
 09. languages:              2020_03_16_081238_create_languages_table
 10. used_languages:         2020_03_16_081620_create_used_langauges_table
+11. password_resets:        2014_10_12_100000_create_password_resets_table
+12. failed_jobs:            2019_08_19_000000_create_failed_jobs_table

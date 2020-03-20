@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\account_type;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
@@ -21,6 +22,11 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
+    /*
+     * MADE CHANGES:
+     * validator()
+     * create()
+     */
 
     use RegistersUsers;
 
@@ -51,8 +57,10 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'exists:university_users,email', 'string', 'email', 'max:255', 'unique:users'], // foreign key validation: https://timacdonald.me/foreign-key-validation-rule/
+            // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'account_type_id' => ['required', 'string', 'max:10'],
         ]);
     }
 
@@ -68,6 +76,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'account_type_id' => $data['account_type_id'],
         ]);
     }
 }
