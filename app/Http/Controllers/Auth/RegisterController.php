@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\account_type;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
@@ -60,7 +61,7 @@ class RegisterController extends Controller
             'email' => ['required', 'exists:university_users,email', 'string', 'email', 'max:255', 'unique:users'], // foreign key validation: https://timacdonald.me/foreign-key-validation-rule/
             // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'account_type_id' => ['required', 'string', 'max:10'],
+            // 'account_type_id' => ['required', 'string', 'max:10'],
         ]);
     }
 
@@ -72,11 +73,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $emaill = $data['email'];
+        // $account_type_id = DB::select('select account_type_id from users where email = ?', [$emaill])->first();
+        $user = DB::table('university_users')->where('email', '=', $emaill)->first();
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'account_type_id' => $data['account_type_id'],
+            'account_type_id' => $user->account_type_id,
         ]);
     }
 }

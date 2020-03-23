@@ -1,5 +1,6 @@
 ## ORDER OF MIGRATION:
 ---------------------
+00. academic_years:         2020_03_22_184905_create_academic_years_table
 01. university_users:       2020_03_16_080857_create_university_users_table
 02. account_types:          2020_03_16_081115_create_account_types_table
 03. users:                  2014_10_12_000000_create_users_table

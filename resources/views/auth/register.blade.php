@@ -61,11 +61,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label for="account_type_id" class="col-md-4 col-form-label text-md-right">{{ __('Account Type') }}</label>
 
                             <div class="col-md-6">
-                                {{-- <input id="account_type_id" type="text" class="form-control @error('account_type_id') is-invalid @enderror" name="account_type_id" value="{{ old('account_type_id') }}" required autocomplete="account_type_id" autofocus> --}}
                                 <select name="account_type_id" id="account_type_id" class="custom-select">
                                     <option value="001">Admin</option>
                                     <option value="002">Convenor</option>
@@ -78,7 +77,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">

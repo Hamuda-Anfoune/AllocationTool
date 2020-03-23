@@ -17,8 +17,17 @@
 // });
 
 // Calling index() from PagesController
+
+use App\Http\Controllers\PreferencesController;
+
 Route::get('/', 'HomeController@index'); // the '/' sets the home page
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/preferences/module', 'Prefs\ModuleController@create');
+
+Route::post('/preferences/module', 'Prefs\ModuleController@store')->name('storeModulePrefs');
+
+// Prefs:: routes();

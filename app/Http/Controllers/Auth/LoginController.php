@@ -20,10 +20,9 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
-    /*
-     * CHANGES MADE
-     * vendor\laravel\framework\src\Illuminate\Foundation\Auth\AuthenticatesUsers.php LINE: 147
-    */
+
+
+
 
     /**
      * Where to redirect users after login.

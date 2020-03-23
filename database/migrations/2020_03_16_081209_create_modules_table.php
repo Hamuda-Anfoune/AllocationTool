@@ -16,6 +16,10 @@ class CreateModulesTable extends Migration
         Schema::create('modules', function (Blueprint $table) {
             $table->string('module_id', 15)->primary();
             $table->string('module_name', 150);
+            $table->string('convenor_email', 50);
+
+            //REALTIONSHIPS
+            $table->foreign('convenor_email')->references('email')->on('users');
         });
     }
 
@@ -26,6 +30,8 @@ class CreateModulesTable extends Migration
      */
     public function down()
     {
+        // Drop foreign keys before table
+        // $table->dropForeign('convenor_email');
         Schema::dropIfExists('modules');
     }
 }

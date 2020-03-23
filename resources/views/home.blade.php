@@ -14,7 +14,8 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    You are logged in! <br>
+                    Edit to show content related to signed in account type
                 </div>
             </div>
         </div>
