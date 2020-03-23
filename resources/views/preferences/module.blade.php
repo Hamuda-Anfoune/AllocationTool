@@ -107,7 +107,10 @@
                         <div class="form-group row">
                             <label for="academic_year" class="col-md-4 col-form-label text-md-right">{{ __('Academic Year') }}</label>
                             <div class="col-md-6">
-                                <input id="academic_year" type="text" class="form-control " name="academic_year" value="{{ $current_academic_year->year }}" required>
+                                {{-- <input id="academic_year" type="text" class="form-control " name="academic_year" value="{{ $current_academic_year->year }}" required> --}}
+                                <select name="academic_year" id="academic_year" class="custom-select">
+                                    <option value="{{ $current_academic_year->year }}">{{ $current_academic_year->year }}</option>
+                                </select>
                                 {{-- @error('academic_year')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
