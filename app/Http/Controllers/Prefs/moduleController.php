@@ -31,13 +31,13 @@ class moduleController extends Controller
     public function create(Request $request)
     {
         /*
-            ---------------------------------------------------------------------
-            THIS PAGE SHOULD ONLY SHOW TO A SIGNED IN MODULE CONVENOR ACCOUNT
-            ---------------------------------------------------------------------
-            */
-            // echo $request->session()->get('email');
-            // echo session()->get('email');
-            // echo session('email');
+        ---------------------------------------------------------------------
+        THIS PAGE SHOULD ONLY SHOW TO A SIGNED IN MODULE CONVENOR ACCOUNT
+        ---------------------------------------------------------------------
+        */
+        // echo $request->session()->get('email');
+        // echo session()->get('email');
+        // echo session('email');
 
         // Checking of convenor: Admin = 001, Convenor = 002, GTA = 003, Externatl TA = 004
         if (session()->get('account_type_id')== 001 || session()->get('account_type_id')== 002) // session value is assigned in authenticated() in AuthenticatesUsers.php

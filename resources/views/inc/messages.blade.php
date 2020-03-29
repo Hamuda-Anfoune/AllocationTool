@@ -11,12 +11,12 @@
 
 @if (session('success'))
     <div class="alert alert-success">
-        {{session('success')}}
+        <strong>Success: </strong>{{session('success')}}
     </div>
 @endif
 
 @if (session('alert'))
     <div class="alert alert-danger">
-        {{session('alert')}}
+        <strong>Alert: </strong>{{session('alert')}}
     </div>
 @endif

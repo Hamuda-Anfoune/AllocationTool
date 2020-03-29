@@ -30,4 +30,8 @@ Route::get('/preferences/module', 'Prefs\ModuleController@create');
 
 Route::post('/preferences/module', 'Prefs\ModuleController@store')->name('storeModulePrefs');
 
+Route::get('/preferences/ta', 'Prefs\TAController@create');
+
+Route::post('/preferences/ta', 'Prefs\TAController@store')->name('storeTAPrefs');
+
 // Prefs:: routes();

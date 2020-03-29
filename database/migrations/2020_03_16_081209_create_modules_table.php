@@ -31,7 +31,9 @@ class CreateModulesTable extends Migration
     public function down()
     {
         // Drop foreign keys before table
-        // $table->dropForeign('convenor_email');
+        Schema::table('modules', function(Blueprint $table){
+            $table->dropForeign('convenor_email');
+        });
         Schema::dropIfExists('modules');
     }
 }

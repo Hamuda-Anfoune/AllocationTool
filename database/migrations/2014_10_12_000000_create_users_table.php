@@ -23,12 +23,10 @@ class CreateUsersTable extends Migration
             // $table->timestamps();
             $table->string('email', 50)->primary();
             $table->string('name');
-            $table->string('account_type_id',10); // 10: is the length of hte string
+            $table->string('account_type_id',10); // 10: is the length of the string
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            // $table->string('haha',59); // 59: length of string
-            // $table->boolean('booll');
 
             // RELATIONSHIP
             $table->foreign('email')->references('email')->on('university_users'); //relationship  one to one between users & university_users tables

@@ -12,7 +12,7 @@ class ta_module_choice extends Model
      * @var array
      */
     protected $fillable = [
-        'field_id', 'ta_email', 'module_id', 'priority', 'did_before',
+        'field_id', 'preference_id', 'ta_email', 'module_id', 'priority', 'did_before',
     ];
 
     /**
@@ -34,9 +34,4 @@ class ta_module_choice extends Model
     ];
 
     protected $primaryKey = 'field_id'; // Setting PrimaryKey
-
-    // public $incrementing = false; // To stop Eloquent from assuming primaryKey is auto incrementing
-
-    // protected $keyType = 'string'; // To stop Eloquent from assuming primaryKey is an int
-
 }

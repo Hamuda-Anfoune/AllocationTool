@@ -16,11 +16,13 @@ class CreateTaPreferencesTable extends Migration
         Schema::create('ta_preferences', function (Blueprint $table) {
             $table->string('preference_id', 45)->primary();
             $table->string('ta_email', 50);
-            $table->mediumInteger('max_hours')->nullable();
             $table->mediumInteger('max_modules')->nullable();
+            $table->mediumInteger('max_contact_hours')->nullable();
+            $table->mediumInteger('max_marking_hours')->nullable();
             $table->string('academic_year', 15);
             $table->mediumInteger('semester');
-            $table->boolean('have_tiear4_visa');
+            $table->boolean('have_tier4_visa')->default(false);
+            $table->timestamps();
 
             // RELATIONSHIPS
             $table->foreign('ta_email')->references('email')->on('users'); //relationship  one to one between users & ta_preferences tables
@@ -34,6 +36,13 @@ class CreateTaPreferencesTable extends Migration
      */
     public function down()
     {
+        Schema::table('ta_preferences', function(Blueprint $table){
+            // $table->dropForeign(['ta_email']);
+            $table->dropPrimary('preference_id'); // WOULD NOT WORK WITHOUT DROPPING FOREIGN KEY IN ta_module_choices
+            $table->dropForeign('ta_preferences_ta_email_foreign');
+            $table->dropIndex('ta_preferences_ta_email_foreign');
+        });
+
         Schema::dropIfExists('ta_preferences');
     }
 }

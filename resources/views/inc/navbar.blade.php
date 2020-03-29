@@ -21,7 +21,10 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/preferences/module">Module</a>
-                  </li>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/preferences/ta">Teaching Assistants</a>
+                </li>
               </ul>
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
