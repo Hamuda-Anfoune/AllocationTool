@@ -12,7 +12,7 @@ class ta_preference extends Model
      * @var array
      */
     protected $fillable = [
-        'ta_email', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'academic_year', 'semester', 'have_tier4_visa',
+        'ta_email', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'academic_year', 'have_tier4_visa',
     ];
 
     /**

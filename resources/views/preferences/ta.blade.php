@@ -4,12 +4,12 @@
 {{-- {{$title}} --}}
 
 {{Session::get('max_modules')}}
-{{Session::get('semester')}}
+{{-- {{Session::get('semester')}} --}}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header text-md-center"><h4>{{ __('Add TA Preferences') }}</h4></div>
+                <div class="card-header tesxt-md-center"><h4>{{ __('Add TA Preferences') }}</h4></div>
                 <div class="card-body align-items-center">
                     <form method="POST" action="{{ route('storeTAPrefs') }}">
                         @csrf
@@ -76,12 +76,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label for="semester" class="col-md-4 col-form-label text-md-right">{{ __('Semester') }}</label>
 
                             <div class="col-md-6">
                                 {{-- <input id="semester" type="text" class="form-control @error('semester') is-invalid @enderror" name="semester" value="{{ old('semester') }}" required autocomplete="semester" autofocus> --}}
-                                <select name="semester" id="semester" class="custom-select">
+                                {{-- <select name="semester" id="semester" class="custom-select">
                                     <option value="01" {{ old('semester') == 01 ? 'selected' : '' }}>First</option>
                                     <option value="02" {{ old('semester') == 02 ? 'selected' : '' }}>Second</option>
                                 </select>
@@ -91,7 +91,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         {{-- ------------------------
                             VISA STATUS

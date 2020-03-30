@@ -107,9 +107,9 @@ class TAController extends Controller
 
         // Create a preference ID using:
         /*
-            username_not_whole_email+Y+academicYear+S+semester
+            username_not_whole_email+Y+academicYear
         */
-        $preference_id = $username_not_whole_email.'Y'.$request->input('academic_year').'S'.$request->input('semester');
+        $preference_id = $username_not_whole_email.'Y'.$request->input('academic_year');
 
 
         // Check, if TA already submitted preferences for this semester then interrupt, and advice to go to update preferences
@@ -117,6 +117,7 @@ class TAController extends Controller
 
         // if(DB::table('ta_preferences')->where('preference_id', '=', $preference_id))
         if(ta_preference::where('preference_id', '=', $preference_id)->count() > 0)
+        // if(DB::table('ta_preferences')->where('preference_id', $preference_id)->exists()) // Consider this!!
         {
                 return back()->withInput($request->input())->with('alert', 'Sorry, seems like you have already submitted your prefernces for this semester!'); //
         }
@@ -136,7 +137,7 @@ class TAController extends Controller
             $ta_pref->max_contact_hours = $request->input('max_contact_hours');
             $ta_pref->max_marking_hours = $request->input('max_marking_hours');
             $ta_pref->academic_year = $request->input('academic_year');
-            $ta_pref->semester = $request->input('semester');
+            // $ta_pref->semester = $request->input('semester');
             // $ta_pref->have_tier4_visa = $request->input('have_tier4_visa');
 
             $ta_pref->have_tier4_visa = ($request->input('have_tier4_visa') == Null) ? false : true;
@@ -176,8 +177,6 @@ class TAController extends Controller
                     $current_ta_module_choice->module_id = $request->input('module_'.$i.'_id');
                     $current_ta_module_choice->priority = $i;
                     $current_ta_module_choice->did_before = ($request->input('done_before_'.$i) == Null) ? false : true;
-
-
 
                     // Checking the length of the array to calculate the array key at which the instance will be saved
                     // Counting the lenght of the array

@@ -37,13 +37,15 @@ class moduleController extends Controller
         */
         // echo $request->session()->get('email');
         // echo session()->get('email');
-        // echo session('email');
+        // echo session('account_type_id');
 
         // Checking of convenor: Admin = 001, Convenor = 002, GTA = 003, Externatl TA = 004
-        if (session()->get('account_type_id')== 001 || session()->get('account_type_id')== 002) // session value is assigned in authenticated() in AuthenticatesUsers.php
+        if (session()->get('account_type_id') == 002) // session value is assigned in authenticated() in AuthenticatesUsers.php
         {
+            // Get the convenor's email
+            $convenor_email = session()->get('email');
             // Get a list of all midules in database
-            $modules = Module::all();
+            $modules = Module::where('convenor_email', '=', $convenor_email)->get();
 
             // Get current year => method 1
             // $current_academic_year = Academic_year::all()->where('current', '1');                    // Returns a complex JSON object
@@ -94,10 +96,22 @@ class moduleController extends Controller
             'no_of_contact_hours' => ['required'],
             'no_of_marking_hours' => ['required'],
             'academic_year' => ['required', 'exists:academic_years,year'],
-            'semester' => ['required'],
+            // 'semester' => ['required'],
         ]);
 
-        // creating a new instance of Module_preference to save to DB
+        // Get current academic year
+        $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();    // - first(): Returns a simple object,
+
+        // check if a preference for this module in tis year is submitted
+        if(DB::table('module_preferences')
+                                    ->where('academic_year', '=', $current_academic_year->year)
+                                    ->where('module_id','=', $request->input('module_id'))->exists())
+        {
+            return redirect('/preferences/module')->with('alert', 'Preference already submitted for this academic year');
+        }
+        else
+        {
+            // creating a new instance of Module_preference to save to DB
         $module_pref = new module_preference();
 
         // Adding the posted attributes to the created instance
@@ -106,7 +120,7 @@ class moduleController extends Controller
         $module_pref->no_of_contact_hours = $request->input('no_of_contact_hours');
         $module_pref->no_of_marking_hours = $request->input('no_of_marking_hours');
         $module_pref->academic_year = $request->input('academic_year');
-        $module_pref->semester = $request->input('semester');
+        // $module_pref->semester = $request->input('semester');
 
         //Getting the convenor email from the session signin data
         // $module_pref->convenor_email = session()->get('email'); // NOW IN THE MODULE TABLE, IT IS A PREPERTY NOT A PREFERENCE
@@ -118,6 +132,8 @@ class moduleController extends Controller
 
         $module_pref->save();
         return redirect('/preferences/module')->with('success', 'Preference Created'); // success: type of message, Preference Created: msg body
+        }
+
     }
 
     /**

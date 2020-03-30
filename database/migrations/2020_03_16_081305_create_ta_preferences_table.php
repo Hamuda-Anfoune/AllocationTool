@@ -20,7 +20,7 @@ class CreateTaPreferencesTable extends Migration
             $table->mediumInteger('max_contact_hours')->nullable();
             $table->mediumInteger('max_marking_hours')->nullable();
             $table->string('academic_year', 15);
-            $table->mediumInteger('semester');
+            // $table->mediumInteger('semester');
             $table->boolean('have_tier4_visa')->default(false);
             $table->timestamps();
 

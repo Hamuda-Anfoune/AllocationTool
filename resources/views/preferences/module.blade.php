@@ -119,12 +119,12 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label for="semester" class="col-md-4 col-form-label text-md-right">{{ __('Semester') }}</label>
 
                             <div class="col-md-6">
                                 {{-- <input id="semester" type="text" class="form-control @error('semester') is-invalid @enderror" name="semester" value="{{ old('semester') }}" required autocomplete="semester" autofocus> --}}
-                                <select name="semester" id="semester" class="custom-select">
+                                {{-- <select name="semester" id="semester" class="custom-select">
                                     <option value="001">First</option>
                                     <option value="002">Second</option>
                                 </select>
@@ -134,7 +134,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">

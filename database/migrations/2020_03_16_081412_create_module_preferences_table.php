@@ -21,7 +21,7 @@ class CreateModulePreferencesTable extends Migration
             $table->mediumInteger('no_of_contact_hours');
             $table->mediumInteger('no_of_marking_hours');
             $table->string('academic_year', 15);
-            $table->mediumInteger('semester');
+            // $table->mediumInteger('semester');
             $table->timestamps();
 
             //REALTIONSHIPS

@@ -12,7 +12,7 @@ class allocations extends Model
      * @var array
      */
     protected $fillable = [
-        'allocation_id', 'academic_year', 'semester', 'password', 'module_id', 'ta_email', 'creator_email',
+        'allocation_id', 'academic_year', 'password', 'module_id', 'ta_email', 'creator_email',
     ];
 
     /**

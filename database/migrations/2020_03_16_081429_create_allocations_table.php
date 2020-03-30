@@ -16,7 +16,7 @@ class CreateAllocationsTable extends Migration
         Schema::create('allocations', function (Blueprint $table) {
             $table->string('allocation_id', 15)->primary();
             $table->string('academic_year', 15);
-            $table->mediumInteger('semester');
+            // $table->mediumInteger('semester');
             $table->string('module_id', 15);
             $table->string('ta_email', 50);
             $table->string('creator_email', 50);

@@ -12,7 +12,7 @@ class module_preference extends Model
      * @var array
      */
     protected $fillable = [
-        'field_id', 'module_id', 'convenor_user_id', 'no_of_assistants', 'no_of_contact_hours', 'no_of_marking_hours', 'academic_year', 'semester',
+        'field_id', 'module_id', 'convenor_user_id', 'no_of_assistants', 'no_of_contact_hours', 'no_of_marking_hours', 'academic_year',
     ];
 
     /**
@@ -21,7 +21,7 @@ class module_preference extends Model
      * @var array
      */
     protected $hidden = [
-        // 'convenor_user_id', 'academic_year', 'semester',
+        // 'convenor_user_id', 'academic_year',
     ];
 
     /**
