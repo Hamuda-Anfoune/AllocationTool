@@ -47,7 +47,7 @@ class HomeController extends Controller
             // $all_convenors_modules = module::where('convenor_email', '=', $email)->get();
 
             // Get the modules WITH SUBMITTED PREFERENCES that this convenor teaches
-            $preferenced_convenor_modules = DB::table('module_preferences')
+            $convenor_preferences = DB::table('module_preferences')
                                                             ->whereExists(function ($query)
                                                             {
                                                                 $query->select(DB::raw(100))
@@ -56,18 +56,20 @@ class HomeController extends Controller
                                                                     ->where('convenor_email','=', (session()->get('email')));
                                                             })
                                                             ->get();
-            /*TODO:
+            /* DONE:
              *  Get the names of the preferenced modules
-             *
              */
-
-            //  for($i=1; $i<sizeof($preferenced_convenor_modules); $i++)
-            //  {
-
-            //  }
+            $preferenced_convenor_modules = [];
+             for($i=0; $i<count($convenor_preferences); $i++)
+             {
+                $preferenced_convenor_modules[$i] = DB::table('modules')
+                                                        ->where('module_id','=', $convenor_preferences[$i]->module_id)
+                                                        ->where('academic_year','=', $current_academic_year->year)
+                                                        ->first();
+             }
 
             /* DONE:
-             * Get the modules WITHOUT SUBMITTED PREFERENCES that this convenor teaches:
+             *  Get the modules WITHOUT SUBMITTED PREFERENCES that this convenor teaches:
              *   modules that are taught by this convenor
              *   where the academic year = current academic year ->
              *   which do not exist in module_preferences ->
@@ -85,6 +87,7 @@ class HomeController extends Controller
 
             return view('home')
                             ->with('preferenced_convenor_modules', $preferenced_convenor_modules)
+                            // ->with('preferenced_convenor_modules', $convenor_preferences)
                             ->with('nonpreferenced_convenor_modules', $nonpreferenced_convenor_modules);
         }
         elseif(session()->get('account_type_id')== 003 || session()->get('account_type_id')== 004)
