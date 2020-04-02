@@ -32,7 +32,7 @@ class HomeController extends Controller
         // If Admin:
 
         // Get the current academic year
-        $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();
+        $current_academic_year = DB::table('Academic_years')->select('year')->where('current', '=', 1)->first();
 
         // Get logged in user's email
         $email = session()->get('email');
@@ -46,42 +46,39 @@ class HomeController extends Controller
         {
             // $all_convenors_modules = module::where('convenor_email', '=', $email)->get();
 
-
-
-            /* // Get the modules WITH PREFERENCES that this convenor teaches
-             * $preferenced_convenor_modules = DB::table('modules')
-             *                                                 ->where('convenor_email','=', $email)
-             *                                                 ->whereExists(function ($query) {
-             *                                                     $query->select(DB::raw(100))
-             *                                                         ->from('module_preferences')
-             *                                                         ->whereRaw('module_preferences.module_id = modules.module_id')
-             *                                                         ->where('module_preferences.academic_year',' =', $current_academic_year);
-             *                                                 })
-             *                                                 ->get();
-            */
-
             // Get the modules WITH SUBMITTED PREFERENCES that this convenor teaches
             $preferenced_convenor_modules = DB::table('module_preferences')
-                                                            ->whereExists(function ($query) {
+                                                            ->whereExists(function ($query)
+                                                            {
                                                                 $query->select(DB::raw(100))
                                                                     ->from('modules')
                                                                     ->whereRaw('module_preferences.module_id = modules.module_id')
                                                                     ->where('convenor_email','=', (session()->get('email')));
-                                                                })
+                                                            })
                                                             ->get();
+            /*TODO:
+             *  Get the names of the preferenced modules
+             *
+             */
 
-            /* TODO:
-             * Get the modules WITHOUT SUBMITTED PREFERENCES that this convenor teaches
-             * which do not exist in module_preferences
-             * where the academic year = current academic year
-             * that are taught by this convenor
-            */
+            //  for($i=1; $i<sizeof($preferenced_convenor_modules); $i++)
+            //  {
+
+            //  }
+
+            /* DONE:
+             * Get the modules WITHOUT SUBMITTED PREFERENCES that this convenor teaches:
+             *   modules that are taught by this convenor
+             *   where the academic year = current academic year ->
+             *   which do not exist in module_preferences ->
+             */
             $nonpreferenced_convenor_modules = DB::table('modules')
                                                             ->where('convenor_email','=', $email)
-                                                            ->whereNotExists(function ($query) {
+                                                            ->where('academic_year','=', $current_academic_year->year)
+                                                            ->whereNotExists(function ($query)
+                                                            {
                                                                 $query->select(DB::raw(100))
                                                                     ->from('module_preferences')
-                                                                    ->where('module_preferences.academic_year',' =', $current_academic_year)
                                                                     ->whereRaw('module_preferences.module_id = modules.module_id');
                                                             })
                                                             ->get();

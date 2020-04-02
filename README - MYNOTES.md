@@ -1,15 +1,11 @@
 ## TODO:
 -----------------
-  *  Directly after registration, user account type id and email are not stored in the session, which creates a problem while trying to add preferences
+  *  Alter the module prefernces submission to add used languages
 
   *  Edit home page to be a dashboard
 
   *  Turn on Vue production mode when deploying for production, as it's currently running in development mode.
     See more tips at https://vuejs.org/guide/deployment.html
-
-  * Add foreign key references for academic year
-
-  * Edit home to show content related to signed in account type
 
   * edit error msg when attempting to register with an email that does not exist in university_users table
 

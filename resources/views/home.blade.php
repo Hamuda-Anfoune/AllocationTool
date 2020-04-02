@@ -21,32 +21,32 @@
                         --}}
                         <h3><strong>Modules You Teach</strong></h3>
                         @if(($preferenced_convenor_modules->count()) > 0)
-                        <h5><i>Modules With Preferences</i>:</h5>
-                        <ul>
-                            @foreach($preferenced_convenor_modules as $module)
-                                <li>{{$module->module_id}} - {{$module->academic_year}}</li>
-                            @endforeach
-                        </ul>
+                            <h5><i>Modules With Preferences</i>:</h5>
+                            <ul>
+                                @foreach($preferenced_convenor_modules as $module)
+                                    <li>{{$module->module_id}} - {{$module->academic_year}}</li>
+                                @endforeach
+                            </ul>
                         @endif
 
                         @if(($nonpreferenced_convenor_modules->count()) > 0)
-                        <h5><i>Modules Without Preferences</i></h5>
-                        <ul>
-                            @foreach($nonpreferenced_convenor_modules as $module)
-                                <li>{{$module->module_name}}</li>
-                            @endforeach
-                        </ul>
+                            <h5><i>Modules Without Preferences</i></h5>
+                            <ul>
+                                @foreach($nonpreferenced_convenor_modules as $module)
+                                    <li>{{$module->module_name}}</li>
+                                @endforeach
+                            </ul>
                         @endif
 
                     @endif
                     @if (session('account_type_id') == 003 || session('account_type_id') == 004)
-                    <h3>Your Preferences</h3>
-                    @if(($TAs_preferences->count()) > 0)
-                        <ul>
-                            @foreach($TAs_preferences as $preference)
-                                <li>{{$preference->preference_id}}</li>
-                            @endforeach
-                        </ul>
+                        <h3>Your Preferences</h3>
+                        @if(($TAs_preferences->count()) > 0)
+                            <ul>
+                                @foreach($TAs_preferences as $preference)
+                                    <li>{{$preference->academic_year}}</li>
+                                @endforeach
+                            </ul>
                         @endif
                     @endif
                 </div>

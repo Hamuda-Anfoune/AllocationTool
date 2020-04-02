@@ -88,7 +88,7 @@ class TAController extends Controller
             'max_contact_hours' => ['required'],
             'max_marking_hours' => ['required'],
             'academic_year' => ['required', 'exists:academic_years,year'],
-            'semester' => ['required'],
+            // 'semester' => ['required'],
 
             // Only one module choice is mandatory
         ]);
@@ -138,9 +138,7 @@ class TAController extends Controller
             $ta_pref->max_marking_hours = $request->input('max_marking_hours');
             $ta_pref->academic_year = $request->input('academic_year');
             // $ta_pref->semester = $request->input('semester');
-            // $ta_pref->have_tier4_visa = $request->input('have_tier4_visa');
-
-            $ta_pref->have_tier4_visa = ($request->input('have_tier4_visa') == Null) ? false : true;
+             $ta_pref->have_tier4_visa = ($request->input('have_tier4_visa') == Null) ? false : true;
 
             //  return $ta_pref;
 

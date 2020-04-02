@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Prefs;
 
 use App\Academic_year;
 use App\Http\Controllers\Controller;
+use App\language;
+use App\used_langauge;
 // use Illuminate\Foundation\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\module; // BRINGING THE MODEL
 use App\module_preference;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
 
 class moduleController extends Controller
@@ -45,7 +49,9 @@ class moduleController extends Controller
             // Get the convenor's email
             $convenor_email = session()->get('email');
             // Get a list of all midules in database
-            $modules = Module::where('convenor_email', '=', $convenor_email)->get();
+            $modules = Module::all()->where('convenor_email', '=', $convenor_email);
+
+            $languages = language::all();
 
             // Get current year => method 1
             // $current_academic_year = Academic_year::all()->where('current', '1');                    // Returns a complex JSON object
@@ -57,7 +63,10 @@ class moduleController extends Controller
             // echo $current_academic_year->year;
 
             // pass modules to view, will be shown in a select element in the view
-            return view ('preferences.module')->with('module', $modules)->with('current_academic_year', $current_academic_year);
+            return view ('preferences.module')
+                                ->with('modules', $modules)
+                                ->with('current_academic_year', $current_academic_year)
+                                ->with('languages', $languages);
 
         }else
         {
@@ -107,7 +116,7 @@ class moduleController extends Controller
                                     ->where('academic_year', '=', $current_academic_year->year)
                                     ->where('module_id','=', $request->input('module_id'))->exists())
         {
-            return redirect('/preferences/module')->with('alert', 'Preference already submitted for this academic year');
+            return redirect('/preferences/module')->with('alert', 'Preference already submitted for this module for this academic year');
         }
         else
         {
@@ -122,15 +131,78 @@ class moduleController extends Controller
         $module_pref->academic_year = $request->input('academic_year');
         // $module_pref->semester = $request->input('semester');
 
-        //Getting the convenor email from the session signin data
-        // $module_pref->convenor_email = session()->get('email'); // NOW IN THE MODULE TABLE, IT IS A PREPERTY NOT A PREFERENCE
 
-        // ALL THREE STATEMENTS BELOW WORK!
-        // echo $request->session()->get('email');
-        // echo session()->get('email');
-        // echo session('email');
+        ////////////
+            // Creating an array to save ta_module_choice instances
+            $used_languages_array = [];
+            // Counting the lenght of the array
+            $arrayLength = count($used_languages_array);
 
-        $module_pref->save();
+            //for loop: Check module choices and save
+            for($i=1; $i<=3; $i++)
+            {
+                // Creating an instance of the ta_module_choices
+                $used_language_choice = new used_langauge();
+
+                // Will loop and get IDs of submitted choices
+                $used_languages_choice_id =  $request->input('language_'.$i.'_id');
+
+                if($used_languages_choice_id != NULL) // if ID is not null
+                {
+                    $used_language_choice->module_id = $request->input('module_id');
+                    $used_language_choice->language_id = $used_languages_choice_id;
+                    $used_language_choice->academic_year = $current_academic_year->year;
+
+                    // Checking the length of the array to calculate the array key at which the instance will be saved
+                    // Counting the lenght of the array
+                    $arrayLength = count($used_languages_array);
+
+                    if($arrayLength == 0) // If array is now empty
+                    {
+                        // Add to array WITHOUT chaning the key
+                        $used_languages_array[$arrayLength] = $used_language_choice;
+                    }
+                    else // if array is not empty
+                    {
+                        // Add WITH changing the key
+                        $used_languages_array[$arrayLength] = $used_language_choice;
+                    }
+                }
+                else // once we get a null used_languages_array_id
+                {
+                    // Do nothing
+                }
+            }
+
+            // $arrayLength = count($used_languages_array);
+            /*
+             * All saving will be in the try catch
+             */
+            try
+            {
+                $used_language_to_save = new used_langauge();
+                // Save to module_preferences table
+                $module_pref->save();
+
+                // If languages have been chosen
+                if(sizeof($used_languages_array) != 0)
+                {
+                    // Save to ta_module_choices table
+                    for($j = 0; $j <= $arrayLength; $j++)
+                    {
+                        $used_language_to_save = $used_languages_array[$j];
+                        $used_language_to_save->save();
+                    }
+                }
+            }
+            catch (QueryException $e)
+            {
+                return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: '. $e); //
+            }
+
+            ////////////////////
+
+        // $module_pref->save();
         return redirect('/preferences/module')->with('success', 'Preference Created'); // success: type of message, Preference Created: msg body
         }
 
