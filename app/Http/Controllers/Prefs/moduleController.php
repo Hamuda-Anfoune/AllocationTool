@@ -102,7 +102,7 @@ class moduleController extends Controller
         // Get current academic year
         $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();    // - first(): Returns a simple object,
 
-        // check if a preference for this module in tis year is submitted
+        // check if a preference for this module in this year is submitted
         if(DB::table('module_preferences')
                                     ->where('academic_year', '=', $current_academic_year->year)
                                     ->where('module_id','=', $request->input('module_id'))->exists())

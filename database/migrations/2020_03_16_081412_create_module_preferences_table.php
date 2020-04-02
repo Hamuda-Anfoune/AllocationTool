@@ -26,6 +26,7 @@ class CreateModulePreferencesTable extends Migration
 
             //REALTIONSHIPS
             $table->foreign('module_id')->references('module_id')->on('modules');
+            $table->foreign('academic_year')->references('year')->on('academic_years');
             // $table->foreign('convenor_email')->references('email')->on('users'); // CANCELLED AS convenor_email WAS REMOVED
         });
     }

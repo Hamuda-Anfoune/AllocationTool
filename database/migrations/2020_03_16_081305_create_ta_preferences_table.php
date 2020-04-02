@@ -26,6 +26,7 @@ class CreateTaPreferencesTable extends Migration
 
             // RELATIONSHIPS
             $table->foreign('ta_email')->references('email')->on('users'); //relationship  one to one between users & ta_preferences tables
+            $table->foreign('academic_year')->references('year')->on('academic_years');
         });
     }
 

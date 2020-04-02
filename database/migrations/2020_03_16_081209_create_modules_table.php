@@ -17,9 +17,11 @@ class CreateModulesTable extends Migration
             $table->string('module_id', 15)->primary();
             $table->string('module_name', 150);
             $table->string('convenor_email', 50);
+            $table->string('academic_year', 15);
 
             //REALTIONSHIPS
             $table->foreign('convenor_email')->references('email')->on('users');
+            $table->foreign('academic_year')->references('year')->on('academic_years');
         });
     }
 

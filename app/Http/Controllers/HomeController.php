@@ -48,19 +48,19 @@ class HomeController extends Controller
 
 
 
-            // // Get the modules WITH PREFERENCES that this convenor teaches
-            // $preferenced_convenor_modules = DB::table('modules')
-            //                                                 ->where('convenor_email','=', $email)
-            //                                                 ->whereExists(function ($query) {
-            //                                                     $query->select(DB::raw(100))
-            //                                                         ->from('module_preferences')
-            //                                                         ->whereRaw('module_preferences.module_id = modules.module_id')
-            //                                                         ->where('module_preferences.academic_year',' =', $current_academic_year);
-            //                                                 })
-            //                                                 ->get();
+            /* // Get the modules WITH PREFERENCES that this convenor teaches
+             * $preferenced_convenor_modules = DB::table('modules')
+             *                                                 ->where('convenor_email','=', $email)
+             *                                                 ->whereExists(function ($query) {
+             *                                                     $query->select(DB::raw(100))
+             *                                                         ->from('module_preferences')
+             *                                                         ->whereRaw('module_preferences.module_id = modules.module_id')
+             *                                                         ->where('module_preferences.academic_year',' =', $current_academic_year);
+             *                                                 })
+             *                                                 ->get();
+            */
 
-
-            // Get the modules WITH PREFERENCES that this convenor teaches
+            // Get the modules WITH SUBMITTED PREFERENCES that this convenor teaches
             $preferenced_convenor_modules = DB::table('module_preferences')
                                                             ->whereExists(function ($query) {
                                                                 $query->select(DB::raw(100))
@@ -70,14 +70,19 @@ class HomeController extends Controller
                                                                 })
                                                             ->get();
 
-            // Get the modules WITHOUT PREFERENCES that this convenor teaches
+            /* TODO:
+             * Get the modules WITHOUT SUBMITTED PREFERENCES that this convenor teaches
+             * which do not exist in module_preferences
+             * where the academic year = current academic year
+             * that are taught by this convenor
+            */
             $nonpreferenced_convenor_modules = DB::table('modules')
                                                             ->where('convenor_email','=', $email)
                                                             ->whereNotExists(function ($query) {
                                                                 $query->select(DB::raw(100))
                                                                     ->from('module_preferences')
-                                                                    ->whereRaw('module_preferences.module_id = modules.module_id')
-                                                                    ->where('module_preferences.academic_year',' =', '$current_academic_year');
+                                                                    ->where('module_preferences.academic_year',' =', $current_academic_year)
+                                                                    ->whereRaw('module_preferences.module_id = modules.module_id');
                                                             })
                                                             ->get();
 

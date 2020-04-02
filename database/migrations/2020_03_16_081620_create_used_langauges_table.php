@@ -14,7 +14,7 @@ class CreateUsedLangaugesTable extends Migration
     public function up()
     {
         Schema::create('used_langauges', function (Blueprint $table) {
-            $table->bigIncrements('field_id');
+            $table->bigIncrements('field_id')->primary();
             $table->string('module_id', 15);
             $table->string('language_id', 10);
 

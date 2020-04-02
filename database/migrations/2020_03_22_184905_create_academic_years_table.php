@@ -14,8 +14,8 @@ class CreateAcademicYearsTable extends Migration
     public function up()
     {
         Schema::create('academic_years', function (Blueprint $table) {
-            $table->bigIncrements('field_id');
-            $table->string('year', 15);
+            // $table->bigIncrements('field_id');
+            $table->string('year', 15)->primary();
             $table->boolean('current');
             // $table->timestamps();
         });

@@ -17,11 +17,18 @@
 
 ****************************
 
+
 ## Notes:
 -----------------
   *  using the email as the primary key instead of an ID as the university uses that to identify users.
 
+  *  usnig the acaemic year in both modules and module_preferences:
+        modules: might be differnt from year to another
+        module_prefernces: nead to know each preference belongs to which year
+
   *  //
+
+****************************
 
 
 ## How Tos:
