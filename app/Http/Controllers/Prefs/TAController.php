@@ -10,6 +10,8 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use App\module; // BRINGING THE MODEL
 use App\ta_module_choice;
+use App\language;
+use App\Ta_language_choice;
 use App\TA_preference;
 use Illuminate\Database\QueryException;
 use Mockery\Matcher\HasValue;
@@ -53,6 +55,9 @@ class TAController extends Controller
             // Get a list of all midules in database
             $modules = Module::all();
 
+            // Get a list of all the prgorammimg languages
+            $languages = language::all();
+
             // Get current year => method 1
             // $current_academic_year = Academic_year::all()->where('current', '1');                    // Returns a complex JSON object
 
@@ -62,7 +67,10 @@ class TAController extends Controller
             // echo $current_academic_year->year;
 
             // pass modules to view, will be shown in a select element in the view
-            return view ('preferences.ta')->with('modules', $modules)->with('current_academic_year', $current_academic_year);
+            return view ('preferences.ta')
+                                ->with('modules', $modules)
+                                ->with('current_academic_year', $current_academic_year)
+                                ->with('languages', $languages);
             // return $modules;
 
         }else
@@ -197,6 +205,62 @@ class TAController extends Controller
                 }
             }
 
+
+            // -------------------------------------
+            //      LANGUAGE PREFERENCES START
+            // -------------------------------------
+
+
+            // Creating an array to save ta_module_choice instances
+            $preferred_languages_array = [];
+            // Counting the lenght of the array
+            // $array2Length = count($preferred_languages_array);
+
+            //for loop: Check module choices and save
+            for($i=1; $i<=3; $i++)
+            {
+                // Creating an instance of the ta_language_choice
+                $preferred_language_choice = new Ta_language_choice();
+
+                // Will get IDs of submitted choices
+                $preferred_language_choice_id =  $request->input('preferred_language_'.$i.'_id');
+
+
+                if($preferred_language_choice_id != NULL) // if ID is not null
+                {
+                    $preferred_language_choice->preference_id = $preference_id;
+                    $preferred_language_choice->language_id = $preferred_language_choice_id;
+
+                    echo $preferred_language_choice;
+
+                    // Checking the length of the array to calculate the array key at which the instance will be saved
+                    // Counting the lenght of the array
+
+
+                    // if($array2Length == 0) // If array is now empty
+                    // {
+                    //     // Add to array WITHOUT chaning the key
+                    //     // $preferred_languages_array[$array2Length] = $preferred_language_choice;
+                    // }
+                    // else // if array is not empty
+                    // {
+                        // ADD TO ARRAY
+                        $preferred_languages_array[] = $preferred_language_choice;
+                    // }
+                }
+                else // once we get a null preferred_languages_array_id
+                {
+                    // Do nothing
+                }
+            }
+
+            // ------------------------------------
+            //      LANGUAGE PREFERENCES END
+            // ------------------------------------
+
+            // return $preferred_languages_array;
+
+
             /*
              * All saving will be in the try catch
              */
@@ -211,6 +275,17 @@ class TAController extends Controller
                         $ta_module_choice_to_save = $module_choices_array[$j];
                         $ta_module_choice_to_save->priority = $j+1;
                         $ta_module_choice_to_save->save();
+                }
+
+                // Save to TA language choices
+                // get the length of the array where language choices are saved
+                $array2Length = count($preferred_languages_array);
+
+                // use legth to loop and save language choices
+                for($l = 0; $l < $array2Length; $l++)
+                {
+                        $ta_preferred_languages_to_save = $preferred_languages_array[$l];
+                        $ta_preferred_languages_to_save->save();
                 }
             }
             catch (QueryException $e)

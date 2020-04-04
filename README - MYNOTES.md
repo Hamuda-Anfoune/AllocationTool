@@ -1,15 +1,17 @@
 ## TODO:
 -----------------
-  *  Alter the module prefernces submission to add used languages
+  *  Edit the module preferences submission view to add a new div for each new 'used language'
+
+  *  Edit the TA preferences submission view to add a new div for each new 'module choice'
 
   *  Edit home page to be a dashboard
 
   *  Turn on Vue production mode when deploying for production, as it's currently running in development mode.
-    See more tips at https://vuejs.org/guide/deployment.html
+     See more tips at https://vuejs.org/guide/deployment.html
 
-  * edit error msg when attempting to register with an email that does not exist in university_users table
+  *  edit error msg when attempting to register with an email that does not exist in university_users table
 
-  * Add foreign key drop statements to down() in the migrations
+  *  Add foreign key drop statements to down() in the migrations
 
 ****************************
 

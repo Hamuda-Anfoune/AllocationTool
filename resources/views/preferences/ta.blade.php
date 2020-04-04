@@ -350,6 +350,72 @@
                                 </label>
                             </div>
                         </div>
+
+                        {{-- ------------------------
+                            PROGRAMMING LANGUAGES
+                        ------------------------ --}}
+
+                        <div class="text-center">
+                            <h4>{{ __('Preferred Programming Languages') }}</h4>
+                            <br>
+                        </div>
+
+                        <div class="form-group row ">
+                            <label for="preferred_language_1_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 1') }}</label>
+
+                            <div class="col-md-6">
+                                <select name="preferred_language_1_id" id="preferred_language_1_id" class="custom-select">
+                                    <option value="">Choice #1</option>
+                                    @foreach ($languages as $language)
+                                        <option value='{{$language->language_id}}' {{ old('preferred_language_1_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('preferred_language_1_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="preferred_language_2_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 1') }}</label>
+
+                            <div class="col-md-6">
+                                <select name="preferred_language_2_id" id="preferred_language_2_id" class="custom-select">
+                                    <option value="">Choice #2</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('preferred_language_2_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('preferred_language_2_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="preferred_language_3_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 3') }}</label>
+
+                            <div class="col-md-6">
+                                <select name="preferred_language_3_id" id="preferred_language_3_id" class="custom-select">
+                                    <option value="">Choice #3</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('preferred_language_3_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('preferred_language_3_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <br>
+                        <hr>
+                        <br>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
