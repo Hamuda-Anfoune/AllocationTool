@@ -40,6 +40,12 @@ Route::get('/TA', 'Prefs\TAController@index');
 
 Route::get('/allocations/create', 'Allocation\AllocationController@create');
 
+Route::get('/config', 'Admin\ConfigurationController@index');
+
+Route::get('/config/add', 'Admin\ConfigurationController@create')->name('addConfigs');
+
+Route::post('/config/add', 'Admin\ConfigurationController@store')->name('storeConfigs');
+
 
 
 // Prefs:: routes();

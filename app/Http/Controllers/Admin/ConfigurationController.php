@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ControlController extends Controller
+class ConfigurationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,17 @@ class ControlController extends Controller
      */
     public function index()
     {
-        return view('control.index');
+        /* TODO:
+         *  Get data about module prefs
+         *  Get data about TA prefs
+         *  Get data about allocations if any
+         *  Get data about done before weight
+         *  Get data about language priority to TAs
+         *
+         *  Filter and organise this data and send to view
+         */
+
+        return view('configurations.index');
     }
 
     /**
@@ -24,7 +34,7 @@ class ControlController extends Controller
      */
     public function create()
     {
-        //
+        return view('configurations.add');
     }
 
     /**

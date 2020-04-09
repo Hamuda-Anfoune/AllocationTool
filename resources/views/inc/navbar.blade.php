@@ -32,6 +32,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/allocations/create">Allocations</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/config">Configuration</a>
+                </li>
               </ul>
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
