@@ -10,7 +10,7 @@ use App\used_langauge;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use App\module; // BRINGING THE MODEL
+use App\module; // BRINGING THE MODULE MODEL
 use App\module_preference;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
@@ -24,7 +24,57 @@ class moduleController extends Controller
      */
     public function index()
     {
-        //
+        // Get the current academic year
+        $current_academic_year = DB::table('Academic_years')->select('year')->where('current', '=', 1)->first();
+
+        // Get logged in user's email
+        $email = session()->get('email');
+
+        // $all_convenors_modules = module::where('convenor_email', '=', $email)->get();
+
+            // Get the modules WITH SUBMITTED PREFERENCES that this convenor teaches
+            $convenor_preferences = DB::table('module_preferences')
+                                        ->whereExists(function ($query)
+                                        {
+                                            $query->select(DB::raw(100))
+                                                ->from('modules')
+                                                ->whereRaw('module_preferences.module_id = modules.module_id')
+                                                ->where('convenor_email','=', (session()->get('email')));
+                                        })
+                                        ->get();
+            /* DONE:
+             *  Get the names of the preferenced modules
+             */
+            $preferenced_convenor_modules = [];
+             for($i=0; $i<count($convenor_preferences); $i++)
+             {
+                $preferenced_convenor_modules[$i] = DB::table('modules')
+                                                        ->where('module_id','=', $convenor_preferences[$i]->module_id)
+                                                        ->where('academic_year','=', $current_academic_year->year)
+                                                        ->first();
+             }
+
+            /* DONE:
+             *  Get the modules WITHOUT SUBMITTED PREFERENCES that this convenor teaches:
+             *   modules that are taught by this convenor
+             *   where the academic year = current academic year ->
+             *   which do not exist in module_preferences ->
+             */
+            $nonpreferenced_convenor_modules = DB::table('modules')
+                                                            ->where('convenor_email','=', $email)
+                                                            ->where('academic_year','=', $current_academic_year->year)
+                                                            ->whereNotExists(function ($query)
+                                                            {
+                                                                $query->select(DB::raw(100))
+                                                                    ->from('module_preferences')
+                                                                    ->whereRaw('module_preferences.module_id = modules.module_id');
+                                                            })
+                                                            ->get();
+
+            return view('Module.index')
+                            ->with('preferenced_convenor_modules', $preferenced_convenor_modules)
+                            // ->with('preferenced_convenor_modules', $convenor_preferences)
+                            ->with('nonpreferenced_convenor_modules', $nonpreferenced_convenor_modules);
     }
 
     /**
@@ -63,7 +113,7 @@ class moduleController extends Controller
             // echo $current_academic_year->year;
 
             // pass modules to view, will be shown in a select element in the view
-            return view ('preferences.module')
+            return view ('Module.add')
                                 ->with('modules', $modules)
                                 ->with('current_academic_year', $current_academic_year)
                                 ->with('languages', $languages);
@@ -83,13 +133,6 @@ class moduleController extends Controller
      */
     public function store(Request $request)
     {
-
-        /*
-         ---------------------------------------------------------------------
-           THIS PAGE SHOULD ONLY SHOW TO A SIGNED IN MODULE CONVENOR ACCOUNT
-         ---------------------------------------------------------------------
-         */
-
 
         // Check if signed in user is a convenor
         // if not reroute to home
@@ -203,7 +246,7 @@ class moduleController extends Controller
             ////////////////////
 
         // $module_pref->save();
-        return redirect('/preferences/module')->with('success', 'Preference Created'); // success: type of message, Preference Created: msg body
+        return redirect('Module/add')->with('success', 'Preference Created'); // success: type of message, Preference Created: msg body
         }
 
     }

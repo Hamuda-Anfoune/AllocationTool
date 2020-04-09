@@ -19,11 +19,18 @@
                 <li class="nav-item">
                   <a class="nav-link" href="/about">Contact us</a>
                 </li>
+                @if (session('account_type_id') == 002)
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Module/add">Module</a>
+                    </li>
+                @endif
+                @if (session('account_type_id') == 003 || session('account_type_id') == 004)
+                    <li class="nav-item">
+                        <a class="nav-link" href="/TA/add">Teaching Assistants</a>
+                    </li>
+                @endif
                 <li class="nav-item">
-                    <a class="nav-link" href="/preferences/module">Module</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/preferences/ta">Teaching Assistants</a>
+                    <a class="nav-link" href="/allocations/create">Allocations</a>
                 </li>
               </ul>
             <!-- Right Side Of Navbar -->

@@ -1,3 +1,16 @@
+
+
+
+
+
+-- ----------------------------------------------------
+--              THIS SCEMA IS OUTDATED
+-- MULTIPLE CHANGES HAVE BEEN INTRODUCED TO THE TABLES
+-- ----------------------------------------------------
+
+
+
+
 -- MODULES
 CREATE TABLE `allocationtool`.`modules` (
   `module_id` VARCHAR(15) NOT NULL,

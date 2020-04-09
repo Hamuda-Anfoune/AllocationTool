@@ -26,12 +26,20 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/preferences/module', 'Prefs\ModuleController@create');
+Route::get('/Module/add', 'Prefs\ModuleController@create');
 
-Route::post('/preferences/module', 'Prefs\ModuleController@store')->name('storeModulePrefs');
+Route::post('/Module/add', 'Prefs\ModuleController@store')->name('storeModulePrefs');
 
-Route::get('/preferences/ta', 'Prefs\TAController@create');
+Route::get('/Module', 'Prefs\ModuleController@index');
 
-Route::post('/preferences/ta', 'Prefs\TAController@store')->name('storeTAPrefs');
+Route::get('/TA/add', 'Prefs\TAController@create');
+
+Route::post('/TA/add', 'Prefs\TAController@store')->name('storeTAPrefs');
+
+Route::get('/TA', 'Prefs\TAController@index');
+
+Route::get('/allocations/create', 'Allocation\AllocationController@create');
+
+
 
 // Prefs:: routes();

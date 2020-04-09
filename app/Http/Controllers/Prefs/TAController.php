@@ -32,7 +32,17 @@ class TAController extends Controller
      */
     public function index()
     {
-        //
+        // Get the current academic year
+        $current_academic_year = DB::table('Academic_years')->select('year')->where('current', '=', 1)->first();
+
+        // Get logged in user's email
+        $email = session()->get('email');
+
+
+        // Get the TA's preferences
+        $TAs_preferences = ta_preference::where('ta_email', '=', $email)->get();
+
+        return view('TA/index')->with('TAs_preferences', $TAs_preferences);
     }
 
 
@@ -67,7 +77,7 @@ class TAController extends Controller
             // echo $current_academic_year->year;
 
             // pass modules to view, will be shown in a select element in the view
-            return view ('preferences.ta')
+            return view ('TA.add')
                                 ->with('modules', $modules)
                                 ->with('current_academic_year', $current_academic_year)
                                 ->with('languages', $languages);
@@ -314,7 +324,52 @@ class TAController extends Controller
      */
     public function show($id)
     {
-        //
+        $current_ta_preferences = DB::table('ta_preferences')->where('preference_id','=', $id)->get();
+
+        /* Below: Gets the modules but not the priority
+         $current_module_choices = DB::table('modules')
+                                    ->whereExists(function ($query) use($id)
+                                    {
+                                        $query->select(DB::raw(100))
+                                            ->from('ta_module_choices')
+                                            ->whereRaw('ta_module_choices.module_id = modules.module_id')
+                                            ->where('preference_id','=', $id);
+                                    })
+                                    ->get();
+        */
+
+        $id = 'salimY2019-2020-02';
+
+        // $target_academic_year = substr($id, 0, strpos($id, "Y")); // Gets what's before the Y
+        $target_academic_year = substr($id, strpos($id, "Y") + 1); // Gets what's after the Y
+
+        $current_module_choices_without_names = DB::table('ta_module_choices')->where('preference_id','=',$id)->get();
+
+        // DONE: Get an array of the chosen modules' based on id in ta_module_choices, add priority to array elements
+        $current_module_choices = [];
+        for($i=0; $i<count($current_module_choices_without_names); $i++)
+        {
+            $current_module_choices[$i] = DB::table('modules')
+                                                        ->where('modules.module_id','=', $current_module_choices_without_names[$i]->module_id)
+                                                        ->where('modules.academic_year','=', $target_academic_year)
+                                                        ->first();
+
+            $current_module_choices[$i]->priority = $current_module_choices_without_names[$i]->priority;
+        }
+
+        // Get language choices from ta_language_choices and their names from languages
+        $current_language_choices = DB::table('ta_language_choices')->where('preference_id','=',$id)->get();
+        for($j = 0; $j <count($current_language_choices); $j++)
+        {
+            $get_name = DB::table('languages')->select('language_name')->where('language_id', '=', $current_language_choices[$j]->language_id)->first();
+            $current_language_choices[$j]->language_name = $get_name->language_name;
+           // print_r($current_language_choices);
+        }
+
+        return view('TA.show')
+                            ->with('current_ta_preferences', $current_ta_preferences)
+                            ->with('current_module_choices', $current_module_choices)
+                            ->with('current_language_choices', $current_language_choices);
     }
 
     /**

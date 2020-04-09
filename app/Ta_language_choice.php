@@ -21,7 +21,7 @@ class Ta_language_choice extends Model
      * @var array
      */
     protected $hidden = [
-        //
+        'field_id',
     ];
 
     /**

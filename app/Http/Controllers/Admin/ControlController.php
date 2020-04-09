@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class PreferencesController extends Controller
+class ControlController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,8 +14,7 @@ class PreferencesController extends Controller
      */
     public function index()
     {
-        return view ('index');
-        // return "Hello World";
+        return view('control.index');
     }
 
     /**
