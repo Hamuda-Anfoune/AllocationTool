@@ -37,6 +37,22 @@ class ConfigurationController extends Controller
         return view('configurations.add');
     }
 
+    public function updateWeighingFactors(Request $request)
+    {
+        // read the set of langauges for TA form DB
+
+        // get the set of language weights from the request
+
+        // if applicable:
+            // update division factors based on new weights
+            // There should be a tickbox to recalculate division factors or not
+    }
+
+    public function updateDivisionFactors(Request $request)
+    {
+        // get the new
+    }
+
     /**
      * Store a newly created resource in storage.
      *

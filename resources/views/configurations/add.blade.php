@@ -8,9 +8,11 @@
             <div class="card">
                 <div class="card-header text-md-center"><h4>{{ __('Module Preferences') }}</h4></div>
                 <div class="card-body">
-                    Add the control data for the admin:<br>
+                    <strong>TODO:</strong>
+                    - Add the control data for the admin:<br>
                     \tweight of done before<br>
-                    \tweight of<br>
+                    \tweight of each module match<br>
+                    - Choice to calculate
                     \tOther configurations<br>
                     <hr>
                     <br>
