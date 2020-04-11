@@ -28,14 +28,26 @@ class CreateLanguageWeightsTable extends Migration
         // Inseert default data
         DB::table('language_weights')->insert(
             array(
-                'type' => 'default',
-                'language_weight_1' => 50,
-                'language_weight_2' => 30,
-                'language_weight_3' => 20,
-                'language_weight_4' => 10,
-                'language_weight_5' => 10,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
+                [
+                    'type' => 'default',
+                    'language_weight_1' => 50,
+                    'language_weight_2' => 30,
+                    'language_weight_3' => 20,
+                    'language_weight_4' => 10,
+                    'language_weight_5' => 10,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'current',
+                    'language_weight_1' => 50,
+                    'language_weight_2' => 30,
+                    'language_weight_3' => 20,
+                    'language_weight_4' => 10,
+                    'language_weight_5' => 10,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]
             )
         );
     }

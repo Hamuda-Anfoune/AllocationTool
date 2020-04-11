@@ -8,17 +8,273 @@
             <div class="card">
                 <div class="card-header text-md-center"><h4>{{ __('Module Preferences') }}</h4></div>
                 <div class="card-body">
+                    <i class="fab fa-balance-scale fa-sm fa-fw"></i>
                     <strong>Admin home page!</strong><br>
                     <ul>
-                        <li>Will show data about allocations</li>
-                        <li>numbers of modules with preferences</li>
-                        <li>numbers of TA with preferences</li>
-                        <li>And other data, which I'll add once I think of it!</li>
+                        <li>Will show data about algorithm configuration</li>
+                        <li>Data will show in button cards</li>
+                        <li>Once clicked, button cards will show modals</li>
+                        <li>Modals will update database</li>
+                        <li>Thank you!</li>
                     </ul>
-                    <h6><a href="config/add">Go to add controls</a></h6>
+                    <br>
+                </div>
+            </div>
+            <div style="height:4vw"></div>
+        </div>
+    </div>
+    <div class="row md-col-12"> {{-- START OF BOARD NO. 1 --}}
+        <div class="col-md-3">
+            <div id="lang-weight-head" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                </div>
+                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
+                    <p class="widget-title">Programming Languages</p>
+                </div>
+            </div>
+            <div id="lang-weight-1" class="widget-div bg-skyblue mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">1st Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+            <div id="lang-weight-2" class="widget-div bg-skyblue mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">2nd Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+            <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">3rd Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div>    {{-- END OF 1ST COLUMN --}}
+
+        <div class="col-md-3">    {{-- START OF 2ND COLUMN --}}
+            <div id="done-before-weight-head" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                </div>
+                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
+                    <p class="widget-title">Done Before</p>
+                </div>
+            </div>
+            <div id="done-before-weight-1" class="widget-div bg-green mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">1st Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div>  {{-- END OF 2ND COLUMN --}}
+
+        <div class="col-md-3">  {{-- START OF 3RD COLUMN --}}
+            <div id="lang-weight-primary" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                </div>
+                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
+                    <p class="widget-title">Programming Languages</p>
+                </div>
+            </div>
+            <div id="lang-weight-first" class="widget-div bg-orange mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">1st Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div>  {{-- END OF 3RD COLUMN --}}
+
+        <div class="col-md-3">  {{-- START OF 4TH COLUMN --}}
+            <div id="lang-weight-primary" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                </div>
+                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
+                    <p class="widget-title">Programming Languages</p>
+                </div>
+            </div>
+            <div id="lang-weight-first" class="widget-div bg-red mb-3 min-vh-7">
+                <a class="btn col-md-12" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">
+                    <span class=" hyperspan">
+                        <p class="widget-title">1st Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div> {{-- END OF 4TH COLUMN --}}
+    </div> {{-- END OF BOARD NO. 1 --}}
+
+    <div class="row md-col-12"> {{-- START OF BOARD NO. 2 --}}
+        <div class="col-md-12"> {{-- SCREEN-FULL HEADER --}}
+            <div id="lang-weight-head" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-12 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                    <p class="widget-title-number-col-4 ml-3">Programming Languages Weights</p>
+                </div>
+            </div>
+        </div> {{-- END OF SCREEN-FULL HEADER --}}
+
+        <div class="col-md-4"> {{-- DIVISION FACTORS --}}
+            <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">Division factors</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div> {{-- END OF DIVISION FACTORS --}}
+        <div class="col-md-4"> {{-- 1ST LANGUAGE CHOICE --}}
+            <div id="lang-weight-1" class="widget-div bg-skyblue mb-3 min-vh-7 d-flex align-content-center flex-wrap justify-content-center">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan-col-4">
+                        <div class="row justify-content-center">
+                            <span class="fa-3x mb-0">00</span>
+                            <p class="">1st Language Choice</p>
+                        </div>
+                        <hr>
+                        <div class="row ml-3">
+                            <span class="fa-3x mb-0 line-h-initial">00</span>
+                            <p>As 2nd choice for TA</p>
+                        </div>
+                        <div class="row ml-3">
+                            <span class="fa-3x mb-0 line-h-initial">00</span>
+                            <p>As 3rd choice for TA</p>
+                        </div>
+                        <div class="row ml-3">
+                            <span class="fa-3x mb-0 line-h-initial">00</span>
+                            <p>As 4th choice for TA</p>
+                        </div>
+                        <div class="row ml-3">
+                            <span class="fa-3x mb-0 line-h-initial">00</span>
+                            <p>As 5th choice for TA</p>
+                        </div>
+                    </span>
+                </a>
+            </div>
+        </div>  {{-- END OF 1ST LANGUAGE CHOICE --}}
+
+        <div class="col-md-4"> {{-- 2ND LANGUAGE CHOICE --}}
+            <div id="lang-weight-2" class="widget-div bg-skyblue mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">2nd Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div> {{-- END OF 2ND LANGUAGE CHOICE --}}
+
+        <div class="col-md-4"> {{-- 3RD LANGUAGE CHOICE --}}
+            <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">3rd Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div> {{-- END OF 3RD LANGUAGE CHOICE --}}
+
+        <div class="col-md-4"> {{-- 4TH LANGUAGE CHOICE --}}
+            <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">3rd Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div> {{-- END OF 4TH LANGUAGE CHOICE --}}
+
+        <div class="col-md-4"> {{-- 5TH LANGUAGE CHOICE --}}
+            <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-7">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">3rd Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div> {{-- END OF 5TH LANGUAGE CHOICE --}}
+    </div> {{-- END OF BOARD NO. 2 --}}
+
+    {{-- START OF MODALS --}}
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Recipient:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
                 </div>
             </div>
         </div>
     </div>
+    {{-- END OF MODALS --}}
 </div>
 @endsection

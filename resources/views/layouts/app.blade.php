@@ -7,17 +7,23 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'AllocationTool') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/all.js') }}" defer></script> <!-- FONTAWESOME -->
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+    {{-- <link href="https://fonts.googleapis.com/css?family=Helvetica_Neue" rel="stylesheet"> --}}
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/all.css') }}" rel="stylesheet"> <!-- FONTAWESOME -->
+
 </head>
 <body>
     <div id="app">

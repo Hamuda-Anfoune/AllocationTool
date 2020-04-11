@@ -15,7 +15,17 @@ class AllocationController extends Controller
      */
     public function index()
     {
-        //
+         /* TODO:
+          *  Get number of Modules
+          *  Get number of convenors
+          *  Get number of TAs
+          *  Get data about module prefs
+          *  Get data about TA prefs
+          *  Get data about allocations if any
+          *
+          *  Filter and organise this data and send to view
+          */
+        return view('allocations.index');
     }
 
     /**

@@ -1,0 +1,138 @@
+
+.widget-div {
+    /* position: absolute; */
+    position:relative;
+    padding: 0;
+    /* height: 10vw; */
+    width: 100%;
+    text-align: center;
+    /* color: white; */
+    /* border: 1px solid grey;
+    border-radius: 0.5vw; */
+    /* left:0;
+    top:0; */
+}
+
+.widget-primary{
+    min-height: 5vw;
+    /* font-size: 1.5vw; */
+    text-align: center;
+    vertical-align: middle;
+}
+
+.widget-title {
+    font-weight: 500;
+    margin: 0px;
+}
+.widget-title-number-col-4 {
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin: 0px 0px 0px 16px;
+}
+
+.widget-title-col-4 {
+    font-weight: 200;
+    font-size: 1rem;
+    margin: 0px 0px 0px 16px;
+}
+
+.hyperspan {
+    /* position: absolute; */
+    position:relative;
+    width: 100%;
+    text-align: center;
+    color: white;
+    border: 1px solid 0.5vw;
+    /* left:0;
+    top:0; */
+}
+
+.hyperspan-col-4 {
+    /* position: absolute; */
+    position:relative;
+    width: 100%;
+    text-align: center;
+    color: white;
+    border: 1px solid 0.5vw;
+    /* left:0;
+    top:0; */
+}
+
+.hyperspan hr {
+  color: white;
+  background-color: white;
+}
+
+.hyperspan-col-4 hr {
+    color: white;
+    background-color: white;
+    margin: 0px;
+}
+
+.hyperspan-col-4 p {
+    margin: 7.5% 0px 0px 16px;
+    line-height: initial;
+}
+
+.bg-violet{
+    background-color: blueviolet;
+}
+
+.bg-blue{
+    background-color: blue;
+}
+
+.bg-darkblue{
+    background-color: rgb(9, 89, 138);
+}
+
+.bg-darkskyblue{
+    background-color: rgb(14, 129, 147);
+}
+.bg-skyblue{
+    background-color: skyblue;
+}
+
+.bg-turquoise{
+    background-color: turquoise;
+}
+
+.bg-darkturquoise{
+    background-color: rgb(10, 157, 86);
+}
+
+.bg-green{
+    background-color: rgb(24, 157, 143);
+}
+
+.bg-olive{
+    background-color: rgb(41, 159, 8);
+}
+
+.bg-yellow{
+    background-color: yellow;
+}
+
+.bg-orange{
+    background-color: orange;
+}
+
+.bg-darkorange{
+    background-color: rgb(174, 117, 11);
+}
+
+.bg-red{
+    background-color: red;
+}
+
+.bg-orange{
+    background-color: brown;
+}
+
+.min-vh-7{
+    min-height: 7vw;
+}
+
+.line-h-initial{
+    line-height: initial
+}

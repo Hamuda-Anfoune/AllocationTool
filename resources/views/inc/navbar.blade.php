@@ -30,7 +30,7 @@
                     </li>
                 @endif
                 <li class="nav-item">
-                    <a class="nav-link" href="/allocations/create">Allocations</a>
+                    <a class="nav-link" href="/allocations">Allocations</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/config">Configuration</a>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ConfigurationController extends Controller
 {
@@ -14,15 +15,18 @@ class ConfigurationController extends Controller
      */
     public function index()
     {
+        $title = 'Configuration - Dashbord';
+
         /* TODO:
-         *  Get data about module prefs
-         *  Get data about TA prefs
-         *  Get data about allocations if any
          *  Get data about done before weight
          *  Get data about language priority to TAs
+         *  Get data
          *
          *  Filter and organise this data and send to view
          */
+
+        $weight_for_done_before = DB::table('module_repeatition_weights')->select('1_time_weight')->where('type', '=', 'current')->first();
+        $language_weights =  DB::table('module_repeatition_weights')->where('type', '=', 'current')->get();
 
         return view('configurations.index');
     }
@@ -34,6 +38,11 @@ class ConfigurationController extends Controller
      */
     public function create()
     {
+        $title = 'Configuration - Edit';
+
+        //
+
+
         return view('configurations.add');
     }
 
@@ -57,7 +66,7 @@ class ConfigurationController extends Controller
             // There should be a tickbox to recalculate division factors or not
     }
 
-    public function updateDoneBefore(Request $request)
+    public function updateModuleDoneBefore(Request $request)
     {
         // VALIDATE
 

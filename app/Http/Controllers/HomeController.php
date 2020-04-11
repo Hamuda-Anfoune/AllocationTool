@@ -30,7 +30,7 @@ class HomeController extends Controller
         if(session()->get('account_type_id')== 001)
         {
             //
-            return redirect('config/');
+            return redirect('allocations/');
         }
         elseif(session()->get('account_type_id')== 002)
         {
