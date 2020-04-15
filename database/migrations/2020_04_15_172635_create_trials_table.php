@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsedLangaugesTable extends Migration
+class CreateTrialsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateUsedLangaugesTable extends Migration
      */
     public function up()
     {
-        Schema::create('used_langauges', function (Blueprint $table) {
-            $table->bigIncrements('field_id');
+        Schema::create('trials', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('module_id', 15);
             $table->string('language_id', 10);
             $table->smallInteger('priority');
@@ -35,6 +35,6 @@ class CreateUsedLangaugesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('used_langauges');
+        Schema::dropIfExists('trials');
     }
 }

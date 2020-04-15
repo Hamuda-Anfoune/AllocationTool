@@ -12,7 +12,8 @@ class ModuleRankOrderList extends Model
      * @var array
      */
     protected $fillable = [
-        'module_id', 'academic_year', 'ta_email', 'total_weight', 'did_before_weight',
+        'academic_year', 'module_id', 'ta_email', 'ta_total_weight', 'did_before_weight',
+        'module_priority_for_ta', 'module_priority_for_ta_weight', 'languages_similarity_weight'
     ];
 
     /**
@@ -21,8 +22,10 @@ class ModuleRankOrderList extends Model
      * @var array
      */
     protected $attributes = [
-        'total_weight' => 0.0,
-        'did_before_weight' => 0.0,
+        // 'ta_total_weight' => 0,
+        // 'did_before_weight' => 0,
+        // 'module_priority_for_ta' => 0,
+        // 'module_priority_for_ta_weight' => 0,
     ];
 
     /**

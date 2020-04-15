@@ -29,20 +29,20 @@ class CreateModuleRepeatitionWeightsTable extends Migration
         DB::table('module_repeatition_weights')->insert(
             array([
                     'type' => 'default',
-                    'repeated_times_1' => 50,
-                    'repeated_times_2' => 30,
+                    'repeated_times_1' => 10,
+                    'repeated_times_2' => 10,
                     'repeated_times_3' => 20,
-                    'repeated_times_4' => 10,
-                    'repeated_times_5' => 10,
+                    'repeated_times_4' => 30,
+                    'repeated_times_5' => 50,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')],
                 [
                     'type' => 'current',
-                    'repeated_times_1' => 50,
-                    'repeated_times_2' => 30,
+                    'repeated_times_1' => 10,
+                    'repeated_times_2' => 10,
                     'repeated_times_3' => 20,
-                    'repeated_times_4' => 10,
-                    'repeated_times_5' => 10,
+                    'repeated_times_4' => 30,
+                    'repeated_times_5' => 50,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')]
             )

@@ -15,7 +15,7 @@ class used_langauge extends Model
      * @var array
      */
     protected $fillable = [
-        'field_id', 'module_id', 'language_id', 'academic_year',
+        'field_id', 'module_id', 'language_id', 'priority', 'academic_year',
     ];
 
     /**

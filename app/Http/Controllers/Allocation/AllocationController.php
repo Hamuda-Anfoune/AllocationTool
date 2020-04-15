@@ -11,10 +11,9 @@ use App\Libraries\WeightsClass;
 
 class AllocationController extends Controller
 {
-    public function calculate(int $a, int $b)
-    {
-        return $a*$b;
-    }
+    /* TODO:
+     *  Hange how did_before is calculated to counting how many previous allocations where a TA is allocated to a module
+     */
 
     /**
      * Display a listing of the resource.
@@ -23,136 +22,7 @@ class AllocationController extends Controller
      */
     public function index()
     {
-        $basic_DB_access = new BasicDBClass();
-        $weights_class = new WeightsClass();
-        /* TODO - INDEX:
-          *  Get number of Modules
-          *  Get number of convenors
-          *  Get number of TAs
-          *  Get data about module prefs
-          *  Get data about TA prefs
-          *  Get data about allocations if any
-          *
-          *  Filter and organise this data and send to view
-          */
-        // return view('allocations.index');
-
-        echo  $weights_class->getWeightForModulePriority(3);
-
-        /*
-         * START OF FOREIGN CODE
-         */
-
-        /* TODO:
-         *  Get a list of Modules with submitted preferences,
-         *  Get a list of TAs who submitted preferences,
-         *  Get the TA ROL weights
-         *  Get the Lanugage Weights
-         *  Get the language Weighing Factors
-         *  Get the Module Repetition Weight
-         */
-        // echo  $weights_class->getWeightForModulePriority(2);
-        // Get current academic year
-        $current_academic_year = $basic_DB_access->getCurrentAcademicYear();
-
-        // list of modules with preferences
-        $modules_with_prefs = $basic_DB_access->getModulesWithPrefsForYear($current_academic_year);
-
-        // list of TAs with submitted prefs in the current academic year
-        // With preference IDs
-        $TAs_wtih_prefs = $basic_DB_access->getTAsWithPrefsForYear($current_academic_year);
-
-        $counter = 0;
-        foreach($modules_with_prefs as $module)
-        {
-            /*
-            * Handling TAs HERE
-            */
-
-            // Module counter
-            // echo ' this is module number'.$counter.': ';
-            $counter++;
-
-            // Get the TAs' ROL for modules
-            $module_choices = [];
-
-            foreach($TAs_wtih_prefs as $ta)
-            {
-                // Create an object of the module_ROL to store the TAs details
-                $ta_rank_details = new ModuleRankOrderList();
-
-                // Set basic attributes to the object: ModuleRankOrderList()
-                $ta_rank_details->module_id = $module->module_id;
-                $ta_rank_details->academic_year = $current_academic_year;
-                $ta_rank_details->ta_email = $ta->ta_email;
-
-                // Get data where module exists in TA's module choices for current year, preferences differ based on Academic year
-                $current_ta_with_current_module = DB::table('ta_module_choices')
-                                                    ->select('priority', 'did_before')
-                                                    ->where('preference_id', '=', $ta->preference_id)
-                                                    ->where('module_id', '=', $module->module_id)
-                                                    ->first();
-
-
-                // get priority if exists
-                // calculate weight
-
-                // print_r($current_ta_with_current_module);
-                // echo  $ta->ta_email;
-
-                // If module is a preference for TA
-                if($current_ta_with_current_module != null)
-                {
-                    // calculate weight to give if done before
-                    if($current_ta_with_current_module->did_before == true)
-                    {
-                        /* TODO:
-                         *
-                         *  Find a way to calculate how many times current ta has assisted with current module before
-                         */
-
-                        // Register weight of assissting with this module before
-                        $ta_rank_details->did_before_weight = $weights_class->getModuleRepetitionWeights(1);
-
-                        // Add weight of assissting before to total weight of TA for current module
-                        $ta_rank_details->total_weight =+ $weights_class->getModuleRepetitionWeights(1);
-                    }
-
-                    // calculate weight to give to TA based on module priority
-                    // $current_ta_with_current_module->priority;
-                    echo  $ta_rank_details;
-
-
-                }else
-                {
-                    echo 'false';
-                }
-
-
-
-            }
-
-            // print_r($current_ta_with_current_module);
-            // print_r($current_ta_with_current_module->{array(0)}->module_id);
-
-
-            /*
-            * DONE WITH TAs HERE
-            */
-        }
-
-        // return $module_choices;
-
-
-        /*
-         *  SCRAP CODE HERE
-         */
-
-        // checking for repetitions
-        // print_r (collect($modules_with_prefs)->unique(function ($item) {
-        //     return $item['module_id'];
-        // }));
-
+        return view('allocations.index');
     }
 
     /**
@@ -223,25 +93,143 @@ class AllocationController extends Controller
 
     public function createModuleROLs() //ROL: Rank Order List: list of TAs in order of preference
     {
-        /* TODO:
-         *  Get a list of Modules with submitted preferences,
-         *  Get a list of TAs who submitted preferences,
-         *  Get the TA ROL weights
-         *  Get the Lanugage Weights
-         *  Get the language Weighing Factors
-         *  Get the Module Repetition Weight
+        $basic_DB_access = new BasicDBClass();
+        $weights_class = new WeightsClass();
+        /* TODO - INDEX:
+          *  Get number of Modules
+          *  Get number of convenors
+          *  Get number of TAs
+          *  Get data about module prefs
+          *  Get data about TA prefs
+          *  Get data about allocations if any
+          *
+          *  Filter and organise this data and send to view
+          */
+        // return view('allocations.index');
+
+
+
+        /*
+         * START OF FOREIGN CODE
          */
 
+        /* TODO:
+         *  Calculate Weight of having the module as choice for TA
+         *      - did_before
+         *      - weight of priority of module in ROL
+         *
+         *  Calculate weight of having programming languages in common with module
+         */
+
+
         // Get current academic year
-        $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();    // - first(): Returns a simple object,
+        $current_academic_year = $basic_DB_access->getCurrentAcademicYear();
 
         // list of modules with preferences
-        $modules_with_prefs = DB::table('module_preferences')->select('module_id')->where('academic_year', '=', $current_academic_year->year)->get();
+        $modules_with_prefs = $basic_DB_access->getModulesWithPrefsForYear($current_academic_year);
 
-        print_r (collect($modules_with_prefs)->unique(function ($item) {
-            return $item['module_id'];
-        }));
+        // list of TAs with submitted prefs in the current academic year
+        // With preference IDs
+        $TAs_wtih_prefs = $basic_DB_access->getTAsWithPrefsForYear($current_academic_year);
 
+        foreach($modules_with_prefs as $module)
+        {
+            // Get used languages for this module
+            $module_used_languages = $basic_DB_access->getUsedLanguagesForModuleForYear($module->module_id, $current_academic_year);
+
+            /*
+            * Handling TAs HERE
+            */
+
+            foreach($TAs_wtih_prefs as $ta)
+            {
+                // Create an object of the module_ROL to store the TAs details
+                $ta_rank_details = new ModuleRankOrderList();
+
+                // Set basic attributes to the object: ModuleRankOrderList()
+                $ta_rank_details->module_id = $module->module_id;
+                $ta_rank_details->academic_year = $current_academic_year;
+                $ta_rank_details->ta_email = $ta->ta_email;
+
+                // Get data where module exists in TA's module choices for current year, preferences differ based on Academic year
+                $current_ta_with_current_module = DB::table('ta_module_choices')
+                                                    ->select('priority', 'did_before')
+                                                    ->where('preference_id', '=', $ta->preference_id)
+                                                    ->where('module_id', '=', $module->module_id)
+                                                    ->first();
+
+                /*
+                 *  CALCULATE WEIGHTS FOR:
+                 *      ASSISSTING WITH MODULE BEFORE
+                 *      PRIORITY OF MODULE IN THE RANK ORDER LIST (ROL)
+                 */
+                // If module is a preference for TA
+                if($current_ta_with_current_module != null)
+                {
+                    // calculate weight to give if done before
+                    if($current_ta_with_current_module->did_before == true)
+                    {
+                        /* TODO:
+                         *
+                         *  Find a way to calculate how many times current ta has assisted with current module before
+                        */
+
+                        $did_before_weight = $weights_class->getModuleRepetitionWeights($ta->ta_email, $module->module_id);
+
+                        // WEIGHT FOR ASSISSTING WITH MODULE BEFORE
+                        // Register weight of assissting with this module before
+                        $ta_rank_details->did_before_weight = $did_before_weight;
+                        // Add weight of assissting before to total weight of TA for current module
+                        $ta_rank_details->ta_total_weight += $did_before_weight;
+                    }
+
+                    // WEIGHT FOR PRIORITY OF MODULE IN THE RANK ORDER LIST (ROL)
+                    // calculate weight to give to TA based on module priority
+                    $ta_rank_details->module_priority_for_ta = $current_ta_with_current_module->priority;
+                    $ta_rank_details->module_priority_for_ta_weight = $weights_class->getWeightForModulePriority($current_ta_with_current_module->priority);
+                    $ta_rank_details->ta_total_weight += $weights_class->getWeightForModulePriority($current_ta_with_current_module->priority);
+                }
+
+                // WEIGHT FOR HAVING PROGRAMMING LANGUAGES IN COMMON
+                // Get a language choices for TA
+                $ta_language_choices = $basic_DB_access->getTaLanguageChoicesForYear($ta->preference_id)->toArray();
+
+                foreach($module_used_languages as $language)
+                {
+                    // compare language with TA_language
+                    foreach($ta_language_choices as $ta_language_choice)
+                    {
+                        if($language->language_id === $ta_language_choice->language_id) // Certified Working!!
+                        {
+                            // echo 'WE HAve a match ppl!';
+                            // echo 'target: '. $language->language_id . 'goal: '. $ta_language_choice->language_id;
+
+                            //Get the language pririty to calculate its weight which willbe added to the TA_total_weight
+                            $language_priority_weight =  $weights_class->getWeightForLanguagePriority($language->priority);
+
+                            // Add weight ot total weight
+                            $ta_rank_details->ta_total_weight += $language_priority_weight;
+                            // Add weight to weight for similar language choices between TA & module
+                            $ta_rank_details->languages_similarity_weight += $language_priority_weight;
+                        }
+
+                    }
+
+                    /*
+                     * --------------------------
+                     *
+                     *        SAVE TO DB
+                     *
+                     * --------------------------
+                    */
+                    // $ta_rank_details->save();
+
+                    return redirect('/allocations')->with('success', 'Modules Rank Order List Created');
+                }
+
+            } // End of foreach TA
+
+        } // end of foreach module
     }
 
     /**

@@ -15,11 +15,15 @@ class CreateModuleRankOrderListsTable extends Migration
     {
         Schema::create('module_rank_order_lists', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('module_id', 15);
             $table->string('academic_year', 15);
+            $table->string('module_id', 15);
             $table->string('ta_email');
-            $table->float('total_weight');
-            $table->float('did_before_weight');
+            $table->float('ta_total_weight')->default(0);
+            $table->float('did_before_weight')->default(0);
+            $table->smallInteger('module_priority_for_ta')->default(0);
+            $table->float('module_priority_for_ta_weight')->default(0);
+            $table->float('languages_similarity_weight')->default(0);
+
             $table->timestamps();
 
             //RELATIPNSHIPS

@@ -18,3 +18,4 @@
 - language_weights:                     2020_04_10_115827_create_language_weights_table
 - module_priority_weights:              2020_04_15_120715_create_module_priority_weights_table
 - module_rank_order_lists               2020_04_13_173311_create_module_rank_order_lists_table
+- module_repeatition_weights:           2020_04_10_125742_create_module_repeatition_weights_table

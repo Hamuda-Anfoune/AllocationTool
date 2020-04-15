@@ -228,12 +228,13 @@ class moduleController extends Controller
                 $module_pref->save();
 
                 // If languages have been chosen
-                if(sizeof($used_languages_array) != 0)
+                if(sizeof($used_languages_array) > 0)
                 {
                     // Save to ta_module_choices table
                     for($j = 0; $j <= $arrayLength; $j++)
                     {
                         $used_language_to_save = $used_languages_array[$j];
+                        $used_language_to_save->priority = $j+1;
                         $used_language_to_save->save();
                     }
                 }

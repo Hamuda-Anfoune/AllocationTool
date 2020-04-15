@@ -42,6 +42,8 @@ Route::get('/allocations', 'Allocation\AllocationController@index');
 
 Route::get('/allocations/create', 'Allocation\AllocationController@create');
 
+Route::get('/allocations/module/rol', 'Allocation\AllocationController@createModuleROLs');
+
 Route::get('/config', 'Admin\ConfigurationController@index');
 
 Route::get('/config/add', 'Admin\ConfigurationController@create')->name('addConfigs');

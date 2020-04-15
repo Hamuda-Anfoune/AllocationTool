@@ -17,11 +17,8 @@ class CreateLanguageWeightsTable extends Migration
         Schema::create('language_weights', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('type', 15); // type of entry: default || current
-            $table->float('language_weight_1');
-            $table->float('language_weight_2');
-            $table->float('language_weight_3');
-            $table->float('language_weight_4');
-            $table->float('language_weight_5');
+            $table->smallInteger('order');
+            $table->float('weight');
             $table->timestamps();
         });
 
@@ -30,21 +27,71 @@ class CreateLanguageWeightsTable extends Migration
             array(
                 [
                     'type' => 'default',
-                    'language_weight_1' => 50,
-                    'language_weight_2' => 30,
-                    'language_weight_3' => 20,
-                    'language_weight_4' => 10,
-                    'language_weight_5' => 10,
+                    'order' => 1,
+                    'weight' => 50,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'default',
+                    'order' => 2,
+                    'weight' => 30,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'default',
+                    'order' => 3,
+                    'weight' => 20,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'default',
+                    'order' => 4,
+                    'weight' => 10,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'default',
+                    'order' => 5,
+                    'weight' => 10,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'type' => 'current',
-                    'language_weight_1' => 50,
-                    'language_weight_2' => 30,
-                    'language_weight_3' => 20,
-                    'language_weight_4' => 10,
-                    'language_weight_5' => 10,
+                    'order' => 1,
+                    'weight' => 50,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'current',
+                    'order' => 2,
+                    'weight' => 30,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'current',
+                    'order' => 3,
+                    'weight' => 20,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'current',
+                    'order' => 4,
+                    'weight' => 10,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'type' => 'current',
+                    'order' => 5,
+                    'weight' => 10,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ]
