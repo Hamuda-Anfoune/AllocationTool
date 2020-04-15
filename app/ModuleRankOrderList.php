@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WeighingFactor extends Model
+class ModuleRankOrderList extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,17 @@ class WeighingFactor extends Model
      * @var array
      */
     protected $fillable = [
-        'type', 'factor_1', 'factor_2', 'factor_3', 'factor_4', 'factor_5',
+        'module_id', 'academic_year', 'ta_email', 'total_weight', 'did_before_weight',
+    ];
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'total_weight' => 0.0,
+        'did_before_weight' => 0.0,
     ];
 
     /**
@@ -21,7 +31,7 @@ class WeighingFactor extends Model
      * @var array
      */
     protected $hidden = [
-        // 'preference_id',
+
     ];
 
     /**
@@ -30,6 +40,6 @@ class WeighingFactor extends Model
      * @var array
      */
     protected $casts = [
-
+        // 'did_before' => 'boolean', // cast to bool as it's saved in DB as integer
     ];
 }

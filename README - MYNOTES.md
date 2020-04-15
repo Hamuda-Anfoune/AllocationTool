@@ -13,8 +13,7 @@
 
 ## TODO:
 -----------------
- * Create a view for the admin to assign the weights for each module preferece;
-    e.g. having helped with the module before would have 3 poiints in the weighing process
+ * Add account_type to session upon automatic signin after new account registration
 
  * Finalise show functionality for TA preferences
 

@@ -59,17 +59,9 @@
 
                             <div class="col-md-6">
                                 <select name="no_of_contact_hours" id="no_of_contact_hours" class="custom-select">
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
+                                    @for($i=1; $i<= 40; $i++)
+                                        <option value="{{$i}}" {{ old('no_of_contact_hours') == $i ? 'selected' : '' }}>{{$i}}</option>
+                                    @endfor
                                 </select>
                                 @error('no_of_contact_hours')
                                     <span class="invalid-feedback" role="alert">
@@ -84,17 +76,9 @@
 
                             <div class="col-md-6">
                                 <select name="no_of_marking_hours" id="no_of_marking_hours" class="custom-select">
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
+                                    @for($i=1; $i<= 40; $i++)
+                                        <option value="{{$i}}" {{ old('no_of_marking_hours') == $i ? 'selected' : '' }}>{{$i}}</option>
+                                    @endfor
                                 </select>
                                 @error('no_of_marking_hours')
                                     <span class="invalid-feedback" role="alert">

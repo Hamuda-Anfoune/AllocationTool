@@ -14,7 +14,7 @@
 }
 
 .widget-primary{
-    min-height: 5vw;
+    min-height: 6vw;
     /* font-size: 1.5vw; */
     text-align: center;
     vertical-align: middle;
@@ -61,6 +61,7 @@
 .hyperspan hr {
   color: white;
   background-color: white;
+  margin: 10px 0px 5px 0px;
 }
 
 .hyperspan-col-4 hr {
@@ -70,8 +71,13 @@
 }
 
 .hyperspan-col-4 p {
-    margin: 7.5% 0px 0px 16px;
+    /* margin: 7.5% 0px 0px 16px; */
+    margin: 0% 0px 0px 0px;
     line-height: initial;
+}
+
+.card-col-4-title{
+    font-size: 20px  !important;
 }
 
 .bg-violet{
@@ -129,8 +135,8 @@
     background-color: brown;
 }
 
-.min-vh-7{
-    min-height: 7vw;
+.min-vh-8{
+    min-height: 8vw;
 }
 
 .line-h-initial{

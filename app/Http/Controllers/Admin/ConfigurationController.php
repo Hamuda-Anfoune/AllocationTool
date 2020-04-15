@@ -25,10 +25,15 @@ class ConfigurationController extends Controller
          *  Filter and organise this data and send to view
          */
 
-        $weight_for_done_before = DB::table('module_repeatition_weights')->select('1_time_weight')->where('type', '=', 'current')->first();
-        $language_weights =  DB::table('module_repeatition_weights')->where('type', '=', 'current')->get();
+        $module_repeatition_weights = DB::table('module_repeatition_weights')->select('1_time_weight')->where('type', '=', 'current')->first();
+        $language_weights =  DB::table('language_weights')->where('type', '=', 'current')->get();
+        $weighing_factors = DB::table('weighing_factors')->where('type', '=', 'current')->get();
+        $rank_order_list_weights = DB::table('rank_order_list_weights')->where('type', '=', 'current')->get();
 
-        return view('configurations.index');
+        return view('configurations.index')->with('module_repeatition_weights',$module_repeatition_weights)
+                                            ->with('language_weights',$language_weights)
+                                            ->with('weighing_factors',$weighing_factors)
+                                            ->with('rank_order_list_weights',$rank_order_list_weights);
     }
 
     /**

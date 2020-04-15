@@ -12,7 +12,7 @@ class ModuleRepeatitionWeight extends Model
      * @var array
      */
     protected $fillable = [
-        'type', '1_time_weight', '2_time_weight', '3_time_weight', '4_time_weight', '5_time_weight',
+        'type', 'repeated_times_1', 'repeated_times_2', 'repeated_times_3', 'repeated_times_4', 'repeated_times_5',
     ];
 
     /**

@@ -17,11 +17,11 @@ class CreateModuleRepeatitionWeightsTable extends Migration
         Schema::create('module_repeatition_weights', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('type', 15); // type of entry: default || current
-            $table->float('1_time_weight');
-            $table->float('2_time_weight');
-            $table->float('3_time_weight');
-            $table->float('4_time_weight');
-            $table->float('5_time_weight');
+            $table->float('repeated_times_1');
+            $table->float('repeated_times_2');
+            $table->float('repeated_times_3');
+            $table->float('repeated_times_4');
+            $table->float('repeated_times_5');
             $table->timestamps();
         });
 
@@ -29,20 +29,20 @@ class CreateModuleRepeatitionWeightsTable extends Migration
         DB::table('module_repeatition_weights')->insert(
             array([
                     'type' => 'default',
-                    '1_time_weight' => 50,
-                    '2_time_weight' => 30,
-                    '3_time_weight' => 20,
-                    '4_time_weight' => 10,
-                    '5_time_weight' => 10,
+                    'repeated_times_1' => 50,
+                    'repeated_times_2' => 30,
+                    'repeated_times_3' => 20,
+                    'repeated_times_4' => 10,
+                    'repeated_times_5' => 10,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')],
                 [
                     'type' => 'current',
-                    '1_time_weight' => 50,
-                    '2_time_weight' => 30,
-                    '3_time_weight' => 20,
-                    '4_time_weight' => 10,
-                    '5_time_weight' => 10,
+                    'repeated_times_1' => 50,
+                    'repeated_times_2' => 30,
+                    'repeated_times_3' => 20,
+                    'repeated_times_4' => 10,
+                    'repeated_times_5' => 10,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')]
             )

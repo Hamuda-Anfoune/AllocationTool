@@ -312,7 +312,7 @@ class TAController extends Controller
             // echo session('email');
             // session()->flash('Success', 'Preferences saved successfully!');
 
-            return redirect('/preferences/ta')->with('success', 'Preference Stored'); // success: type of message, Preference Created: msg body
+            return redirect('home')->with('success', 'Preference Stored'); // success: type of message, Preference Created: msg body
         }
     }
 

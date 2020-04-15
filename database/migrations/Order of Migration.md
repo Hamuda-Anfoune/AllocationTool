@@ -1,19 +1,20 @@
 ## ORDER OF MIGRATION:
 ---------------------
-- academic_years:           2020_03_22_184905_create_academic_years_table
-- university_users:         2020_03_16_080857_create_university_users_table
-- account_types:            2020_03_16_081115_create_account_types_table
-- users:                    2014_10_12_000000_create_users_table
-- modules :                 2020_03_16_081209_create_modules_table
-- ta_preferences:           2020_03_16_081305_create_ta_preferences_table
-- ta_module_choices:        2020_03_16_081329_create_ta_module_choices_table
-- module_preferences:       2020_03_16_081412_create_module_preferences_table
-- allocations:              2020_03_16_081429_create_allocations_table
-- languages:                2020_03_16_081238_create_languages_table
-- used_languages:           2020_03_16_081620_create_used_langauges_table
-- Ta_lanaguage_choices:     2020_04_04_120824_create_ta_language_choices_table
-- password_resets:          2014_10_12_100000_create_password_resets_table
-- failed_jobs:              2019_08_19_000000_create_failed_jobs_table
-- division_factors:         2020_04_09_192146_create_division_factors_table
-- weigning_factors:         2020_04_09_192605_create_weighing_factors_table
-- acual_weights:            2020_04_09_192146_create_division_factors_table
+- academic_years:                       2020_03_22_184905_create_academic_years_table
+- university_users:                     2020_03_16_080857_create_university_users_table
+- account_types:                        2020_03_16_081115_create_account_types_table
+- users:                                2014_10_12_000000_create_users_table
+- modules :                             2020_03_16_081209_create_modules_table
+- ta_preferences:                       2020_03_16_081305_create_ta_preferences_table
+- ta_module_choices:                    2020_03_16_081329_create_ta_module_choices_table
+- module_preferences:                   2020_03_16_081412_create_module_preferences_table
+- allocations:                          2020_03_16_081429_create_allocations_table
+- languages:                            2020_03_16_081238_create_languages_table
+- used_languages:                       2020_03_16_081620_create_used_langauges_table
+- Ta_lanaguage_choices:                 2020_04_04_120824_create_ta_language_choices_table
+- password_resets:                      2014_10_12_100000_create_password_resets_table
+- failed_jobs:                          2019_08_19_000000_create_failed_jobs_table
+- weigning_factors:                     2020_04_09_192605_create_weighing_factors_table
+- language_weights:                     2020_04_10_115827_create_language_weights_table
+- module_priority_weights:              2020_04_15_120715_create_module_priority_weights_table
+- module_rank_order_lists               2020_04_13_173311_create_module_rank_order_lists_table

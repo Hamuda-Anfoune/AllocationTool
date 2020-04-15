@@ -4,15 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WeighingFactor extends Model
+class ModulePriorityWeights extends Model
 {
-    /**
+        /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'type', 'factor_1', 'factor_2', 'factor_3', 'factor_4', 'factor_5',
+        'type', 'module_weight_1', 'module_weight_2', 'module_weight_3', 'module_weight_4','module_weight_5',
     ];
 
     /**

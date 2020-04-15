@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             // $table->rememberToken();
             // $table->timestamps();
             $table->string('email', 50)->primary();
+            // $table->string('user_id', 100)->unique(); // USE AS KEY BECAUSE UNIVERSITITES USE UNIQUE EMAILS
             $table->string('name');
             $table->string('account_type_id',10); // 10: is the length of the string
             $table->string('password');

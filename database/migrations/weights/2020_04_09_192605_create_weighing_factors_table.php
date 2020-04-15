@@ -17,11 +17,11 @@ class CreateWeighingFactorsTable extends Migration
         Schema::create('weighing_factors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('type', 15); // type of entry: default || current
-            $table->float('as_1');
-            $table->float('as_2');
-            $table->float('as_3');
-            $table->float('as_4');
-            $table->float('as_5');
+            $table->float('factor_1');
+            $table->float('factor_2');
+            $table->float('factor_3');
+            $table->float('factor_4');
+            $table->float('factor_5');
             $table->timestamps();
         });
 
@@ -30,21 +30,21 @@ class CreateWeighingFactorsTable extends Migration
             array(
                 [
                     'type' => 'default',
-                    'as_1' => 1,
-                    'as_2' => 1,
-                    'as_3' => 2,
-                    'as_4' => 3,
-                    'as_5' => 5,
+                    'factor_1' => 1,
+                    'factor_2' => 1,
+                    'factor_3' => 2,
+                    'factor_4' => 3,
+                    'factor_5' => 5,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'type' => 'current',
-                    'as_1' => 1,
-                    'as_2' => 1,
-                    'as_3' => 2,
-                    'as_4' => 3,
-                    'as_5' => 5,
+                    'factor_1' => 1,
+                    'factor_2' => 1,
+                    'factor_3' => 2,
+                    'factor_4' => 3,
+                    'factor_5' => 5,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                     ]
