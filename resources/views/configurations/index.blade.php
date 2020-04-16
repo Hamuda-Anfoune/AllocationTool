@@ -16,32 +16,25 @@
                             The entries below are used in a weighing process.<br>
                             The process aims to create a Rank Order List of preferred TAs for each module.<br>
                             The process targets one module at a time.<br>
-                            It compares the target module's preferences with the ones of each TA:<br>
-                                i.e.    programming languages priority list.<br>
-                                        The rank of the target module in the target TA's Rank Order List.<br>
-                                        Whether or not the target TA has assisted with the terget module before.<br>
+                            It compares the target module's preferences with the ones of each TA, i.e.<br>
+                            <ul>
+                                <li>The rank of the target module in the target TA's Rank Order List.</li>
+                                <li>Whether or not the target TA has assisted with the terget module before.</li>
+                                <li>programming languages priority list.</li>
+                            </ul>
                             The level of accordance with each of the preferences awards the TA certain weights.<br>
                             The target module will have a Rank Order List, and the TA with the most weight should be on the top.<br>
                             <br>
                             <h5><strong>HOW?</strong></h5>
-                            <strong>Module Repetition Weight:</strong><br>
-                            This value will be added to the TA's total weihgt if the TA has assisted with the target module before.<br>
-                            <br>
                             <strong>Rank Order List:</strong><br>
                             A specific value will be added to the TA's total weight based on the order of the target module in the TA's Rank Oreder List.<br>
                             <br>
-                            <strong>Programming Language Priority List:</strong><br>
-                            There are 5 <i>main weights</i> in this process.<br>
-                            A TA will be awarder the value of the 1st weight if he/she has the same 1st choice of programming language as the module.<br>
-                            The same rule applies on the other weights. <br>
-                            If a language has different oreders in the TA's and module's lists, we use the Weiging Factors.<br>
+                            <strong>Module Repetition Weight:</strong><br>
+                            This value will be added to the TA's total weihgt if the TA has assisted with the target module before.<br>
                             <br>
-                            <strong>Weigning Factors:</strong><br>
-                            They are values used to calculate the weights to award the TA if they have a preferred programming language in common with
-                             the target module, but in different order.<br>
-                            e.g. If language A  was the modules's 1st choice, but the TA's 3rd choice.<br>
-                            In this case the 1st main weight will be divided on the 3rd weighing factor,<br>
-                            and the outcome will be the value to add to the TA's total weight.<br>
+                            <strong>Programming Language Priority List:</strong><br>
+                            Each TA's preferred programming languages will be compared against the module's; if preferred languages match, the TA will be
+                            awarded weight based on the priority of the programming language for the module.<br>
                         </div>
                     </div>
                 </div>
@@ -49,6 +42,118 @@
             <div style="height:4vw"></div>
         </div>
     </div>
+
+    <div class="row md-col-12"> {{-- START OF BOARD NO. 1 --}}
+        <div class="col-md-3">
+            <div id="langs" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                </div>
+                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
+                    <p class="widget-title">Programming Languages</p>
+                </div>
+            </div>
+            <div id="no-of-convenors" class="widget-div bg-skyblue mb-3 min-vh-8">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <div class="d-flex align-content-center flex-wrap justify-content-center">
+                            <p class="widget-title">Module Convenors</p>
+                        </div>
+                        <hr>
+                        <span class="fa-4x mb-0 line-h-initial">15</span>
+                    </span>
+                </a>
+            </div>
+            <div id="lang-weight-2" class="widget-div bg-skyblue mb-3 min-vh-8">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">2nd Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+            <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-8">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">3rd Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div>    {{-- END OF 1ST COLUMN --}}
+
+        <div class="col-md-3">    {{-- START OF 2ND COLUMN --}}
+            <div id="done-before-weight-head" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                </div>
+                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
+                    <p class="widget-title">Done Before</p>
+                </div>
+            </div>
+            <div id="no-of-tas" class="widget-div bg-green mb-3 min-vh-8">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <div class="d-flex align-content-center flex-wrap justify-content-center">
+                            <p class="widget-title">Teaching Assistants</p>
+                        </div>
+                        <hr>
+                        <span class="fa-4x mb-0 line-h-initial">32</span>
+                    </span>
+                </a>
+            </div>
+        </div>  {{-- END OF 2ND COLUMN --}}
+
+        <div class="col-md-3">  {{-- START OF 3RD COLUMN --}}
+            <div id="lang-weight-primary" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                </div>
+                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
+                    <p class="widget-title">Programming Languages</p>
+                </div>
+            </div>
+            <div id="lang-weight-first" class="widget-div bg-orange mb-3 min-vh-8">
+                <a class="btn col-md-12" href="http://www.google.com">
+                    <span class=" hyperspan">
+                        <p class="widget-title">1st Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div>  {{-- END OF 3RD COLUMN --}}
+
+        <div class="col-md-3">  {{-- START OF 4TH COLUMN --}}
+            <div id="lang-weight-primary" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
+                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                    <span class="fas fa-balance-scale fa-2x"></span>
+                </div>
+                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
+                    <p class="widget-title">Programming Languages</p>
+                </div>
+            </div>
+            <div id="lang-weight-first" class="widget-div bg-red mb-3 min-vh-8">
+                <a class="btn col-md-12" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">
+                    <span class=" hyperspan">
+                        <p class="widget-title">1st Language Choice</p>
+                        <hr>
+                        Happy Days!
+                        <br>
+                        hahaha
+                    </span>
+                </a>
+            </div>
+        </div> {{-- END OF 4TH COLUMN --}}
+    </div> {{-- END OF BOARD NO. 1 --}}
 
     <div class="row md-col-12"> {{-- START OF BOARD NO. 2 --}}
         <div class="col-md-12"> {{-- SCREEN-FULL HEADER --}}
@@ -60,105 +165,53 @@
             </div>
         </div> {{-- END OF SCREEN-FULL HEADER --}}
 
-        <div class="col-md-4"> {{-- weighing FACTORS --}}
-            <div id="lang_weight_1" class="widget-div bg-darkskyblue mb-3 min-vh-8">
-                <a class="btn col-md-12" data-toggle="modal" data-target="#weighing_factors_modal">
-                    <span class=" hyperspan-col-4">
-                        <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <span class="my-3" style="font-size:20px"><strong>Weighing Factors</strong></span>
-                        </div>
-                        <hr>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-4x mb-0 line-h-initial">{{$weighing_factors[0]->factor_1}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 1st Preference</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{$weighing_factors[0]->factor_2}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 2nd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{$weighing_factors[0]->factor_3}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 3rd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{$weighing_factors[0]->factor_4}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 4th</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{$weighing_factors[0]->factor_5}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 5th</p>
-                            </div>
-                        </div>
-                    </span>
-                </a>
-            </div>
-        </div> {{-- END OF Weighing FACTORS --}}
 
         <div class="col-md-4"> {{-- 1ST LANGUAGE CHOICE --}}
             <div id="lang_weight_1" class="widget-div bg-skyblue mb-3 min-vh-8">
                 <a class="btn col-md-12" data-toggle="modal" data-target="#lang_modal_1">
                     <span class=" hyperspan-col-4">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <span class="my-3" style="font-size:20px"><strong>Convenor's 1st Choice</strong></span>
+                            <span class="my-3" style="font-size:20px"><strong>Programming Languages Weights</strong></span>
                         </div>
                         <hr>
                         <div class="row mx-1">
                             <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-4x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_1)/($weighing_factors[0]->factor_1))}}</span>
+                                <span class="fa-4x mb-0 line-h-initial">{{$language_weights[1]}}</span>
                             </div>
                             <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 1st Preference</p>
+                                <p>As module's 1st Preference</p>
                             </div>
                         </div>
                         <div class="row mx-1">
                             <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_1)/($weighing_factors[0]->factor_2))}}</span>
+                                <span class="fa-3x mb-0 line-h-initial">{{$language_weights[2]}}</span>
                             </div>
                             <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 2nd</p>
+                                <p>As module's 2nd</p>
                             </div>
                         </div>
                         <div class="row mx-1">
                             <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_1)/($weighing_factors[0]->factor_3))}}</span>
+                                <span class="fa-3x mb-0 line-h-initial">{{$language_weights[3]}}</span>
                             </div>
                             <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 3rd</p>
+                                <p>As module's 3rd</p>
                             </div>
                         </div>
                         <div class="row mx-1">
                             <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_1)/($weighing_factors[0]->factor_4))}}</span>
+                                <span class="fa-3x mb-0 line-h-initial">{{$language_weights[4]}}</span>
                             </div>
                             <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 4th</p>
+                                <p>As module's 4th</p>
                             </div>
                         </div>
                         <div class="row mx-1">
                             <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_1)/($weighing_factors[0]->factor_5))}}</span>
+                                <span class="fa-3x mb-0 line-h-initial">{{$language_weights[5]}}</span>
                             </div>
                             <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 5th</p>
+                                <p>As module's 5th</p>
                             </div>
                         </div>
                     </span>
@@ -166,218 +219,7 @@
             </div>
         </div>  {{-- END OF 1ST LANGUAGE CHOICE --}}
 
-        <div class="col-md-4"> {{-- 2ND LANGUAGE CHOICE --}}
-            <div id="lang_weight_2" class="widget-div bg-darkturquoise mb-3 min-vh-8">
-                <a class="btn col-md-12"  data-toggle="modal" data-target="#lang_modal_2">
-                    <span class=" hyperspan-col-4">
-                        <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <span class="my-3" style="font-size:20px"><strong>Convenor's 2nd Choice</strong></span>
-                        </div>
-                        <hr>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_2)/($weighing_factors[0]->factor_2))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 1st Preference</p>
-                            </div>
-                        </div>
 
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-4x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_2)/($weighing_factors[0]->factor_1))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 2nd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_2)/($weighing_factors[0]->factor_3))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 3rd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_2)/($weighing_factors[0]->factor_4))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 4th</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_2)/($weighing_factors[0]->factor_5))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 5th</p>
-                            </div>
-                        </div>
-                    </span>
-                </a>
-            </div>
-        </div> {{-- END OF 2ND LANGUAGE CHOICE --}}
-
-        <div class="col-md-4"> {{-- 3RD LANGUAGE CHOICE --}}
-            <div id="lang_weight_3" class="widget-div bg-olive mb-3 min-vh-8">
-                <a class="btn col-md-12" data-toggle="modal" data-target="#lang_modal_3">
-                    <span class=" hyperspan-col-4">
-                        <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <span class="my-3" style="font-size:20px"><strong>Convenor's 3rd Choice</strong></span>
-                        </div>
-                        <hr>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_3)/($weighing_factors[0]->factor_4))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 1st Preference</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_3)/($weighing_factors[0]->factor_2))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 2nd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-4x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_3)/($weighing_factors[0]->factor_1))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 3rd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_3)/($weighing_factors[0]->factor_3))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 4th</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_3)/($weighing_factors[0]->factor_5))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 5th</p>
-                            </div>
-                        </div>
-                    </span>
-                </a>
-            </div>
-        </div> {{-- END OF 3RD LANGUAGE CHOICE --}}
-
-        <div class="col-md-4"> {{-- 4TH LANGUAGE CHOICE --}}
-            <div id="lang_weight_4" class="widget-div bg-orange mb-3 min-vh-8">
-                <a class="btn col-md-12"  data-toggle="modal" data-target="#lang_modal_4">
-                    <span class=" hyperspan-col-4">
-                        <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <span class="my-3" style="font-size:20px"><strong>Convenor's 4th Choice</strong></span>
-                        </div>
-                        <hr>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_4)/($weighing_factors[0]->factor_5))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 1st Preference</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_4)/($weighing_factors[0]->factor_4))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 2nd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_4)/($weighing_factors[0]->factor_2))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 3rd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-4x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_4)/($weighing_factors[0]->factor_1))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 4th</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_4)/($weighing_factors[0]->factor_3))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 5th</p>
-                            </div>
-                        </div>
-                    </span>
-                </a>
-            </div>
-        </div> {{-- END OF 4TH LANGUAGE CHOICE --}}
-
-        <div class="col-md-4"> {{-- 5TH LANGUAGE CHOICE --}}
-            <div id="lang_weight_5" class="widget-div bg-red mb-3 min-vh-8">
-                <a class="btn col-md-12" data-toggle="modal" data-target="#lang_modal_5">
-                    <span class=" hyperspan-col-4">
-                        <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <span class="my-3" style="font-size:20px"><strong>Convenor's 5th Choice</strong></span>
-                        </div>
-                        <hr>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_5)/($weighing_factors[0]->factor_5))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 1st Preference</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_5)/($weighing_factors[0]->factor_4))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 2nd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_5)/($weighing_factors[0]->factor_3))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 3rd</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-3x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_5)/($weighing_factors[0]->factor_2))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 4th</p>
-                            </div>
-                        </div>
-                        <div class="row mx-1">
-                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                                <span class="fa-4x mb-0 line-h-initial">{{round(($language_weights[0]->language_weight_5)/($weighing_factors[0]->factor_1))}}</span>
-                            </div>
-                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
-                                <p>As TA's 5th</p>
-                            </div>
-                        </div>
-                    </span>
-                </a>
-            </div>
-        </div> {{-- END OF 5TH LANGUAGE CHOICE --}}
     </div> {{-- END OF BOARD NO. 2 --}}
 
     {{-- START OF MODALS --}}

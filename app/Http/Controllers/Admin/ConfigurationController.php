@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Libraries\WeightsClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,6 +18,7 @@ class ConfigurationController extends Controller
     {
         $title = 'Configuration - Dashbord';
 
+        $weights_class = new WeightsClass();
         /* TODO:
          *  Get data about done before weight
          *  Get data about language priority to TAs
@@ -25,20 +27,14 @@ class ConfigurationController extends Controller
          *  Filter and organise this data and send to view
          */
 
-        // REwok on $language_weights based on new table structure
-
-        $module_repeatition_weights = DB::table('module_repeatition_weights')->select('1_time_weight')->where('type', '=', 'current')->first();
-        $language_weights_raw =  DB::table('language_weights')->where('type', '=', 'current')->get()->toArray();
-        $weighing_factors = DB::table('weighing_factors')->where('type', '=', 'current')->get();
-        $rank_order_list_weights = DB::table('rank_order_list_weights')->where('type', '=', 'current')->get();
-
-        // Convert to a simple array where order is key amd weight is value
-        $language_weights = array_column($language_weights_raw, 'weight', 'order');
+        $module_repeatition_weights = $weights_class->getOneModuleRepetitionWeight(1);
+        $language_weights = $weights_class->getWeightForAllLanguagePriorities();
+        // $weighing_factors = DB::table('weighing_factors')->where('type', '=', 'current')->get();
+        $module_priority_weights = $weights_class->getWeightsForAllModulePriorities();
 
         return view('configurations.index')->with('module_repeatition_weights',$module_repeatition_weights)
                                             ->with('language_weights',$language_weights)
-                                            ->with('weighing_factors',$weighing_factors)
-                                            ->with('rank_order_list_weights',$rank_order_list_weights);
+                                            ->with('rank_order_list_weights',$module_priority_weights);
     }
 
     /**

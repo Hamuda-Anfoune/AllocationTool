@@ -19,6 +19,7 @@ class CreateTrialsTable extends Migration
             $table->string('language_id', 10);
             $table->smallInteger('priority');
             $table->string('academic_year', 15);
+            $table->boolean('active')->default(1);
             $table->timestamps();
 
             //REALTIONSHIPS

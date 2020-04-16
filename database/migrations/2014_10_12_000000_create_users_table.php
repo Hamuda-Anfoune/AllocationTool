@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('account_type_id',10); // 10: is the length of the string
             $table->string('password');
             $table->rememberToken();
+            $table->boolean('active')->default(1);
             $table->timestamps();
 
             // RELATIONSHIP

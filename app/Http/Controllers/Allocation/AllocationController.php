@@ -174,7 +174,7 @@ class AllocationController extends Controller
                          *  Find a way to calculate how many times current ta has assisted with current module before
                         */
 
-                        $did_before_weight = $weights_class->getModuleRepetitionWeights($ta->ta_email, $module->module_id);
+                        $did_before_weight = $weights_class->getModuleRepetitionWeightForTaForModule($ta->ta_email, $module->module_id);
 
                         // WEIGHT FOR ASSISSTING WITH MODULE BEFORE
                         // Register weight of assissting with this module before
@@ -205,7 +205,7 @@ class AllocationController extends Controller
                             // echo 'target: '. $language->language_id . 'goal: '. $ta_language_choice->language_id;
 
                             //Get the language pririty to calculate its weight which willbe added to the TA_total_weight
-                            $language_priority_weight =  $weights_class->getWeightForLanguagePriority($language->priority);
+                            $language_priority_weight =  $weights_class->getWeightForOneLanguagePriority($language->priority);
 
                             // Add weight ot total weight
                             $ta_rank_details->ta_total_weight += $language_priority_weight;
