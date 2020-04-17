@@ -6,24 +6,25 @@ use App\ModuleRepeatitionWeight;
 use Illuminate\Support\Facades\DB;
 
 /**
-     * All functions related to reading weights from DB
-     *
-     * function getModuleRepetitionWeightForTaForModule( string $ta_email, string $module_id)
-     *
-     * function getOneModuleRepetitionWeight(int $times)
-     *
-     * function getWeightForModulePriority(int $priority)
-     *
-     * function getWeightsForAllModulePriorities()
-     *
-     * function getWeightsForAllModulePriorities()
-     *
-     * function object_to_array($data)
-     *
-     * function getWeightForOneLanguagePriority(int $language_priority)
-     *
-     * function getWeightForAllLanguagePriorities()
-     */
+    * ONLY USE TO READ WEIGHTS FROM DB!. SHOULD NOT USE ANY OTHER CUSTOM CLASS.
+    * All functions related to reading weights from DB.
+    *
+    * @method int calculateModuleRepetitionWeightForTaForModule( string $ta_email, string $module_id)
+    *
+    * @method int getOneModuleRepetitionWeight(int $times)
+    *
+    * @method getWeightForModulePriority(int $priority)
+    *
+    * @method getWeightsForAllModulePriorities()
+    *
+    * @method getWeightsForAllModulePriorities()
+    *
+    * @method object_to_array($data)
+    *
+    * @method getWeightForOneLanguagePriority(int $language_priority)
+    *
+    * @method getWeightForAllLanguagePriorities()
+*/
 class WeightsClass
 {
     /**
@@ -33,7 +34,7 @@ class WeightsClass
      * @param  int  $times of repetition
      * @return int  weight of repetition times
      */
-    function getModuleRepetitionWeightForTaForModule(string $ta_email, string $module_id)
+    function calculateRepetitionWeightForModuleForTa(string $ta_email, string $module_id)
     {
         /* TODO: edit $times to calculate the repetiotion times in previous allocations where TA was allocated to Module
          *

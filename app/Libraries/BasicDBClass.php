@@ -3,6 +3,24 @@
 namespace App\Libraries;
 use Illuminate\Support\Facades\DB;
 
+/**
+    * ONLY USE TO READ BASIC PRIMARY DATA FROM DB!. SHOULD NOT USE ANY OTHER CUSTOM CLASS.
+    * (ACADEMIC YEARS, US|ERS, MODULES, TAs AND PREFERENCES DATA)
+    *
+    * @method string getCurrentAcademicYear()
+    *
+    * @method collection getModulesWithPrefsForYear(string $academic_year)
+    *
+    * @method collection getTAsWithPrefsForYear(string $academic_year)
+    *
+    * @method collection getAllModulesForYear(string $academic_year)
+    *
+    * @method collection getUsedLanguagesForModuleForYear(string $module_id, string $academic_year)
+    *
+    * @method collection getTaLanguageChoicesForYear(string $preference_id)
+    *
+    *
+ */
 class BasicDBClass
 {
     function getCurrentAcademicYear()
@@ -13,7 +31,7 @@ class BasicDBClass
 
     function getModulesWithPrefsForYear(string $academic_year)
     {
-        return DB::table('module_preferences')->select('module_id')->where('academic_year', '=', $academic_year)->get();
+        return DB::table('module_preferences')->select('module_id', 'no_of_assistants')->where('academic_year', '=', $academic_year)->get();
     }
 
     /**

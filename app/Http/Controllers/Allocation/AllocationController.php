@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Allocation;
 
 use App\Http\Controllers\Controller;
+use App\Libraries\AllocationsClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\ModuleRankOrderList;
@@ -22,8 +23,160 @@ class AllocationController extends Controller
      */
     public function index()
     {
-        return view('allocations.index');
+        /*
+         * -----------------------------
+         *
+         *    START OF ORIGINAL CODE
+         *
+         * -----------------------------
+         */
+
+        /* TODO - INDEX:
+          *  Get number of Modules
+          *  Get number of convenors
+          *  Get number of TAs
+          *  Get data about module prefs
+          *  Get data about TA prefs
+          *  Get data about allocations if any
+          *
+          *  Filter and organise this data and send to view
+          */
+
+        //return view('allocations.index');
+
+        /*
+         * -----------------------------
+         *
+         *     END OF ORIGINAL CODE
+         *
+         * -----------------------------
+         */
+
+
+        /*
+         * ALLOCATION ALGORITHM STARTS HERE
+         *
+         * TODO:
+         *  Get TAs' ROLs
+         *  Create final modules' ROLs: with exact order based on weight
+        */
+
+        // create a matrix of modules_ROLs
+        // add only the number of assistants the module wants
+        // when comparing
+        $basic_DB_access = new BasicDBClass();
+        $allocation_class = new AllocationsClass();
+
+        $academic_year = $basic_DB_access->getCurrentAcademicYear();
+
+        return $allocation_class->createFinalRolsForModulesForYear($academic_year);
+
+
+
+        $tas = [];
+
+        $ta = [];
+        $ta =
+        [
+            'weight' => 35,
+            'id' => 'gta1'
+        ];
+        $game = DB::table('module_rank_order_lists')->select('ta_email', 'ta_total_weight')->where('module_id','=','CO7091')->orderBy('ta_total_weight', 'DESC')->take(3)->get();
+
+        foreach($game as $haha)
+        {
+            // $ta[]->weight = $haha->ta_total_weight;
+            // $ta->id = $haha->ta_email;
+
+            $ta =
+        [
+            'weight' => $haha->ta_total_weight,
+            'id' => $haha->ta_email
+        ];
+            $tas[] = $ta;
+        }
+        // echo 'TAs';
+        // echo "<br>";
+        return $tas;
+
+        /**-----------------------------------------------------------------------
+         * Final structure of the modules' allocation matrix
+         */
+        $smart = 23;
+        $module_id = 'co7707';
+
+        $allocation_matrix[$module_id] =
+        [
+            'no_of_assistants' => 4,
+            'tas' =>
+            [
+                35 => 'gta1',
+                18 =>'ta1',
+                $smart => 'gta1'
+            ]
+        ];
+
+        // echo $allocation_matrix[$module_id]['tas'][35];
+        // echo "<br>";
+        // echo $allocation_matrix[$module_id]['no_of_assistants'];
+        //  return $allocation_matrix;
+
+        // Below NOT working
+        // $how = $allocation_matrix[$module_id]->where($key < 20);
+
+        /**
+         * END: Final structure of the modules' allocation matrix
+         * -----------------------------------------------------------------------
+         */
+
+
+        /** -----------------------------------------------------------------------
+         * How to check if TA_x has a weight that exceeds the weeights of the TAs already in the ROL
+         * if the number of returned objects is equal to no_of_assistants then all the TAs already in the ROL weigh more then the current TA
+         */
+        $current_ta_weight = 20;
+        $fitered = array_filter(
+            $allocation_matrix[$module_id]['tas'],
+            function ($key) use($current_ta_weight) {
+                return ($key > $current_ta_weight);
+            }, ARRAY_FILTER_USE_KEY
+        );
+
+        // return $fitered;
+        /** END:
+         * How to check if TA_x has a weight that exceeds the weeights of the TAs already in the ROL
+         * if the number of returned objects is equal to no_of_assistants then all the TAs already in the ROL weigh more then the current TA
+         * -----------------------------------------------------------------------
+         */
+
+        /** -----------------------------------------------------------------------
+         * Structure of modules ROLs matrix
+         */
+        //
+        $modules_ROLs[$module_id] =
+        [
+            'no_of_assistants' => 4,
+            'tas' =>
+            [
+                ['weight' => 35, 'id' => 'haha'],
+                ['weight' => 18, 'id' => 'ta1'],
+                ['weight' => $smart, 'id' => 'gta2'],
+            ]
+        ];
+
+        return $modules_ROLs;
+
+        $key = array_search('gta2', array_column($modules_ROLs[$module_id]['tas'], 'id'));
+
+        // echo $key;
+
+        /**
+         * END: Structure of modules ROLs matrix
+         * -----------------------------------------------------------------------
+         */
+
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -91,22 +244,15 @@ class AllocationController extends Controller
     // End of allocate
     }
 
+    /**
+     * This will create primary module ROLs and save them to the database.
+     * These lists are primary because they have all TAs with weights for all modules,
+     * and they are NOT oredered based on weight.
+     */
     public function createModuleROLs() //ROL: Rank Order List: list of TAs in order of preference
     {
         $basic_DB_access = new BasicDBClass();
         $weights_class = new WeightsClass();
-        /* TODO - INDEX:
-          *  Get number of Modules
-          *  Get number of convenors
-          *  Get number of TAs
-          *  Get data about module prefs
-          *  Get data about TA prefs
-          *  Get data about allocations if any
-          *
-          *  Filter and organise this data and send to view
-          */
-        // return view('allocations.index');
-
 
 
         /*
@@ -174,7 +320,7 @@ class AllocationController extends Controller
                          *  Find a way to calculate how many times current ta has assisted with current module before
                         */
 
-                        $did_before_weight = $weights_class->getModuleRepetitionWeightForTaForModule($ta->ta_email, $module->module_id);
+                        $did_before_weight = $weights_class->calculateRepetitionWeightForModuleForTa($ta->ta_email, $module->module_id);
 
                         // WEIGHT FOR ASSISSTING WITH MODULE BEFORE
                         // Register weight of assissting with this module before

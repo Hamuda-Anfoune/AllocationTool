@@ -102,7 +102,7 @@
             <div id="lang-weight-first" class="widget-div bg-orange mb-3 min-vh-8">
                 <a class="btn col-md-12" href="http://www.google.com">
                     <span class=" hyperspan">
-                        <p class="widget-title">1st Language Choice</p>
+                        <p class="widget-title">Modules Without Prefs</p>
                         <hr>
                         Happy Days!
                         <br>
@@ -124,7 +124,7 @@
             <div id="lang-weight-first" class="widget-div bg-red mb-3 min-vh-8">
                 <a class="btn col-md-12" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">
                     <span class=" hyperspan">
-                        <p class="widget-title">1st Language Choice</p>
+                        <p class="widget-title">Modules Without Prefs</p>
                         <hr>
                         Happy Days!
                         <br>

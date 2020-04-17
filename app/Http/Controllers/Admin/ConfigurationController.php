@@ -17,12 +17,13 @@ class ConfigurationController extends Controller
     public function index()
     {
         $title = 'Configuration - Dashbord';
-
         $weights_class = new WeightsClass();
         /* TODO:
-         *  Get data about done before weight
-         *  Get data about language priority to TAs
-         *  Get data
+         *  Get number of active TAs
+         *  Get number of active Convenors
+         *  Get weights of done before weight: $module_repeatition_weights
+         *  Get weights of language priority to modules: $language_weights
+         *  Get weights of module priority to TAs: $module_priority_weights
          *
          *  Filter and organise this data and send to view
          */
@@ -34,7 +35,8 @@ class ConfigurationController extends Controller
 
         return view('configurations.index')->with('module_repeatition_weights',$module_repeatition_weights)
                                             ->with('language_weights',$language_weights)
-                                            ->with('rank_order_list_weights',$module_priority_weights);
+                                            ->with('rank_order_list_weights',$module_priority_weights)
+                                            ->with('title', $title);
     }
 
     /**
