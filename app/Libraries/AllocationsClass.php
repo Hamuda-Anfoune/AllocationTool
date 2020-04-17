@@ -71,16 +71,17 @@ class AllocationsClass
             // $modules_ROLs[$module->module_id]->tas = $tas;
         }
 
-        $modules_ROLs['test'] =
-        [
-            'no_of_assistants' => 4,
-            'tas' =>
-            [
-                ['weight' => 35, 'ta_email' => 'gta1'],
-                ['weight' => 18, 'ta_email' => 'ta1'],
-                ['weight' => $smart=23, 'ta_email' => 'gta2'],
-            ]
-        ];
+        // TEST
+        // $modules_ROLs['test'] =
+        // [
+        //     'no_of_assistants' => 4,
+        //     'tas' =>
+        //     [
+        //         ['weight' => 35, 'ta_email' => 'gta1'],
+        //         ['weight' => 18, 'ta_email' => 'ta1'],
+        //         ['weight' => $smart=23, 'ta_email' => 'gta2'],
+        //     ]
+        // ];
         return $modules_ROLs;
     }
 
