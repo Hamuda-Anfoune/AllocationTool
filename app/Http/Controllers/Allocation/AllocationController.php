@@ -69,6 +69,7 @@ class AllocationController extends Controller
 
         $academic_year = $basic_DB_access->getCurrentAcademicYear();
 
+        return $allocation_class->createFinalRolsForTas($academic_year);
         return $allocation_class->createFinalRolsForModulesForYear($academic_year);
 
 

@@ -14,24 +14,19 @@ use App\Libraries\WeightsClass;
  */
 class AllocationsClass
 {
+    /**
+     * Returns an associative array of module ROLs for a specific year, with module_id as the keys of the array
+     *
+     * @param string $academic_year
+     *
+     * @return array[module_id] : [int number_of_assistants, array tas : [int weight, string ta_email]]
+     */
     function createFinalRolsForModulesForYear(string $academic_year)
     {
         $basic_db_calss = new BasicDBClass();
 
         // Create the matrix of the modules' ROLs
-        // tast matrix
-        $modules_ROLs_test['test'] =
-        [
-            'no_of_assistants' => 4,
-            'tas' =>
-            [
-                ['weight' => 35, 'ta_email' => 'gta1'],
-                ['weight' => 18, 'ta_email' => 'ta1'],
-                ['weight' => $smart=23, 'ta_email' => 'gta2'],
-            ]
-        ];
-
-        // Actual matrix
+        // Matrix initialisation
         $modules_ROLs = [];
 
         // Get all Modules With prefs for year
@@ -48,7 +43,6 @@ class AllocationsClass
             // Iterate through the top TAs
             foreach($top_tas as $ta)
             {
-
                 // Add to Array of TAs for module
                 $current_ta =
                 [
@@ -65,10 +59,6 @@ class AllocationsClass
                 'no_of_assistants' => $module->no_of_assistants,
                 'tas'=> $tas
             ];
-
-            // $modules_ROLs[$module->module_id]->no_of_assistants = $module->no_of_assistants;
-
-            // $modules_ROLs[$module->module_id]->tas = $tas;
         }
 
         // TEST
@@ -82,12 +72,51 @@ class AllocationsClass
         //         ['weight' => $smart=23, 'ta_email' => 'gta2'],
         //     ]
         // ];
+
         return $modules_ROLs;
     }
 
-    function createFinalRolsForTas()
+    function createFinalRolsForTas(string $academic_year)
     {
+        $basic_db_calss = new BasicDBClass();
+
+        // Create the matrix of the modules' ROLs
+        // Matrix initialisation
+        $tas_ROLs = [];
+
         // Gat all TAs with prefs
+        $all_tas_with_prefs = $basic_db_calss->getTAsWithPrefsForYear($academic_year);
+
+
+        foreach($all_tas_with_prefs as $ta)
+        {
+            // Get top modules a TA has chosen and their priorities
+            $all_modules = DB::table('ta_module_choices')->select('module_id', 'priority')->where('ta_email','=',$ta->ta_email)->orderBy('priority', 'DESC')->get();
+
+            // Declare a clear modules array
+            $modules = [];
+
+            // Iterate through the modules
+            foreach($all_modules as $module)
+            {
+                // Add to Array of TAs for module
+                $current_module =
+                [
+                    'priority' => $module->priority,
+                    'module_id' => $module->module_id
+                ];
+
+                $modules[] = $current_module;
+            }
+
+            // assign module id to the entry in the matrix
+            $tas_ROLs[$ta->ta_email] =
+            [
+                'modules'=> $modules
+            ];
+        }
+
+        return $tas_ROLs;
     }
 
     function getTopTasForModule(int $no_of_assistants)
