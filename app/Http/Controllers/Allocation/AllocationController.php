@@ -69,111 +69,127 @@ class AllocationController extends Controller
 
         $academic_year = $basic_DB_access->getCurrentAcademicYear();
 
-        return $allocation_class->createFinalRolsForTas($academic_year);
-        return $allocation_class->createFinalRolsForModulesForYear($academic_year);
 
 
+        // Get all TAs and their prefs and ROLS
+        $all_tas_prefs_and_Rols =  $allocation_class->createTasRolsAndPrefsForYear($academic_year);
+        // Get all Modules with their prefs and ROLS
+        $modules_prefs_and_ROLs =  $allocation_class->createFinalRolsForModulesForYear($academic_year);
 
-        $tas = [];
+        // Intitiate allocation matrices for TAs
+        $ta_allocation_matrix = [];
 
-        $ta = [];
-        $ta =
-        [
-            'weight' => 35,
-            'id' => 'gta1'
-        ];
-        $game = DB::table('module_rank_order_lists')->select('ta_email', 'ta_total_weight')->where('module_id','=','CO7091')->orderBy('ta_total_weight', 'DESC')->take(3)->get();
+        // Intitiate allocation matrices for nodules
+        $module_allocation_matrix = $allocation_class->intitiateModuleAllocationMatrix($academic_year);
 
-        foreach($game as $haha)
+        // array_search below returns the index not the priority,
+        // We are using the priority as keys
+        // As indeces start from 0 and priority starts from 1:
+        // we will adding 1 to the return of this function
+        $piority_test = 1 + array_search('CO7105', array_column($all_tas_prefs_and_Rols['gta1@gmail.com']['modules'], 'module_id'));
+
+        foreach($all_tas_prefs_and_Rols as $ta)
         {
-            // $ta[]->weight = $haha->ta_total_weight;
-            // $ta->id = $haha->ta_email;
+            /**
+             * TODO:
+             *   Check if allcoation is done
+             */
+            // Iterate through module choices
+            for($i = 1; $i <= count($ta['modules']); $i++)
+            {
+                // Get module choice ID, $i represents the priority of the module choice in the TA's ROL
+                $module_choice_id = $ta['modules'][$i]['module_id'];
+                $current_ta_email = $ta['ta_email'];
+                // module_priority = $i, AS PRIORITY IS THE KEY REPRESENTED IN $i ABOVE,
 
-            $ta =
-        [
-            'weight' => $haha->ta_total_weight,
-            'id' => $haha->ta_email
-        ];
-            $tas[] = $ta;
+                // print_r($module_allocation_matrix);
+                // echo 'haha';
+
+
+                //$min_weight = min(array_column($modules_prefs_and_ROLs[$module_choice_id]['tas'], 'weight'));
+
+                //echo $module_choice_id;
+                // echo 'min: ' . $min_weight;
+
+
+                // $keyy = 1 + array_search($min_weight, array_column($modules_prefs_and_ROLs[$module_choice_id]['tas'], 'weight'));
+                // echo $keyy;
+                // echo $modules_prefs_and_ROLs[$module_choice_id]['tas'][$keyy]['ta_email'];
+                // print_r($modules_prefs_and_ROLs[$module_choice_id]['tas'][$keyy]);
+
+
+
+                // Check if module has submitted prefs
+                if(array_key_exists($module_choice_id, $modules_prefs_and_ROLs))
+                {
+                    // Check if there are unallocated positions
+                    // if number of allocated TAs is less than no_of_assistants required
+                    if ((sizeof($module_allocation_matrix[$module_choice_id]['tas'])) < $modules_prefs_and_ROLs[$module_choice_id]['no_of_assistants'])
+                    {
+                        // allocate to module
+                    }
+                    else
+                    {
+                        // Check if TA exists in the module's ROL: True if it exists, False if not
+                        if(array_key_exists($current_ta_email, $modules_prefs_and_ROLs[$module_choice_id]['tas']))
+                        {
+                            // Remove the TA with the least weight from the allocation,
+                            // Get the min value
+                            $min_weight = min(array_column($module_allocation_matrix[$module_choice_id]['tas'], 'weight'));
+
+                            // Get the array key if the min weight, key = index + 1,
+                            // because we are using the priority as keys, index starts at 0, but priority starts at 1
+                            $key_to_remove = 1 + array_search($min_weight, array_column($modules_prefs_and_ROLs[$module_choice_id]['tas'], 'weight'));
+
+                            // save the email of the TA with the min
+                            $ta_email_to_remove = $modules_prefs_and_ROLs[$module_choice_id]['tas'][$key_to_remove]['ta_email'];
+
+                            /**
+                             * TODO:
+                             *   allocate current TA and module to each other
+                             *   call allocation function and pass removed TA
+                             */
+                        }
+
+
+
+
+
+
+                        // Check if current TA has got more weight than any of the allocated ones
+                        // Get current TA's weight
+                        $current_ta_weight =  $modules_prefs_and_ROLs[$module_choice_id]['tas'][$current_ta_email]['weight'];
+                        // Fiter allocated TAs with more weight than the current TA's weight
+                        $fitered = array_filter(
+                            $module_allocation_matrix[$module_choice_id]['tas'],
+                            function ($key) use($current_ta_weight) {
+                                return ($key > $current_ta_weight);
+                            }, ARRAY_FILTER_USE_KEY
+                        );
+
+                        echo $current_ta_weight;
+
+                    }
+
+                }
+                else
+                {
+                    echo $module_choice_id . 'has not submitted preferences for current academic year!';
+                }
+
+
+
+
+
+
+            }
         }
-        // echo 'TAs';
-        // echo "<br>";
-        return $tas;
 
-        /**-----------------------------------------------------------------------
-         * Final structure of the modules' allocation matrix
-         */
-        $smart = 23;
-        $module_id = 'co7707';
 
-        $allocation_matrix[$module_id] =
-        [
-            'no_of_assistants' => 4,
-            'tas' =>
-            [
-                35 => 'gta1',
-                18 =>'ta1',
-                $smart => 'gta1'
-            ]
-        ];
 
-        // echo $allocation_matrix[$module_id]['tas'][35];
-        // echo "<br>";
-        // echo $allocation_matrix[$module_id]['no_of_assistants'];
-        //  return $allocation_matrix;
-
-        // Below NOT working
-        // $how = $allocation_matrix[$module_id]->where($key < 20);
 
         /**
-         * END: Final structure of the modules' allocation matrix
-         * -----------------------------------------------------------------------
-         */
-
-
-        /** -----------------------------------------------------------------------
-         * How to check if TA_x has a weight that exceeds the weeights of the TAs already in the ROL
-         * if the number of returned objects is equal to no_of_assistants then all the TAs already in the ROL weigh more then the current TA
-         */
-        $current_ta_weight = 20;
-        $fitered = array_filter(
-            $allocation_matrix[$module_id]['tas'],
-            function ($key) use($current_ta_weight) {
-                return ($key > $current_ta_weight);
-            }, ARRAY_FILTER_USE_KEY
-        );
-
-        // return $fitered;
-        /** END:
-         * How to check if TA_x has a weight that exceeds the weeights of the TAs already in the ROL
-         * if the number of returned objects is equal to no_of_assistants then all the TAs already in the ROL weigh more then the current TA
-         * -----------------------------------------------------------------------
-         */
-
-        /** -----------------------------------------------------------------------
-         * Structure of modules ROLs matrix
-         */
-        //
-        $modules_ROLs[$module_id] =
-        [
-            'no_of_assistants' => 4,
-            'tas' =>
-            [
-                ['weight' => 35, 'id' => 'haha'],
-                ['weight' => 18, 'id' => 'ta1'],
-                ['weight' => $smart, 'id' => 'gta2'],
-            ]
-        ];
-
-        return $modules_ROLs;
-
-        $key = array_search('gta2', array_column($modules_ROLs[$module_id]['tas'], 'id'));
-
-        // echo $key;
-
-        /**
-         * END: Structure of modules ROLs matrix
-         * -----------------------------------------------------------------------
+         * END OF ALLOCATION
          */
 
     }

@@ -31,7 +31,7 @@ class BasicDBClass
 
     function getModulesWithPrefsForYear(string $academic_year)
     {
-        return DB::table('module_preferences')->select('module_id', 'no_of_assistants')->where('academic_year', '=', $academic_year)->get();
+        return DB::table('module_preferences')->select('module_id', 'no_of_assistants', 'no_of_contact_hours', 'no_of_marking_hours')->where('academic_year', '=', $academic_year)->get();
     }
 
     /**
@@ -44,7 +44,7 @@ class BasicDBClass
      */
     function getTAsWithPrefsForYear(string $academic_year)
     {
-        return DB::table('ta_preferences')->select('ta_email', 'preference_id')->where('academic_year', '=', $academic_year)->get();
+        return DB::table('ta_preferences')->select('ta_email', 'preference_id', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'have_tier4_visa')->where('academic_year', '=', $academic_year)->get();
     }
 
     /**
@@ -56,6 +56,14 @@ class BasicDBClass
     function getAllModulesForYear(string $academic_year)
     {
         return DB::table('modules')->where('academic_year', '=', $academic_year)->get();
+    }
+
+    function getAllActiveTas()
+    {
+        return DB::table('users')
+                    ->where('account_type_id', '=', [003, 004])
+                    ->where('active', '=', 1)
+                    ->get();
     }
 
     /**

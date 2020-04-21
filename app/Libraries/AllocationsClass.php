@@ -15,11 +15,63 @@ use App\Libraries\WeightsClass;
 class AllocationsClass
 {
     /**
+     * Initiates the allocation matrix for modules with empty arrays of TAs
+     */
+    function intitiateModuleAllocationMatrix($academic_year)
+    {
+        $basic_db_calss = new BasicDBClass();
+
+        $module_allocation_matrix =[];
+
+        // Get all Modules With prefs for year
+        $all_modules = $basic_db_calss->getAllModulesForYear($academic_year);
+
+        foreach($all_modules as $module)
+        {
+            // An empty array of TAs
+            $tas = array();
+
+            $module_allocation_matrix[$module->module_id] =
+            [
+                'tas' => $tas
+            ];
+        }
+
+        return $module_allocation_matrix;
+    }
+
+    /**
+     * Initiates the allocation matrix for TAs with empty arrays of modules
+     */
+    function intitiateTaAllocationMatrix($academic_year)
+    {
+        $basic_db_calss = new BasicDBClass();
+
+        $ta_allocation_matrix =[];
+
+        // Get all Modules With prefs for year
+        $all_active_tas = $basic_db_calss->getAllActiveTas();
+
+        foreach($all_active_tas as $ta)
+        {
+            // An empty array of TAs
+            $modules = array();
+
+            $ta_allocation_matrix[$ta->ta_email] =
+            [
+                'modules' => $modules
+            ];
+        }
+
+        return $ta_allocation_matrix;
+    }
+
+    /**
      * Returns an associative array of module ROLs for a specific year, with module_id as the keys of the array
      *
      * @param string $academic_year
      *
-     * @return array[module_id] : [int number_of_assistants, array tas : [int weight, string ta_email]]
+     * @return array key[module_id] : [int number_of_assistants, int working_hours_per_week, array tas : [int weight, string ta_email]]
      */
     function createFinalRolsForModulesForYear(string $academic_year)
     {
@@ -40,103 +92,116 @@ class AllocationsClass
             // Declare a clear TAs array: $tas
             $tas = [];
 
+            // initiate priority of TAs
+            $ta_priority = 1;
+
             // Iterate through the top TAs
             foreach($top_tas as $ta)
             {
+
                 // Add to Array of TAs for module
                 $current_ta =
                 [
                     'weight' => $ta->ta_total_weight,
-                    'ta_email' => $ta->ta_email
+                    'ta_email' => $ta->ta_email,
+                    'ta_priority' => $ta_priority
                 ];
 
-                $tas[] = $current_ta;
+                $tas[$ta_priority] = $current_ta;
+
+                // Add to priority
+                $ta_priority++;
             }
+
 
             // assign module id to the entry in the matrix
             $modules_ROLs[$module->module_id] =
             [
                 'no_of_assistants' => $module->no_of_assistants,
+                'working_hours_per_week' => $module->no_of_contact_hours + $module->no_of_marking_hours,
                 'tas'=> $tas
             ];
         }
 
+        return $modules_ROLs;
+
         // TEST
+        // $current_ta =
+        //         [
+        //             'weight' => 100,
+        //             'ta_email' => 'lol'
+        //         ];
+        //         $tas['haha'] = $current_ta;
+
+
         // $modules_ROLs['test'] =
         // [
         //     'no_of_assistants' => 4,
-        //     'tas' =>
-        //     [
-        //         ['weight' => 35, 'ta_email' => 'gta1'],
-        //         ['weight' => 18, 'ta_email' => 'ta1'],
-        //         ['weight' => $smart=23, 'ta_email' => 'gta2'],
-        //     ]
+        //     'tas' => $tas
         // ];
 
-        return $modules_ROLs;
+        // $ta_exists_in_Rol = (array_key_exists("some_ta_email",$modules_ROLs['test']['tas'])) ? true : false;
+        // return $ta_exists_in_Rol;
+        // End of test
+
     }
 
-    function createFinalRolsForTas(string $academic_year)
+    /**
+     * Returns a matrix of TAs with their preferences and arrays of all their preferred modules and their priorities.
+     *
+     * @param string $academic_year
+     *
+     * @return array key[ta_email]: {int weekly_working_hours, int max_weekly_working_hours, int max_modules, array modules: [{ key module_id: value priority}]}
+     */
+    function createTasRolsAndPrefsForYear(string $academic_year)
     {
         $basic_db_calss = new BasicDBClass();
 
         // Create the matrix of the modules' ROLs
         // Matrix initialisation
-        $tas_ROLs = [];
+        $all_tas_prefs_and_ROLs = [];
 
         // Gat all TAs with prefs
         $all_tas_with_prefs = $basic_db_calss->getTAsWithPrefsForYear($academic_year);
 
-
         foreach($all_tas_with_prefs as $ta)
         {
-            // Get top modules a TA has chosen and their priorities
-            $all_modules = DB::table('ta_module_choices')->select('module_id', 'priority')->where('ta_email','=',$ta->ta_email)->orderBy('priority', 'DESC')->get();
+            // Get all modules a TA has chosen and their priorities
+            $all_modules_for_current_ta = DB::table('ta_module_choices')->select('module_id', 'priority')->where('ta_email','=',$ta->ta_email)->orderBy('priority', 'ASC')->get();
+
+            // Calculate max_working_hours based on having Tier 4 visa or not
+            ($ta->have_tier4_visa == true) ? $max_weekly_working_hours = 20 :  $max_weekly_working_hours = 40;
 
             // Declare a clear modules array
             $modules = [];
 
             // Iterate through the modules
-            foreach($all_modules as $module)
+            foreach($all_modules_for_current_ta as $module)
             {
-                // Add to Array of TAs for module
-                $current_module =
+                // Add to Array of modules for current TA
+                // $current_module =
+                // [
+                //     $module->module_id => $module->priority
+                // ];
+
+                // $modules[] = $current_module;
+                $modules[$module->priority] =
                 [
-                    'priority' => $module->priority,
                     'module_id' => $module->module_id
                 ];
-
-                $modules[] = $current_module;
             }
 
             // assign module id to the entry in the matrix
-            $tas_ROLs[$ta->ta_email] =
+            $all_tas_prefs_and_ROLs[$ta->ta_email] =
             [
+                'ta_email' => $ta->ta_email,
+                'weekly_working_hours' => $ta->max_contact_hours + $ta->max_marking_hours,
+                'max_weekly_working_hours' => $max_weekly_working_hours,
+                'max_modules' => $ta->max_modules,
                 'modules'=> $modules
             ];
         }
-
-        return $tas_ROLs;
-    }
-
-    function getTopTasForModule(int $no_of_assistants)
-    {
-        DB::table('module_rank_order_list')->orderBy('priority', 'DESC')->get($no_of_assistants);
-    }
-
-    function getAllTaRols()
-    {
-        //
-    }
-
-    function getAllModuleRols()
-    {
-        //
-    }
-
-    function getOneModuleRol(string $module_id)
-    {
-        //
+        return $all_tas_prefs_and_ROLs;
     }
 
     /**
@@ -152,5 +217,6 @@ class AllocationsClass
     {
         // which ta has higher weight in module rol
         // return ta_email of ta with highest weight in module ROL
+
     }
 }
