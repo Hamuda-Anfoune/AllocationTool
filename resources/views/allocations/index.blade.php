@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header text-md-center"><h4>{{ __('Module Preferences') }}</h4></div>
+                <div class="card-header text-md-center"><h4>{{ __('Allocation') }}</h4></div>
                 <div class="card-body">
                     <i class="fab fa-balance-scale fa-sm fa-fw"></i>
                     <strong>Admin home page!</strong><br>
@@ -23,6 +23,26 @@
             <div style="height:4vw"></div>
         </div>
     </div>
+
+    <div class=" pt-3 pb-5 mb-3 bg-white col-md-12 text-center ">  {{-- ALLOCATE DIV --}}
+        <h4>Intitate allocation process</h4>
+        <div class="mb-3">
+            <a class=" col-md-8 btn btn-success" href="{{ route('createModuleROLs') }}"> Allocate</a>
+        </div>
+    </div>
+
+    <div class=" pt-3 pb-5 mb-3 bg-white col-md-12 text-center ">  {{-- ALLOCATE DIV --}}
+        <h4>Clear Allocation Results</h4>
+        {{-- <div class=" col-md-12 row"> --}}
+            <div class="col-md-12 mb-3 text-center">
+                <a class=" col-md-6 btn btn-danger" href="{{ route('deleteAllocation') }}">Delete Current Year's Allocation</a>
+            </div>
+            <div class="col-md-12 text-center">
+                <a class=" col-md-6 btn btn-danger" href="{{ route('deleteModuleROLs') }}">Delete Current Year's Module ROLs</a>
+            </div>
+        {{-- </div> --}}
+    </div>
+
     <div class="row md-col-12"> {{-- START OF BOARD NO. 1 --}}
         <div class="col-md-3">
             <div id="langs" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
@@ -462,6 +482,7 @@
             </div>
         </div> {{-- END OF 5TH LANGUAGE CHOICE --}}
     </div> {{-- END OF BOARD NO. 2 --}}
+
 
     {{-- START OF MODALS --}}
 

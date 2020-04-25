@@ -40,9 +40,15 @@ Route::get('/TA', 'Prefs\TAController@index');
 
 Route::get('/allocations', 'Allocation\AllocationController@index');
 
-Route::get('/allocations/create', 'Allocation\AllocationController@create');
+Route::get('/allocations/store', 'Allocation\AllocationController@store')->name('allocate');
 
-Route::get('/allocations/module/rol', 'Allocation\AllocationController@createModuleROLs');
+Route::get('/allocations/delete', 'Allocation\AllocationController@destroy')->name('deleteAllocation');
+
+Route::get('/allocations/module/rol', 'Allocation\AllocationController@createModuleROLs')->name('createModuleROLs');
+
+Route::get('/allocations/module/delete-rol', 'Allocation\AllocationController@deleteModuleROLs')->name('deleteModuleROLs');
+
+Route::get('allocations/missing-prefs', 'Allocation\AllocationController@missingPrefs');
 
 Route::get('/config', 'Admin\ConfigurationController@index');
 

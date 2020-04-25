@@ -29,9 +29,59 @@ class BasicDBClass
         return $row->year;
     }
 
+    /**
+     * returns all modules in target academic year.
+     *
+     * @param  string $academic_year
+     * @return array Modal: Module
+     */
+    function getAllModulesForYear(string $academic_year)
+    {
+        return DB::table('modules')->where('academic_year', '=', $academic_year)->get();
+    }
+
+    /**
+     * Will return all modules with submitted preferences for year
+     * @param string $academic_year
+     * @return collection
+     */
     function getModulesWithPrefsForYear(string $academic_year)
     {
         return DB::table('module_preferences')->select('module_id', 'no_of_assistants', 'no_of_contact_hours', 'no_of_marking_hours')->where('academic_year', '=', $academic_year)->get();
+    }
+
+    /**
+     * Will return all modules without preferences for year
+     * @param string $academic_year
+     * @return collection
+     */
+    function getModulesWithoutPrefsForYear(string $academic_year)
+    {
+        return DB::table('modules')
+                    ->select('module_id', 'module_name')
+                    ->where('academic_year','=',$academic_year)
+                    ->whereNotExists(function($query)
+                    {
+                        $query->select(DB::raw(1))
+                            ->from('module_preferences')
+                            ->whereRaw('module_preferences.module_id = modules.module_id');
+                    })
+                    ->get();
+    }
+
+    /**
+     * Will return all active TAs
+     * @return collection
+     */
+    function getAllActiveTas()
+    {
+        return DB::table('users')
+                    ->where('active', '=', 1)
+                    ->where(function($q) {
+                        $q->where('account_type_id', 003)
+                          ->orWhere('account_type_id', 004);
+                    })
+                    ->get();
     }
 
     /**
@@ -48,23 +98,31 @@ class BasicDBClass
     }
 
     /**
-     * returns all modules in target academic year.
-     *
-     * @param  string $academic_year
-     * @return array Modal: Module
+     * Will return all TAs without preferences for year
+     * @param string $academic_year
+     * @return collection
      */
-    function getAllModulesForYear(string $academic_year)
-    {
-        return DB::table('modules')->where('academic_year', '=', $academic_year)->get();
-    }
-
-    function getAllActiveTas()
+    function getActiveTasWithoutPrefsForYear(string $academic_year)
     {
         return DB::table('users')
-                    ->where('account_type_id', '=', [003, 004])
+                    ->select('email', 'name')
                     ->where('active', '=', 1)
+                    ->where(function($q) {
+                        $q->where('account_type_id', 003)
+                          ->orWhere('account_type_id', 004);
+                    })
+                    ->whereNotExists(function($query)use($academic_year)
+                    {
+                        $query->select(DB::raw(1))
+                            ->from('ta_preferences')
+                            ->whereRaw('ta_preferences.ta_email = users.email')
+                            ->where('academic_year','=',$academic_year);
+                        })
                     ->get();
     }
+
+
+
 
     /**
      * Return the languages a module used in specific academic year.

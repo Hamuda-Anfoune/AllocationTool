@@ -38,6 +38,27 @@
 
 
 
+        $ta_allocation_matrix['ta_email'] =
+        [
+            'weekly_working_hours' => 0,
+            'modules' =>
+            [
+                'CO0001','CO0002', 'CO0003'
+            ]
+        ];
+
+        // Add new item CO0087
+        $ta_allocation_matrix1['ta_email']['modules'][] = 'CO0087';
+
+        $CO0001 = 'CO0001';
+
+        // Get the key of item $CO0001
+        $key = array_search($CO0001, $ta_allocation_matrix1['ta_email']['modules']);
+
+        // distroy emntry with key $key
+        unset($ta_allocation_matrix['haha']['modules'][$key]);
+
+
         /** -----------------------------------------------------------------------
          * Structure of modules ROLs matrix
          */
@@ -47,9 +68,9 @@
             'no_of_assistants' => 4,
             'tas' =>
             [
-                ['weight' => 35, 'id' => 'haha'],
-                ['weight' => 18, 'id' => 'ta1'],
-                ['weight' => $smart, 'id' => 'gta2'],
+                'ta_email' => ['weight' => 35, 'id' => 'haha'],
+                'ta_email' => ['weight' => 18, 'id' => 'ta1'],
+                'ta_email' => ['weight' => $smart, 'id' => 'gta2'],
             ]
         ];
 
@@ -66,41 +87,16 @@
 
 
 
-        $index = array_search('CO7102', array_column($ta['modules'], 'module_id'));
-
-        // Check if module has submitted prefs
-        if(array_key_exists($module_choice_id, $modules_prefs_and_ROLs))
-        {
-            // Check if TA exists in the module's ROL: True if it exists, False if not
-            if(array_key_exists($current_ta_email, $modules_prefs_and_ROLs[$module_choice_id]['tas']))
-            {
-                // Get current TA's priority
-            }
-
-            $no_of_assistants =  count($modules_prefs_and_ROLs[$module_choice_id]['tas']);
-        }else{
-            echo 'this module does not exist';
-        }
-
-        // check if module is has an allocation
-        if(array_key_exists($module_choice_id, $module_allocation_matrix))
-        {
-            //
-        }
-        else
-        {
-            //
-        }
-        //Check if TA exists in module ROL
-        // $ta_exists_in_Rol = (array_key_exists($ta['ta_email'], $modules_prefs_and_ROLs[$module_choice_id]['tas'])) ? true : false;
-
-        // echo $ta_exists_in_Rol;
 
 
         /** -----------------------------------------------------------------------
          * How to check if TA_x has a weight that exceeds the weeights of the TAs already in the ROL
          * if the number of returned objects is equal to no_of_assistants then all the TAs already in the ROL weigh more then the current TA
          */
+
+         // Get current TA's weight
+         $current_ta_weight =  $modules_prefs_and_ROLs[$module_choice_id]['tas'][$current_ta_email]['weight'];
+
         $current_ta_weight = 20;
         $fitered = array_filter(
             $module_allocation_matrix[$module_id]['tas'],

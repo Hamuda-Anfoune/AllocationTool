@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header tesxt-md-center"><h4>{{ __('Add TA Preferences') }}</h4></div>
+                <div class="card-header text-md-center"><h4>{{ __('Add TA Preferences') }}</h4></div>
                 <div class="card-body align-items-center">
                     <form method="POST" action="{{ route('storeTAPrefs') }}">
                         @csrf
@@ -99,7 +99,7 @@
 
                         <br>
                         <hr>
-
+                        <br>
                         <div class="text-center">
                             <h4>{{ __('Visa Status') }}</h4>
                         </div>
@@ -355,6 +355,10 @@
                             PROGRAMMING LANGUAGES
                         ------------------------ --}}
 
+                        <br>
+                        <hr>
+                        <br>
+
                         <div class="text-center">
                             <h4>{{ __('Preferred Programming Languages') }}</h4>
                             <br>
@@ -417,9 +421,9 @@
                         <br>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Add') }}
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-success col-md-8">
+                                    {{ __('Add Preference') }}
                                 </button>
                             </div>
                         </div>

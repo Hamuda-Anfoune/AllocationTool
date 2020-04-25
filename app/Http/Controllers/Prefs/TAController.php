@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\module; // BRINGING THE MODEL
 use App\ta_module_choice;
 use App\language;
+use App\Libraries\BasicDBClass;
 use App\Ta_language_choice;
 use App\TA_preference;
 use Illuminate\Database\QueryException;
@@ -62,8 +63,8 @@ class TAController extends Controller
         // Checking of convenor: Admin = 001, Convenor = 002, GTA = 003, Externatl TA = 004
         if (session()->get('account_type_id')== 003 || session()->get('account_type_id')== 004) // session value is assigned in authenticated() in AuthenticatesUsers.php
         {
-            // Get a list of all midules in database
-            $modules = Module::all();
+            $basic_DB_class = new BasicDBClass();
+
 
             // Get a list of all the prgorammimg languages
             $languages = language::all();
@@ -74,7 +75,10 @@ class TAController extends Controller
             // Get current year => method 2
             $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();    // - first(): Returns a simple object,
                                                                                                         // - get():   Returns a JSON array
-            // echo $current_academic_year->year;
+
+            // Get a list of all midules in database
+            // $modules = Module::all();
+            $modules = $basic_DB_class->getAllModulesForYear($current_academic_year->year);
 
             // pass modules to view, will be shown in a select element in the view
             return view ('TA.add')
@@ -312,7 +316,7 @@ class TAController extends Controller
             // echo session('email');
             // session()->flash('Success', 'Preferences saved successfully!');
 
-            return redirect('home')->with('success', 'Preference Stored'); // success: type of message, Preference Created: msg body
+            return redirect('TA/')->with('success', 'Preference Stored'); // success: type of message, Preference Created: msg body
         }
     }
 

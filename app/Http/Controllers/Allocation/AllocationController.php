@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\ModuleRankOrderList;
 use App\Libraries\BasicDBClass;
 use App\Libraries\WeightsClass;
+use App\Libraries\Allocator;
+use Illuminate\Database\QueryException;
 
 class AllocationController extends Controller
 {
@@ -23,18 +25,11 @@ class AllocationController extends Controller
      */
     public function index()
     {
-        /*
-         * -----------------------------
-         *
-         *    START OF ORIGINAL CODE
-         *
-         * -----------------------------
-         */
-
         /* TODO - INDEX:
           *  Get number of Modules
-          *  Get number of convenors
-          *  Get number of TAs
+          *  Get number of active convenors
+          *  Get number of active TAs
+          *  Get number of all active users
           *  Get data about module prefs
           *  Get data about TA prefs
           *  Get data about allocations if any
@@ -42,155 +37,9 @@ class AllocationController extends Controller
           *  Filter and organise this data and send to view
           */
 
-        //return view('allocations.index');
-
-        /*
-         * -----------------------------
-         *
-         *     END OF ORIGINAL CODE
-         *
-         * -----------------------------
-         */
+        return view('allocations.index');
 
 
-        /*
-         * ALLOCATION ALGORITHM STARTS HERE
-         *
-         * TODO:
-         *  Get TAs' ROLs
-         *  Create final modules' ROLs: with exact order based on weight
-        */
-
-        // create a matrix of modules_ROLs
-        // add only the number of assistants the module wants
-        // when comparing
-        $basic_DB_access = new BasicDBClass();
-        $allocation_class = new AllocationsClass();
-
-        $academic_year = $basic_DB_access->getCurrentAcademicYear();
-
-
-
-        // Get all TAs and their prefs and ROLS
-        $all_tas_prefs_and_Rols =  $allocation_class->createTasRolsAndPrefsForYear($academic_year);
-        // Get all Modules with their prefs and ROLS
-        $modules_prefs_and_ROLs =  $allocation_class->createFinalRolsForModulesForYear($academic_year);
-
-        // Intitiate allocation matrices for TAs
-        $ta_allocation_matrix = [];
-
-        // Intitiate allocation matrices for nodules
-        $module_allocation_matrix = $allocation_class->intitiateModuleAllocationMatrix($academic_year);
-
-        // array_search below returns the index not the priority,
-        // We are using the priority as keys
-        // As indeces start from 0 and priority starts from 1:
-        // we will adding 1 to the return of this function
-        $piority_test = 1 + array_search('CO7105', array_column($all_tas_prefs_and_Rols['gta1@gmail.com']['modules'], 'module_id'));
-
-        foreach($all_tas_prefs_and_Rols as $ta)
-        {
-            /**
-             * TODO:
-             *   Check if allcoation is done
-             */
-            // Iterate through module choices
-            for($i = 1; $i <= count($ta['modules']); $i++)
-            {
-                // Get module choice ID, $i represents the priority of the module choice in the TA's ROL
-                $module_choice_id = $ta['modules'][$i]['module_id'];
-                $current_ta_email = $ta['ta_email'];
-                // module_priority = $i, AS PRIORITY IS THE KEY REPRESENTED IN $i ABOVE,
-
-                // print_r($module_allocation_matrix);
-                // echo 'haha';
-
-
-                //$min_weight = min(array_column($modules_prefs_and_ROLs[$module_choice_id]['tas'], 'weight'));
-
-                //echo $module_choice_id;
-                // echo 'min: ' . $min_weight;
-
-
-                // $keyy = 1 + array_search($min_weight, array_column($modules_prefs_and_ROLs[$module_choice_id]['tas'], 'weight'));
-                // echo $keyy;
-                // echo $modules_prefs_and_ROLs[$module_choice_id]['tas'][$keyy]['ta_email'];
-                // print_r($modules_prefs_and_ROLs[$module_choice_id]['tas'][$keyy]);
-
-
-
-                // Check if module has submitted prefs
-                if(array_key_exists($module_choice_id, $modules_prefs_and_ROLs))
-                {
-                    // Check if there are unallocated positions
-                    // if number of allocated TAs is less than no_of_assistants required
-                    if ((sizeof($module_allocation_matrix[$module_choice_id]['tas'])) < $modules_prefs_and_ROLs[$module_choice_id]['no_of_assistants'])
-                    {
-                        // allocate to module
-                    }
-                    else
-                    {
-                        // Check if TA exists in the module's ROL: True if it exists, False if not
-                        if(array_key_exists($current_ta_email, $modules_prefs_and_ROLs[$module_choice_id]['tas']))
-                        {
-                            // Remove the TA with the least weight from the allocation,
-                            // Get the min value
-                            $min_weight = min(array_column($module_allocation_matrix[$module_choice_id]['tas'], 'weight'));
-
-                            // Get the array key if the min weight, key = index + 1,
-                            // because we are using the priority as keys, index starts at 0, but priority starts at 1
-                            $key_to_remove = 1 + array_search($min_weight, array_column($modules_prefs_and_ROLs[$module_choice_id]['tas'], 'weight'));
-
-                            // save the email of the TA with the min
-                            $ta_email_to_remove = $modules_prefs_and_ROLs[$module_choice_id]['tas'][$key_to_remove]['ta_email'];
-
-                            /**
-                             * TODO:
-                             *   allocate current TA and module to each other
-                             *   call allocation function and pass removed TA
-                             */
-                        }
-
-
-
-
-
-
-                        // Check if current TA has got more weight than any of the allocated ones
-                        // Get current TA's weight
-                        $current_ta_weight =  $modules_prefs_and_ROLs[$module_choice_id]['tas'][$current_ta_email]['weight'];
-                        // Fiter allocated TAs with more weight than the current TA's weight
-                        $fitered = array_filter(
-                            $module_allocation_matrix[$module_choice_id]['tas'],
-                            function ($key) use($current_ta_weight) {
-                                return ($key > $current_ta_weight);
-                            }, ARRAY_FILTER_USE_KEY
-                        );
-
-                        echo $current_ta_weight;
-
-                    }
-
-                }
-                else
-                {
-                    echo $module_choice_id . 'has not submitted preferences for current academic year!';
-                }
-
-
-
-
-
-
-            }
-        }
-
-
-
-
-        /**
-         * END OF ALLOCATION
-         */
 
     }
 
@@ -200,66 +49,263 @@ class AllocationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(request $req)
     {
-        $modules_with_prefs = DB::table('module_preferences')->select('module_id')->get();
+        //
+    }
 
-        return $modules_with_prefs;
-
-
-
-        /* Module preferences
-        - Has TA helped with module before
-        - How similar are the language preferences
-    */
-
-    /* Module Constraints:
-        - number of needed TAs
-        - //
-    */
-
-
-    /* TA Constraints:
-        - number of work hours
-        - //
-    */
-
-
-    // TAs and Modules are agents
-
-    // Get a list of TAs: T = {t1, ..., tn}
-
-    // each TA has got a Rank Order List (ROL): an ordered list of preferred modules: Preferred Module List PML =
-
-    // get a list of modules with preferences: M = {m1, ..., mn} mn: m of n
-
-    // For each module m in M, there is an integer number pm,which represents the number of positions m can take: int qm
-
-    /* Also, for each m in M, there is an integer number chm, which represnets the number of contach hours  required by m,
-     * and an integer mhm representing the marking hours required by m:
-     *      chm=> contact hours required by m
-     *      mhm=> marking hours required by m
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-
-    /* Each m from M has a list of Rank Order List:
-        - all TAs are present in this list
-        - they are ordered based on how much do they fit the module preferences
-    */
-
-    // Each t from
-
-    // Order the module preferences of TAs based on their wwights
-
-    // allocate:
-
-        /* Assign TA to first choice of module if not:
-            - number of needed TAs for this module is met
+    public function store(Request $request)
+    {
+        /*
+         * ALLOCATION ALGORITHM STARTS HERE
+         *
+         *
+         * TODO:
+         *
+         * Assign remaining openings to TA's with remaining hours
         */
 
+        $basic_DB_access = new BasicDBClass();
+        $allocation_class = new AllocationsClass();
+
+        $academic_year = $basic_DB_access->getCurrentAcademicYear();
+
+        /** TODO: uncomment to reactivate
+         *
+         *      CHECK IF ALL ACTIVE TAs AND MODULES HAVE SUBMITTED PREFS
+        */
+
+        // Get all modules without submitted preferences
+        $modules_without_prefs = $basic_DB_access->getModulesWithoutPrefsForYear($academic_year);
+
+        // Get all TAs without submitted preferences
+        $tas_without_prefs = $basic_DB_access->getActiveTasWithoutPrefsForYear($academic_year);
 
 
-    // End of allocate
+        $allocator = new Allocator();
+        // return $allocator->allocate($tas_without_prefs);
+
+        // Redirect to show missing prefs in case there are any!
+        if(count($tas_without_prefs) > 0 || count($modules_without_prefs) > 0)
+        {
+            return redirect('/allocations/missing-prefs');
+        }
+
+        /**
+         *      CREATE AND GET ALL ROLs AND PREFS FOR THIS YEAR
+         */
+
+        // Get all TAs and their prefs and ROLS
+        $all_tas_prefs_and_Rols =  $allocation_class->createTasRolsAndPrefsForYear($academic_year);
+
+        // Get all Modules with their prefs and ROLS
+        $modules_prefs_and_ROLs =  $allocation_class->createFinalRolsForModulesForYear($academic_year);
+
+        // Intitiate allocation matrix
+        $allocations_matrix = $allocation_class->initiateAllocationsMatrix($academic_year);
+        /**
+         *      ITEREATE THROUGH THE TAs TO ALLOCATE
+         */
+
+        foreach($all_tas_prefs_and_Rols as $ta)
+        {
+            $allocations_matrix = $this->allocate($ta, $allocations_matrix);
+        }
+
+        // Once all is done check if there are modules or TAs without allocation
+
+        // create a way to allocate those
+
+        // Save to DB
+
+        print_r($allocations_matrix);
+        return $allocations_matrix['ta_allocations'];
     }
+
+    public function allocate(array $ta, $allocations_matrix)
+    {
+        $basic_DB_access = new BasicDBClass();
+        $allocation_class = new AllocationsClass();
+        $academic_year = $basic_DB_access->getCurrentAcademicYear();
+
+        $current_ta_id = $ta['ta_id'];
+
+        // Get all TAs and their prefs and ROLS
+        $all_tas_prefs_and_Rols =  $allocation_class->createTasRolsAndPrefsForYear($academic_year);
+        // Get all Modules with their prefs and ROLS
+        $modules_prefs_and_ROLs =  $allocation_class->createFinalRolsForModulesForYear($academic_year);
+
+
+         // Check if max working hours is reached, if so move to next TA
+        if(($allocations_matrix['ta_allocations'][$current_ta_id]['weekly_working_hours'] >= $ta['max_weekly_working_hours'])
+            || ($ta['max_modules'] < (sizeof($allocations_matrix['ta_allocations'][$current_ta_id]['modules']) + 1)))
+        {
+            // Do notihing, skip this TA and go to next one
+            echo 'TA has reached max weekly working hours';
+        }
+        else
+        {
+            // echo 'max working hours not reached';
+
+            // Iterate through module choices
+            for($i = 1; $i <= count($ta['modules']); $i++)
+            {
+                // Get module choice ID, $i represents the priority of the module choice in the TA's ROL
+                $module_choice_id = $ta['modules'][$i]['module_id'];
+
+
+                // Check if adding current_module's working hours to TA's working hours will exceed max, OR adding another module will exceed TA's max number of modules
+                if(($allocations_matrix['ta_allocations'][$current_ta_id]['weekly_working_hours'] + $modules_prefs_and_ROLs[$module_choice_id]['weekly_working_hours']) > $ta['max_weekly_working_hours']
+                    || $ta['max_modules'] < (count($allocations_matrix['ta_allocations'][$current_ta_id]['modules']) + 1))
+                {
+                    // Skip this moduel and go to next
+                    // echo 'Adding this module will lead to exceeding TA\'s max weekly working hours' . $current_ta_id . $modules_prefs_and_ROLs[$module_choice_id];
+                }
+                else
+                {
+                    // Check if module has submitted prefs
+                    if(array_key_exists($module_choice_id, $modules_prefs_and_ROLs))
+                    {
+                        // Check if there are unallocated positions
+                        // if number of allocated TAs is less than no_of_assistants required
+                        if ((sizeof($allocations_matrix['module_allocations'][$module_choice_id]['tas'])) < $modules_prefs_and_ROLs[$module_choice_id]['no_of_assistants'])
+                        {
+                            //Get current TA's weight for current module from DB
+                            $ta_weight_for_module = $allocation_class->getTaWeightForModule($current_ta_id, $module_choice_id);
+
+                            // Allocate current TA to current module
+                            $allocations_matrix['module_allocations'][$module_choice_id]['tas'][] = ['ta_id' => $current_ta_id, 'weight' => $ta_weight_for_module];
+
+                            // Allocate current module to current TA
+                            $allocations_matrix['ta_allocations'][$current_ta_id]['modules'][] = $module_choice_id;
+
+                            // Add module's working hours to TA's weekly_working_hours
+                            $allocations_matrix['ta_allocations'][$current_ta_id]['weekly_working_hours'] += $modules_prefs_and_ROLs[$module_choice_id]['weekly_working_hours'];
+                        }
+                        else
+                        {
+                            // Check if TA exists in the module's ROL: True if it exists, False if not
+                            if(array_key_exists($current_ta_id, $modules_prefs_and_ROLs[$module_choice_id]['tas']))
+                            {
+                                /**
+                                 *      Remove the TA with the least weight from the allocation
+                                 */
+                                    // Get the min value
+                                    $min_weight = min(array_column($allocations_matrix['module_allocations'][$module_choice_id]['tas'], 'weight'));
+
+                                    // array_column creates a new array with data from the chosen column with keys from 0
+                                    // array-search returns the key of the searched item from the new array created by array_column
+                                    $key_to_remove = array_search($min_weight, array_column($allocations_matrix['module_allocations'][$module_choice_id]['tas'], 'weight'));
+
+                                    // save the email of the removed TA with the min
+                                    $ta_id_to_remove = $allocations_matrix['module_allocations'][$module_choice_id]['tas'][$key_to_remove]['ta_id'];
+
+                                    // Remove TA with min weight from module's allocations
+                                    unset($allocations_matrix['module_allocations'][$module_choice_id]['tas'][$key_to_remove]);
+
+                                /**
+                                 *      Remove target module from removed TA's allocations
+                                 */
+
+                                    //Get the module's key in the removed TA's allocation array
+                                    $module_key_to_remove = array_search($module_choice_id, $allocations_matrix['ta_allocations'][$ta_id_to_remove]['modules']);
+
+                                    // Remove module from removed TA's allocations
+                                    unset($allocations_matrix['ta_allocations'][$ta_id_to_remove]['modules'][$module_key_to_remove]);
+
+                                    // Remove module's working hours from TA's weekly_working_hours
+                                    $allocations_matrix['ta_allocations'][$ta['ta_id']]['weekly_working_hours'] -= $modules_prefs_and_ROLs[$module_choice_id]['weekly_working_hours'];
+
+                                /**
+                                 *      Allocate current TA and module to each other
+                                 */
+
+                                    // Allocate current TA to current module
+
+                                    // EDIT TO ADD WEIGHT AS WELL
+                                    $crnt_ta_weight_for_crnt_module = $modules_prefs_and_ROLs[$module_choice_id][$current_ta_id]['weight'];
+
+                                    $allocations_matrix['module_allocations'][$module_choice_id]['tas'][] = ['weight' => $crnt_ta_weight_for_crnt_module, 'ta_id' => $current_ta_id];
+
+
+
+                                    // Allocate current module to current TA
+                                    $allocations_matrix['ta_allocations'][$current_ta_id]['modules'][] = $module_choice_id;
+
+                                    // Add module's working hours to TA's weekly_working_hours
+                                    $allocations_matrix['ta_allocations'][$ta['ta_id']]['weekly_working_hours'] += $modules_prefs_and_ROLs[$module_choice_id]['weekly_working_hours'];
+
+                                 // Pass removed TA to allocate function
+                                 $removed_ta = $all_tas_prefs_and_Rols[$ta_id_to_remove];
+
+                                 $allocations_matrix = $this->allocate($removed_ta, $allocations_matrix);
+
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return back()->with('alert', 'has not submitted preferences for current academic year!');
+                    }
+                }
+            }
+        }
+
+        return $allocations_matrix;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy()
+    {
+        echo 'Next time you come here, we\'ll delete your aloocation for the current semester!';
+    }
+
 
     /**
      * This will create primary module ROLs and save them to the database.
@@ -288,6 +334,17 @@ class AllocationController extends Controller
         // Get current academic year
         $current_academic_year = $basic_DB_access->getCurrentAcademicYear();
 
+        // Check if ROLs already created for current semester
+        if(count(DB::table('module_rank_order_lists')->where('academic_year','=', $current_academic_year)->get()) > 0)
+        {
+            return redirect('/allocations/store');
+
+            // COMMENT the below out and UNCOMMENT the one above
+            // return redirect('/allocations')->with('alert', 'Modules Rank Order List Already Created for this semester!');
+        }
+
+
+
         // list of modules with preferences
         $modules_with_prefs = $basic_DB_access->getModulesWithPrefsForYear($current_academic_year);
 
@@ -306,13 +363,14 @@ class AllocationController extends Controller
 
             foreach($TAs_wtih_prefs as $ta)
             {
+                $ta_id = $ta->ta_email;
                 // Create an object of the module_ROL to store the TAs details
                 $ta_rank_details = new ModuleRankOrderList();
 
                 // Set basic attributes to the object: ModuleRankOrderList()
                 $ta_rank_details->module_id = $module->module_id;
                 $ta_rank_details->academic_year = $current_academic_year;
-                $ta_rank_details->ta_email = $ta->ta_email;
+                $ta_rank_details->ta_email = $ta_id;
 
                 // Get data where module exists in TA's module choices for current year, preferences differ based on Academic year
                 $current_ta_with_current_module = DB::table('ta_module_choices')
@@ -337,7 +395,7 @@ class AllocationController extends Controller
                          *  Find a way to calculate how many times current ta has assisted with current module before
                         */
 
-                        $did_before_weight = $weights_class->calculateRepetitionWeightForModuleForTa($ta->ta_email, $module->module_id);
+                        $did_before_weight = $weights_class->calculateRepetitionWeightForModuleForTa($ta_id, $module->module_id);
 
                         // WEIGHT FOR ASSISSTING WITH MODULE BEFORE
                         // Register weight of assissting with this module before
@@ -385,69 +443,63 @@ class AllocationController extends Controller
                      *
                      * --------------------------
                     */
-                    // $ta_rank_details->save();
+                    try
+                    {
+                        $ta_rank_details->save();
+                    }
+                    catch(QueryException $qe)
+                    {
+                        DB::table('module_rank_order_lists')->where('academic_year','=', $current_academic_year)->delete();
+                        return redirect('/allocations')->with('alert', 'Something went wrong: ' . $qe);
+                    }
 
-                    return redirect('/allocations')->with('success', 'Modules Rank Order List Created');
+
+
                 }
 
             } // End of foreach TA
 
         } // end of foreach module
+
+        return redirect('/allocations/store');
+
+        // TODO: comment this out and uncomment the one above
+        // return redirect('/allocations')->with('success', 'Modules Rank Order List Created');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function deleteModuleROLs()
     {
-        //
+        $basic_DB_class = new BasicDBClass();
+        $academic_year = $basic_DB_class->getCurrentAcademicYear();
+        DB::table('module_rank_order_lists')->where('academic_year','=', $academic_year)->delete();
+
+        return back()->with('success', 'Module Rank Order Lists have been dileted for current academic year: '. $academic_year);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function missingPrefs()
     {
-        //
-    }
+        $title = 'Missing Module and TA Preferences';
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        $basic_DB_access = new BasicDBClass();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $academic_semester = $basic_DB_access->getCurrentAcademicYear();
+
+        // Get all modules without submitted preferences
+        $modules_without_prefs = $basic_DB_access->getModulesWithoutPrefsForYear($academic_semester);
+
+        // Get all TAs without submitted preferences
+        $tas_without_prefs = $basic_DB_access->getActiveTasWithoutPrefsForYear($academic_semester);
+
+        if(count($tas_without_prefs) > 0 || count($modules_without_prefs) > 0)
+        {
+            return view('allocations/missingPrefs')
+                        ->with('alert', 'Teaching Assistants have not submitted preferences for current academic semester!')
+                        ->with('modules_without_prefs', $modules_without_prefs)
+                        ->with('tas_without_prefs', $tas_without_prefs)
+                        ->with('title', $title);
+        }
+
+        return view('allocations/missingPrefs')->with('title', $title);
     }
 }

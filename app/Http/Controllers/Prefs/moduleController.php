@@ -12,6 +12,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\module; // BRINGING THE MODULE MODEL
 use App\module_preference;
+use App\Libraries\BasicDBClass;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
 

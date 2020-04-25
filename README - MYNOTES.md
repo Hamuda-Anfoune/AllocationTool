@@ -13,6 +13,10 @@
 
 ## TODO:
 -----------------
+ * Integrate the Studied module before in the system
+
+ * Give GTAs more weight than TAs
+
  * Add account_type to session upon automatic signin after new account registration
 
  * Finalise show functionality for TA preferences
@@ -32,7 +36,7 @@
 -----------------
  * using the email as the primary key instead of an ID as the university uses that to identify users.
 
- * usnig the acaemic year in both modules and module_preferences:
+ * using the acaemic year in both modules and module_preferences:
     modules: might be differnt from year to another
     module_prefernces: nead to know each preference belongs to which year
 
