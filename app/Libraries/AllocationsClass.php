@@ -138,7 +138,7 @@ class AllocationsClass
                             ->select('ta_email', 'ta_total_weight')
                             ->where('module_id','=',$module->module_id)
                             ->orderBy('ta_total_weight', 'DESC')
-                            ->take($module->no_of_assistants)
+                            // ->take($module->no_of_assistants)
                             ->get();
 
             // Declare a clear TAs array: $tas
@@ -223,8 +223,26 @@ class AllocationsClass
         {
             $ta_id = $ta->ta_email;
 
-            // Get all modules a TA has chosen and their priorities
-            $all_modules_for_current_ta = DB::table('ta_module_choices')->select('module_id', 'priority')->where('ta_email','=',$ta_id)->orderBy('priority', 'ASC')->get();
+            // Get the modules a TA has chosen and their priorities
+            $preferred_modules_for_current_ta = DB::table('ta_module_choices')
+                                                ->select('module_id', 'priority')
+                                                ->where('ta_email','=',$ta_id)
+                                                ->where('preference_id','=',$ta->preference_id)
+                                                ->orderBy('priority', 'ASC')
+                                                ->get();
+
+            // Get the modules that TA has not chosen
+            $not_preferred_modules_for_ta = DB::table('modules')
+                                                ->select('module_id')
+                                                ->where('academic_year','=',$academic_year)
+                                                ->whereNotExists(function($query)use($academic_year, $ta)
+                                                {
+                                                    $query->select(DB::raw(1))
+                                                        ->from('ta_module_choices')
+                                                        // ->whereRaw('preference_id','=',$ta->preference_id);
+                                                        ->where('preference_id','=',$ta->preference_id);
+                                                    })
+                                                ->get();
 
             // Calculate max_working_hours
             $max_weekly_working_hours = $ta->max_contact_hours + $ta->max_marking_hours;
@@ -239,7 +257,7 @@ class AllocationsClass
             $modules = [];
 
             // Iterate through the modules
-            foreach($all_modules_for_current_ta as $module)
+            foreach($preferred_modules_for_current_ta as $module)
             {
                 // Add to Array of modules for current TA
                 $modules[$module->priority] =
@@ -248,7 +266,17 @@ class AllocationsClass
                 ];
             }
 
-            // assign module id to the entry in the matrix
+            // Add the not preferred modules to the module array regardless of the priority
+            foreach($not_preferred_modules_for_ta as $module)
+            {
+               // Add to Array of modules for current TA
+               $modules[] =
+               [
+                   'module_id' => $module->module_id
+               ];
+            }
+
+            // Assign TA id to the entry in the matrix
             $all_tas_prefs_and_ROLs[$ta_id] =
             [
                 'ta_id' => $ta_id,

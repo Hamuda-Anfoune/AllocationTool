@@ -13,3 +13,9 @@ DELETE FROM `allocationtool`.`module_preferences` WHERE `academic_year`='2019-20
 DROP TABLE `allocationtool`.`trials`;
 
 SELECT * FROM users WHERE unique_id='';
+
+
+
+## adding unversity account
+
+DELETE FROM `allocationtool`.`university_users` WHERE `email`='hamuda@gmail.com';

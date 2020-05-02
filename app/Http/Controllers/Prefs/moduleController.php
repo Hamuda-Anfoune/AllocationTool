@@ -18,6 +18,11 @@ use Illuminate\Routing\Route;
 
 class moduleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *

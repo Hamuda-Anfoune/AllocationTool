@@ -30,7 +30,6 @@ class ConfigurationController extends Controller
 
         $module_repeatition_weights = $weights_class->getOneModuleRepetitionWeight(1);
         $language_weights = $weights_class->getWeightForAllLanguagePriorities();
-        // $weighing_factors = DB::table('weighing_factors')->where('type', '=', 'current')->get();
         $module_priority_weights = $weights_class->getWeightsForAllModulePriorities();
 
         return view('configurations.index')->with('module_repeatition_weights',$module_repeatition_weights)
@@ -59,19 +58,6 @@ class ConfigurationController extends Controller
         // VALIDATE
 
         // get the new
-    }
-
-    public function updateWeighingFactors(Request $request)
-    {
-        // VALIDATE
-
-        // read the set of langauges for TA form DB
-
-        // get the set of language weights from the request
-
-        // if applicable:
-            // update division factors based on new weights
-            // There should be a tickbox to recalculate division factors or not
     }
 
     public function updateModuleDoneBefore(Request $request)

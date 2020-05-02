@@ -13,6 +13,10 @@
 
 ## TODO:
 -----------------
+ * Edit log in to check for universtiy if it exists
+
+ * Add a functionality for admins to add new modules and new users in universtiy users
+
  * Integrate the Studied module before in the system
 
  * Give GTAs more weight than TAs
@@ -43,7 +47,7 @@
  * Admin will submit control values:
     in the prefernces weighing process:
         weight of 'done before' by TA
-        weight of re;evant languages to module based priority of language to TA
+        weight of relevant languages to module based priority of language to TA
         weight of module priority to TA
 
  * Programming languages and weights:
@@ -70,6 +74,6 @@
 ## Supervisor Meeting Notes:
 -----------------
  *  After setting weights to each TA in accordance to the module's preferences
- *  Where to save data while working on allocation: cash or db
+ *  Where to save data while working on allocation: cache or db
  *  match all TA first choices first, the come to seconds; or match all of every TA then go to other TAs
  *  Merge contact and marking hours into working hours

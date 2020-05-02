@@ -137,9 +137,7 @@ class TAController extends Controller
         // Check, if TA already submitted preferences for this semester then interrupt, and advice to go to update preferences
         // One way is by checking if preference ID exists
 
-        // if(DB::table('ta_preferences')->where('preference_id', '=', $preference_id))
         if(ta_preference::where('preference_id', '=', $preference_id)->count() > 0)
-        // if(DB::table('ta_preferences')->where('preference_id', $preference_id)->exists()) // Consider this!!
         {
                 return back()->withInput($request->input())->with('alert', 'Sorry, seems like you have already submitted your prefernces for this semester!'); //
         }
@@ -273,7 +271,6 @@ class TAController extends Controller
             // ------------------------------------
 
             // return $preferred_languages_array;
-
 
             /*
              * All saving will be in the try catch

@@ -24,6 +24,11 @@ Route::get('/', 'HomeController@index'); // the '/' sets the home page
 
 Auth::routes();
 
+///university/signup
+Route::get('/university/signup', 'UniversityController@index');
+
+Route::post('/university/signup', 'UniversityController@register')->name('storeUni');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/Module/add', 'Prefs\ModuleController@create');
@@ -38,6 +43,12 @@ Route::post('/TA/add', 'Prefs\TAController@store')->name('storeTAPrefs');
 
 Route::get('/TA', 'Prefs\TAController@index');
 
+Route::get('/config', 'Admin\ConfigurationController@index');
+
+Route::get('/config/add', 'Admin\ConfigurationController@create')->name('addConfigs');
+
+Route::post('/config/add', 'Admin\ConfigurationController@store')->name('storeConfigs');
+
 Route::get('/allocations', 'Allocation\AllocationController@index');
 
 Route::get('/allocations/store', 'Allocation\AllocationController@store')->name('allocate');
@@ -49,12 +60,6 @@ Route::get('/allocations/module/rol', 'Allocation\AllocationController@createMod
 Route::get('/allocations/module/delete-rol', 'Allocation\AllocationController@deleteModuleROLs')->name('deleteModuleROLs');
 
 Route::get('allocations/missing-prefs', 'Allocation\AllocationController@missingPrefs');
-
-Route::get('/config', 'Admin\ConfigurationController@index');
-
-Route::get('/config/add', 'Admin\ConfigurationController@create')->name('addConfigs');
-
-Route::post('/config/add', 'Admin\ConfigurationController@store')->name('storeConfigs');
 
 
 // Prefs:: routes();

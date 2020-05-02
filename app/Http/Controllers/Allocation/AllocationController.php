@@ -76,9 +76,9 @@ class AllocationController extends Controller
 
         $academic_year = $basic_DB_access->getCurrentAcademicYear();
 
-        /** TODO: uncomment to reactivate
+        /** TODO:
          *
-         *      CHECK IF ALL ACTIVE TAs AND MODULES HAVE SUBMITTED PREFS
+         *
         */
 
         // Get all modules without submitted preferences
@@ -109,13 +109,11 @@ class AllocationController extends Controller
 
         // Intitiate allocation matrix
         $allocations_matrix = $allocation_class->initiateAllocationsMatrix($academic_year);
-        /**
-         *      ITEREATE THROUGH THE TAs TO ALLOCATE
-         */
 
+        // ITEREATE THROUGH THE TAs TO ALLOCATE
         foreach($all_tas_prefs_and_Rols as $ta)
         {
-            $allocations_matrix = $this->allocate($ta, $allocations_matrix);
+            $allocations_matrix = $allocator->allocate($ta, $allocations_matrix);
         }
 
         // Once all is done check if there are modules or TAs without allocation
@@ -142,12 +140,17 @@ class AllocationController extends Controller
         $modules_prefs_and_ROLs =  $allocation_class->createFinalRolsForModulesForYear($academic_year);
 
 
-         // Check if max working hours is reached, if so move to next TA
+        /** TODO:
+         *
+         *  Check if TA is not already assigned to Module
+         *
+         */
+         // Check if max working hours is reached, OR ta can taif so move to next TA
         if(($allocations_matrix['ta_allocations'][$current_ta_id]['weekly_working_hours'] >= $ta['max_weekly_working_hours'])
             || ($ta['max_modules'] < (sizeof($allocations_matrix['ta_allocations'][$current_ta_id]['modules']) + 1)))
         {
             // Do notihing, skip this TA and go to next one
-            echo 'TA has reached max weekly working hours';
+            echo 'TA has reached max weekly working hours OR max number of modules';
         }
         else
         {
@@ -316,23 +319,31 @@ class AllocationController extends Controller
     {
         $basic_DB_access = new BasicDBClass();
         $weights_class = new WeightsClass();
-
+        // Get current academic year
+        $current_academic_year = $basic_DB_access->getCurrentAcademicYear();
 
         /*
          * START OF FOREIGN CODE
          */
 
         /* TODO:
-         *  Calculate Weight of having the module as choice for TA
-         *      - did_before
-         *      - weight of priority of module in ROL
-         *
-         *  Calculate weight of having programming languages in common with module
+         *  consider similarity in numbers of working hours  in calculation
          */
 
+         // Get all modules without submitted preferences
+        $modules_without_prefs = $basic_DB_access->getModulesWithoutPrefsForYear($current_academic_year);
 
-        // Get current academic year
-        $current_academic_year = $basic_DB_access->getCurrentAcademicYear();
+        // Get all TAs without submitted preferences
+        $tas_without_prefs = $basic_DB_access->getActiveTasWithoutPrefsForYear($current_academic_year);
+
+
+        // Redirect to show missing prefs in case there are any!
+        if(count($tas_without_prefs) > 0 || count($modules_without_prefs) > 0)
+        {
+            return redirect('/allocations/missing-prefs');
+        }
+
+
 
         // Check if ROLs already created for current semester
         if(count(DB::table('module_rank_order_lists')->where('academic_year','=', $current_academic_year)->get()) > 0)

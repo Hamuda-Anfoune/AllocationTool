@@ -27,7 +27,7 @@ class HomeController extends Controller
     public function index()
     {
         // Checking of convenor: Admin = 001, Convenor = 002, GTA = 003, Externatl TA = 004
-        if(session()->get('account_type_id')== 001)
+        if(session()->get('account_type_id')== 000 || session()->get('account_type_id')== 001)
         {
             //
             return redirect('allocations/');

@@ -94,7 +94,11 @@ class BasicDBClass
      */
     function getTAsWithPrefsForYear(string $academic_year)
     {
-        return DB::table('ta_preferences')->select('ta_email', 'preference_id', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'have_tier4_visa')->where('academic_year', '=', $academic_year)->get();
+        return DB::table('ta_preferences')
+                    ->select('ta_email', 'preference_id', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'have_tier4_visa')
+                    ->where('academic_year', '=', $academic_year)
+                    ->orderBy('max_modules', 'ASC')
+                    ->get();
     }
 
     /**
@@ -122,7 +126,15 @@ class BasicDBClass
     }
 
 
-
+    function getPreferenceIdForTaForYear(string $ta_id, string $academic_year)
+    {
+        return DB::table('ta_preferences')
+                    ->select('preference_id')
+                    ->where('ta_email','=',$ta_id)
+                    ->where('academic_year','=',$academic_year)
+                    ->first()
+                    ->preference_id;
+    }
 
     /**
      * Return the languages a module used in specific academic year.
