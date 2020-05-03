@@ -18,6 +18,7 @@ class CreateModulesTable extends Migration
             $table->string('module_name', 150);
             $table->string('convenor_email', 50);
             $table->string('academic_year', 15);
+            $table->timestamps();
 
             //REALTIONSHIPS
             $table->foreign('convenor_email')->references('email')->on('users');

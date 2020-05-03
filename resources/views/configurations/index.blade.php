@@ -138,17 +138,17 @@
                     <span class="fas fa-balance-scale fa-2x"></span>
                 </div>
                 <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
-                    <p class="widget-title">Programming Languages</p>
+                    <p class="widget-title">Academic Year</p>
                 </div>
             </div>
-            <div id="lang-weight-first" class="widget-div bg-red mb-3 min-vh-8">
-                <a class="btn col-md-12" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">
+            <div id="no-of-tas" class="widget-div bg-red mb-3 min-vh-8">
+                <a class="btn col-md-12" data-toggle="modal" data-target="#update_year_modal" data-whatever="@getbootstrap">
                     <span class=" hyperspan">
-                        <p class="widget-title">1st Language Choice</p>
+                        <div class="d-flex align-content-center flex-wrap justify-content-center">
+                            <p class="widget-title">Current Academic Year</p>
+                        </div>
                         <hr>
-                        Happy Days!
-                        <br>
-                        hahaha
+                        <span class="fa-4x mb-0 line-h-initial">32</span>
                     </span>
                 </a>
             </div>
@@ -218,30 +218,33 @@
                 </a>
             </div>
         </div>  {{-- END OF 1ST LANGUAGE CHOICE --}}
-
-
     </div> {{-- END OF BOARD NO. 2 --}}
 
+
     {{-- START OF MODALS --}}
-    {{-- MODAL 1 --}}
-    <div class="modal fade" id="lang_modal_1" tabindex="-1" role="dialog" aria-labelledby="lang_modal_1_Label" aria-hidden="true">
+    {{-- SET NEW ACADEMIC YEAR MODAL --}}
+    <div class="modal fade" id="update_year_modal" tabindex="-1" role="dialog" aria-labelledby="current_year_modal_Label" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Update 1st Language Choice</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Set Academic Year</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('storeTAPrefs') }}">
+                    <form method="POST" action="{{ route('updateAcademicYear') }}">
                         @csrf
-                        <div class="form-group">
-                            <label for="lang-1-weight" class="col-form-label">New Weight:</label>
-                            <input type="text" class="form-control" id="language_weight_1" required>
+                        <div class="col-md-12">
+                            <select name="new_academic_year" id="new_academic_year" class="custom-select" required>
+                                <option value="">Choose new academic year</option>
+                                @foreach ($academicYears as $year)
+                                <option value="{{$year->year}}" {{ old('new_academic_year') == $year->year ? 'selected' : '' }}>{{$year->year}}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary">Send message</button>
+                        <div class="text-center mt-2">
+                            <button type="submit" class="btn btn-primary">Set</button>
                         </div>
                     </form>
                 </div>
@@ -250,14 +253,14 @@
                 </div>
             </div>
         </div>
-    </div> {{-- END OF MODAL 1 --}}
+    </div> {{-- END OF SET NEW ACADEMIC YEAR MODAL --}}
 
-    {{-- MODAL 2 --}}
-    <div class="modal fade" id="lang_modal_2" tabindex="-1" role="dialog" aria-labelledby="lang_modal_2_Label" aria-hidden="true">
+    {{-- PROGRAMMING LANGUAGES WEIGHTS MODAL --}}
+    <div class="modal fade" id="lang_modal_1" tabindex="-1" role="dialog" aria-labelledby="lang_modal_2_Label" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Update 2nd Language Choice</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Update weights for similarity in programming languages</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -279,7 +282,7 @@
                 </div>
             </div>
         </div>
-    </div> {{-- END OF MODAL 2 --}}
+    </div> {{-- END OF PROGRAMMING LANGUAGES WEIGHTS MODAL --}}
 
     {{-- MODAL 2 --}}
     <div class="modal fade" id="lang_modal_3" tabindex="-1" role="dialog" aria-labelledby="lang_modal_3_Label" aria-hidden="true">

@@ -2,6 +2,7 @@
 
 namespace App\Libraries;
 use Illuminate\Support\Facades\DB;
+use App\Academic_year;
 
 /**
     * ONLY USE TO READ BASIC PRIMARY DATA FROM DB!. SHOULD NOT USE ANY OTHER CUSTOM CLASS.
@@ -23,10 +24,24 @@ use Illuminate\Support\Facades\DB;
  */
 class BasicDBClass
 {
+    /**
+     * Returns all system account types
+     */
+    function getAccountTypes()
+    {
+        return DB::table('account_types')->select('account_type_id', 'account_type')->get();
+    }
+
     function getCurrentAcademicYear()
     {
         $row = DB::table('Academic_years')->select('year')->where('current', '=', 1)->first();
         return $row->year;
+    }
+
+    function getAllAcademicYears()
+    {
+        return DB::table('Academic_years')->where('current', '=', 0)->get();
+        //  return Academic_year::all();
     }
 
     /**
@@ -168,4 +183,17 @@ class BasicDBClass
                     ->where('preference_id', '=', $preference_id)
                     ->get();
     }
+
+    /**
+     *      CONVENORS
+     */
+
+     function getAllActiveConvenors()
+     {
+        return DB::table('users')
+                ->select('email','name')
+                ->where('account_type_id','=', 002)
+                ->where('active','=', 1)
+                ->get();
+     }
 }

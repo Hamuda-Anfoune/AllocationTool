@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Libraries\BasicDBClass;
 use App\Libraries\WeightsClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ class ConfigurationController extends Controller
     {
         $title = 'Configuration - Dashbord';
         $weights_class = new WeightsClass();
+        $basic_db_class = new BasicDBClass();
         /* TODO:
          *  Get number of active TAs
          *  Get number of active Convenors
@@ -31,10 +33,12 @@ class ConfigurationController extends Controller
         $module_repeatition_weights = $weights_class->getOneModuleRepetitionWeight(1);
         $language_weights = $weights_class->getWeightForAllLanguagePriorities();
         $module_priority_weights = $weights_class->getWeightsForAllModulePriorities();
+        $academicYears = $basic_db_class->getAllAcademicYears();
 
         return view('configurations.index')->with('module_repeatition_weights',$module_repeatition_weights)
                                             ->with('language_weights',$language_weights)
                                             ->with('rank_order_list_weights',$module_priority_weights)
+                                            ->with('academicYears', $academicYears)
                                             ->with('title', $title);
     }
 
