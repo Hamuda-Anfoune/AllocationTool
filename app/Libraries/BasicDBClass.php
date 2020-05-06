@@ -40,7 +40,7 @@ class BasicDBClass
 
     function getAllAcademicYears()
     {
-        return DB::table('Academic_years')->where('current', '=', 0)->get();
+        return DB::table('Academic_years')->select('year')->get();
         //  return Academic_year::all();
     }
 
@@ -62,8 +62,44 @@ class BasicDBClass
      */
     function getModulesWithPrefsForYear(string $academic_year)
     {
-        return DB::table('module_preferences')->select('module_id', 'no_of_assistants', 'no_of_contact_hours', 'no_of_marking_hours')->where('academic_year', '=', $academic_year)->get();
+        $modules = DB::table('module_preferences')
+                    ->select('module_id', 'no_of_assistants', 'no_of_contact_hours', 'no_of_marking_hours')
+                    ->where('academic_year', '=', $academic_year)
+                    ->get();
+
+        foreach($modules as $module)
+        {
+            $module->module_name = DB::table('modules')
+                                        ->select('module_name')
+                                        ->where('module_id', '=', $module->module_id)
+                                        ->first()
+                                        ->module_name;
+        }
+
+        return $modules;
     }
+
+
+    function getBasicPrefsForModuleForYear(string $module_id, string $academic_year)
+    {
+        $modules = DB::table('module_preferences')
+                ->select('module_id', 'no_of_assistants', 'no_of_contact_hours', 'no_of_marking_hours', 'academic_year')
+                ->where('academic_year', '=', $academic_year)
+                ->where('module_id', '=', $module_id)
+                ->get();
+
+        foreach($modules as $module)
+        {
+            $module->module_name = DB::table('modules')
+                                        ->select('module_name')
+                                        ->where('module_id', '=', $module_id)
+                                        ->first()
+                                        ->module_name;
+        }
+
+        return $modules;
+    }
+
 
     /**
      * Will return all modules without preferences for year
@@ -162,12 +198,25 @@ class BasicDBClass
      */
     function getUsedLanguagesForModuleForYear(string $module_id, string $academic_year)
     {
-        return DB::table('used_langauges')
-                    ->select('language_id', 'priority')
-                    ->where('academic_year', '=', $academic_year)
-                    ->where('module_id', '=', $module_id)
-                    ->get();
+        $languages = DB::table('used_langauges')
+                            ->select('language_id', 'priority')
+                            ->where('academic_year', '=', $academic_year)
+                            ->where('module_id', '=', $module_id)
+                            ->orderBy('priority', 'ASC')
+                            ->get();
+
+        foreach($languages as $language)
+        {
+            $language->Language_name = DB::table('languages')
+                                            ->select('language_name')
+                                            ->where('language_id','=',$language->language_id)
+                                            ->first()
+                                            ->language_name;
+        }
+
+        return $languages;
     }
+
 
     /**
      * Return the languages a TA chose as preferences in specific academic year.
@@ -196,4 +245,5 @@ class BasicDBClass
                 ->where('active','=', 1)
                 ->get();
      }
+
 }

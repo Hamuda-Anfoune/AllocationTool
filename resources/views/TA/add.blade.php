@@ -9,8 +9,13 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header text-md-center"><h4>{{ __('Add TA Preferences') }}</h4></div>
+                <div class="card-header text-md-center"><h4>{{ __('Teaching Assistants\' Preferences Supmission') }}</h4></div>
                 <div class="card-body align-items-center">
+                    <div class="text-center">
+                        <i class="fa fa-2x fa-500px" aria-hidden="true"></i><br>
+                        <strong>Before submitting your preferences!</strong> <br> You can check the modules' prefereces <a href="/modules/prefs/all">here.</a>
+                    </div>
+                    <hr>
                     <form method="POST" action="{{ route('storeTAPrefs') }}">
                         @csrf
 

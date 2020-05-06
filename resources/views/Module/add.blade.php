@@ -134,7 +134,7 @@
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="language_2_id" class="col-md-4 col-form-label text-md-right">{{ __('Used Language No. 1') }}</label>
+                            <label for="language_2_id" class="col-md-4 col-form-label text-md-right">{{ __('Used Language No. 2') }}</label>
 
                             <div class="col-md-6">
                                 <select name="language_2_id" id="language_2_id" class="custom-select">
@@ -154,13 +154,81 @@
                             <label for="language_3_id" class="col-md-4 col-form-label text-md-right">{{ __('Used Language No. 3') }}</label>
 
                             <div class="col-md-6">
-                                <select name="language_3_id" id="language_3_id" class="custom-select">
+                            <select name="language_3_id" id="language_3_id" class="custom-select">
                                     <option value="">Choice #3</option>
                                     @foreach ($languages as $language)
                                         <option value="{{$language->language_id}}" {{ old('language_3_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
                                     @endforeach
                                 </select>
                                 @error('language_3_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="language_4_id" class="col-md-4 col-form-label text-md-right">{{ __('Used Language No. 4') }}</label>
+
+                            <div class="col-md-6">
+                            <select name="language_4_id" id="language_4_id" class="custom-select">
+                                    <option value="">Choice #4</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('language_4_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('language_4_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="language_5_id" class="col-md-4 col-form-label text-md-right">{{ __('Used Language No. 5') }}</label>
+
+                            <div class="col-md-6">
+                            <select name="language_5_id" id="language_5_id" class="custom-select">
+                                    <option value="">Choice #5</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('language_5_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('language_5_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="language_6_id" class="col-md-4 col-form-label text-md-right">{{ __('Used Language No. 6') }}</label>
+
+                            <div class="col-md-6">
+                            <select name="language_6_id" id="language_6_id" class="custom-select">
+                                    <option value="">Choice #6</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('language_6_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('language_6_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="language_7_id" class="col-md-4 col-form-label text-md-right">{{ __('Used Language No. 7') }}</label>
+
+                            <div class="col-md-6">
+                            <select name="language_7_id" id="language_7_id" class="custom-select">
+                                    <option value="">Choice #7</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('language_7_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('language_7_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

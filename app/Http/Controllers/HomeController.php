@@ -35,7 +35,7 @@ class HomeController extends Controller
         elseif(session()->get('account_type_id')== 002)
         {
             //
-            return redirect('Module/');
+            return redirect('module/convenor');
         }
         elseif(session()->get('account_type_id')== 003 || session()->get('account_type_id')== 004)
         {

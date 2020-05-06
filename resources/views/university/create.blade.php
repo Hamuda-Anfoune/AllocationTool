@@ -76,7 +76,7 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
-                        <div>
+                        <div class="text-center">
                             <button type="submit" class="btn btn-primary">Create Account</button>
                         </div>
                     </form>

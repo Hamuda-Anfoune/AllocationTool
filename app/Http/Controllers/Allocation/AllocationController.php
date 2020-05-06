@@ -37,7 +37,12 @@ class AllocationController extends Controller
           *  Filter and organise this data and send to view
           */
 
-        return view('allocations.index');
+        $basic_db_class = new BasicDBClass();
+
+        $academicYears = $basic_db_class->getAllAcademicYears();
+
+        return view('allocations.index')
+                ->with('academicYears', $academicYears);
 
 
 

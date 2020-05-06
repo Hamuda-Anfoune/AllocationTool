@@ -13,15 +13,9 @@
 
 ## TODO:
 -----------------
- * Edit log in to check for universtiy if it exists
-
- * Add a functionality for admins to add new modules and new users in universtiy users
-
- * Integrate the Studied module before in the system
+ * Integrate the Studied module before in the algorithm
 
  * Give GTAs more weight than TAs
-
- * Add account_type to session upon automatic signin after new account registration
 
  * Finalise show functionality for TA preferences
 

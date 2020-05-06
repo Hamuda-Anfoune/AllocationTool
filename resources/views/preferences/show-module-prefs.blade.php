@@ -75,17 +75,13 @@
                         <br>
 
                         <div class="form-group row mb-0">
-
+                            <div class="col-md-6 offset-md-4">
+                                <button href="/modules/prefs/all" class="btn btn-primary">
+                                    {{ __('Back to all modules') }}
+                                </button>
+                            </div>
                         </div>
                     </form>
-                    <div class="col-md-6 offset-md-4">
-                        <a href="/Module/edit/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-primary">
-                            {{ __('Edit') }}
-                        </a>
-                        <a href="/Module/delete/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                            {{ __('Delete') }}
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>

@@ -18,24 +18,45 @@ Auth::routes();
 Route::get('/', 'HomeController@index'); // the '/' sets the home page
 
 
-Route::get('/university/signup', 'Admin\UniversityController@index');
+Route::get('/Admin/university/signup', 'Admin\UniversityController@index');
 
-Route::post('/university/signup', 'Admin\UniversityController@register')->name('storeUni');
+Route::post('/Admin/university/signup', 'Admin\UniversityController@register')->name('storeUni');
 
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::get('/university-users/create', 'Admin\UniversityUsersController@create');
+Route::get('/Admin/university-users/add', 'Admin\UniversityUsersController@create');
 
-Route::post('/university-users/create', 'Admin\UniversityUsersController@store')->name('storeUniversityUser');
+Route::post('/Admin/university-users/add', 'Admin\UniversityUsersController@store')->name('storeUniversityUser');
+
+
+
+Route::get('/modules/prefs/show/{module_id}/{academic_year}', 'Prefs\moduleController@show');
+
+Route::post('/modules/prefs/all', 'Prefs\moduleController@showAll')->name('showAllModulePrefs');
+
+Route::get('/modules/prefs/all', 'Prefs\moduleController@index');
+
+
+// All modules with or without prefs for all convenors
+Route::get('/module/convenor', 'Prefs\ConvenorController@index');
 
 
 Route::get('/Module/add', 'Prefs\ModuleController@create');
 
 Route::post('/Module/add', 'Prefs\ModuleController@store')->name('storeModulePrefs');
 
-Route::get('/Module', 'Prefs\ModuleController@index');
+Route::get('/Module/edit/{module_id}/{academic_year}', 'Prefs\ModuleController@edit');
+
+Route::get('/Module/delete/{module_id}/{academic_year}', 'Prefs\ModuleController@destroy');
+
+Route::post('/Module/update', 'Prefs\ModuleController@update')->name('updateModulePrefs');
+
+
+
+
+
 
 
 Route::get('/TA/add', 'Prefs\TAController@create');

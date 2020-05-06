@@ -30,15 +30,17 @@ class ConfigurationController extends Controller
          *  Filter and organise this data and send to view
          */
 
-        $module_repeatition_weights = $weights_class->getOneModuleRepetitionWeight(1);
+        $current_module_repeatition_weights = $weights_class->getAllCurrentModuleRepetitionWeights();
         $language_weights = $weights_class->getWeightForAllLanguagePriorities();
         $module_priority_weights = $weights_class->getWeightsForAllModulePriorities();
         $academicYears = $basic_db_class->getAllAcademicYears();
+        $current_academic_year = $basic_db_class->getCurrentAcademicYear();
 
-        return view('configurations.index')->with('module_repeatition_weights',$module_repeatition_weights)
+        return view('configurations.index')->with('current_module_repeatition_weights',$current_module_repeatition_weights)
                                             ->with('language_weights',$language_weights)
-                                            ->with('rank_order_list_weights',$module_priority_weights)
+                                            ->with('module_priority_weights',$module_priority_weights)
                                             ->with('academicYears', $academicYears)
+                                            ->with('current_academic_year', $current_academic_year)
                                             ->with('title', $title);
     }
 

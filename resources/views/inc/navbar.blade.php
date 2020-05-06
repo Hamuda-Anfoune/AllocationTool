@@ -21,34 +21,54 @@
                 </li>
                 @if (session('account_type_id') == 002)
                     <li class="nav-item">
-                        <a class="nav-link" href="/Module/add">Module</a>
+                        <a class="nav-link" href="/Module/add">Convenors</a>
                     </li>
                 @endif
                 @if (session('account_type_id') == 003 || session('account_type_id') == 004)
-                    <li class="nav-item">
-                        <a class="nav-link" href="/TA/add">Teaching Assistants</a>
+                    <li class="nav-item  dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('Teaching Assistants') }}
+                          </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="nav-link" href="/modules/prefs/all">{{ __('Modules\' Preferences') }}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link" href="/TA/add">{{ __('Submit Preferences') }}</a>
+                        </div>
                     </li>
                 @endif
-                <li class="nav-item">
-                    <a class="nav-link" href="/allocations">Allocations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/config">Configuration</a>
-                </li>
-              </ul>
+                @if (session('account_type_id') == 000 || session('account_type_id') == 001)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Allocation
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="nav-link" href="/allocations">{{ __('Admins') }}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link" href="/config">{{ __('Configuration') }}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link" href="/modules/prefs/all">{{ __('Modules\' Preferences') }}</a>
+                        </div>
+                    </li>
+                  @endif
+                </ul>
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href=" /university/signup ">{{ __('Univesities') }}</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                     </li>
                     @if (Route::has('register'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        <li class="nav-item dropdown">
+                            {{-- <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a> --}}
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ __('Register') }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('User') }}</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="nav-link" href="/Admin/university/signup ">{{ __('Univesity') }}</a>
+                                </div>
                         </li>
                     @endif
                 @else

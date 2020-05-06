@@ -317,4 +317,19 @@ class AllocationsClass
                         ->where('module_id','=',$module_id)
                         ->first()->ta_total_weight;
     }
+
+    /**
+     * Checks if allocation exists for year
+     *
+     * @param $academicYear
+     *
+     * @return boolean
+     *
+     * True if allocation exists
+     * Flase if noe
+     */
+    function allocationExistsForYear($academic_year)
+    {
+        return DB::table('allocations')->where('academic_year', '=', $academic_year)->exists();
+    }
 }

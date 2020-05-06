@@ -6,12 +6,13 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                {{-- <div class="card-header text-md-center"><h4>{{ __('Module Preferences') }}</h4></div> --}}
+                <div class="card-header text-md-center">
+                    <a class="btn btn-info btn-sm" data-toggle="collapse" href="#instructions" role="button" aria-expanded="false" aria-controls="instructions">Instructions</a>
+                </div>
                 <div class="card-body">
-                    <div class="m-5 row">
-                        <div style="width:4%"><i class="fab fa-balance-scale fa-sm fa-fw" style="font-size:23px"></i></div>
-                        <div style="width:96%">
-                            <h4><strong>NOTES!</strong></h4><br>
+                    <div class="collapse" id="instructions">
+                        <i class="fab fa-balance-scale fa-sm fa-fw"></i>
+                        <strong>NOTES!</strong><br>
                             <h5><strong>WHAT?</strong></h5>
                             The entries below are used in a weighing process.<br>
                             The process aims to create a Rank Order List of preferred TAs for each module.<br>
@@ -26,7 +27,7 @@
                             The target module will have a Rank Order List, and the TA with the most weight should be on the top.<br>
                             <br>
                             <h5><strong>HOW?</strong></h5>
-                            <strong>Rank Order List:</strong><br>
+                            <strong>Module Priority in the TA's Rank Order List:</strong><br>
                             A specific value will be added to the TA's total weight based on the order of the target module in the TA's Rank Oreder List.<br>
                             <br>
                             <strong>Module Repetition Weight:</strong><br>
@@ -35,7 +36,7 @@
                             <strong>Programming Language Priority List:</strong><br>
                             Each TA's preferred programming languages will be compared against the module's; if preferred languages match, the TA will be
                             awarded weight based on the priority of the programming language for the module.<br>
-                        </div>
+                        {{-- </div> --}}
                     </div>
                 </div>
             </div>
@@ -44,130 +45,113 @@
     </div>
 
     <div class="row md-col-12"> {{-- START OF BOARD NO. 1 --}}
-        <div class="col-md-3">
-            <div id="langs" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
-                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                    <span class="fas fa-balance-scale fa-2x"></span>
-                </div>
-                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
-                    <p class="widget-title">Programming Languages</p>
-                </div>
-            </div>
-            <div id="no-of-convenors" class="widget-div bg-skyblue mb-3 min-vh-8">
-                <a class="btn col-md-12" href="http://www.google.com">
-                    <span class=" hyperspan">
-                        <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <p class="widget-title">Module Convenors</p>
-                        </div>
-                        <hr>
-                        <span class="fa-4x mb-0 line-h-initial">15</span>
-                    </span>
-                </a>
-            </div>
-            <div id="lang-weight-2" class="widget-div bg-skyblue mb-3 min-vh-8">
-                <a class="btn col-md-12" href="http://www.google.com">
-                    <span class=" hyperspan">
-                        <p class="widget-title">2nd Language Choice</p>
-                        <hr>
-                        Happy Days!
-                        <br>
-                        hahaha
-                    </span>
-                </a>
-            </div>
-            <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-8">
-                <a class="btn col-md-12" href="http://www.google.com">
-                    <span class=" hyperspan">
-                        <p class="widget-title">3rd Language Choice</p>
-                        <hr>
-                        Happy Days!
-                        <br>
-                        hahaha
-                    </span>
-                </a>
-            </div>
-        </div>    {{-- END OF 1ST COLUMN --}}
-
-        <div class="col-md-3">    {{-- START OF 2ND COLUMN --}}
-            <div id="done-before-weight-head" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
-                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                    <span class="fas fa-balance-scale fa-2x"></span>
-                </div>
-                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
-                    <p class="widget-title">Done Before</p>
-                </div>
-            </div>
-            <div id="no-of-tas" class="widget-div bg-green mb-3 min-vh-8">
-                <a class="btn col-md-12" href="http://www.google.com">
-                    <span class=" hyperspan">
-                        <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <p class="widget-title">Teaching Assistants</p>
-                        </div>
-                        <hr>
-                        <span class="fa-4x mb-0 line-h-initial">32</span>
-                    </span>
-                </a>
-            </div>
-        </div>  {{-- END OF 2ND COLUMN --}}
-
-        <div class="col-md-3">  {{-- START OF 3RD COLUMN --}}
-            <div id="lang-weight-primary" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
-                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                    <span class="fas fa-balance-scale fa-2x"></span>
-                </div>
-                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
-                    <p class="widget-title">Programming Languages</p>
-                </div>
-            </div>
-            <div id="lang-weight-first" class="widget-div bg-orange mb-3 min-vh-8">
-                <a class="btn col-md-12" href="http://www.google.com">
-                    <span class=" hyperspan">
-                        <p class="widget-title">1st Language Choice</p>
-                        <hr>
-                        Happy Days!
-                        <br>
-                        hahaha
-                    </span>
-                </a>
-            </div>
-        </div>  {{-- END OF 3RD COLUMN --}}
-
-        <div class="col-md-3">  {{-- START OF 4TH COLUMN --}}
-            <div id="lang-weight-primary" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
-                <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
-                    <span class="fas fa-balance-scale fa-2x"></span>
-                </div>
-                <div class="col-md-8 d-flex align-content-center flex-wrap justify-content-center">
-                    <p class="widget-title">Academic Year</p>
-                </div>
-            </div>
-            <div id="no-of-tas" class="widget-div bg-red mb-3 min-vh-8">
-                <a class="btn col-md-12" data-toggle="modal" data-target="#update_year_modal" data-whatever="@getbootstrap">
-                    <span class=" hyperspan">
-                        <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <p class="widget-title">Current Academic Year</p>
-                        </div>
-                        <hr>
-                        <span class="fa-4x mb-0 line-h-initial">32</span>
-                    </span>
-                </a>
-            </div>
-        </div> {{-- END OF 4TH COLUMN --}}
-    </div> {{-- END OF BOARD NO. 1 --}}
-
-    <div class="row md-col-12"> {{-- START OF BOARD NO. 2 --}}
         <div class="col-md-12"> {{-- SCREEN-FULL HEADER --}}
             <div id="lang_weight_head" class="row widget-div widget-primary bg-white text-center p-2 mb-3 ml-0 mr-0">
                 <div class="col-md-12 d-flex align-content-center flex-wrap justify-content-center">
                     <span class="fas fa-balance-scale fa-2x"></span>
-                    <p class="widget-title-number-col-4 ml-3">Programming Languages Weights &amp; Weigning Factors</p>
+                    <p class="widget-title-number-col-4 ml-3">Weigning Variables</p>
                 </div>
             </div>
         </div> {{-- END OF SCREEN-FULL HEADER --}}
 
-
-        <div class="col-md-4"> {{-- 1ST LANGUAGE CHOICE --}}
+        <div class="col-md-4"> {{-- START OF FIRST COLUMN --}}
+            {{-- START OF MODULE PRIORITY WEIGHTS --}}
             <div id="lang_weight_1" class="widget-div bg-skyblue mb-3 min-vh-8">
+                <a class="btn col-md-12" data-toggle="modal" data-target="#lang_modal_1">
+                    <span class=" hyperspan-col-4">
+                        <div class="d-flex align-content-center flex-wrap justify-content-center">
+                            <span class="my-3" style="font-size:20px"><strong>Module Priority Weights</strong></span>
+                        </div>
+                        <hr>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-4x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_1}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 1st Preference</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_2}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 2nd</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_3}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 3rd</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_4}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 4th</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_5}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 5th</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_6}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 5th</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_7}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 2nd</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_8}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 3rd</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_9}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 4th</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$module_priority_weights[0]->module_weight_10}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>As module's 5th</p>
+                            </div>
+                        </div>
+                    </span>
+                </a>
+            </div>
+            {{-- END OF MODULE PRIORITY WEIGHTS --}}
+        </div>  {{-- END OF FIRST COLUMN --}}
+
+        <div class="col-md-4">  {{-- START OF SECOND COLUMN --}}
+            {{-- START OF PROGRAMMING LANGUAGES WEIGHTS --}}
+            <div id="lang_weight_1" class="widget-div bg-olive mb-3 min-vh-8">
                 <a class="btn col-md-12" data-toggle="modal" data-target="#lang_modal_1">
                     <span class=" hyperspan-col-4">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
@@ -217,8 +201,82 @@
                     </span>
                 </a>
             </div>
-        </div>  {{-- END OF 1ST LANGUAGE CHOICE --}}
-    </div> {{-- END OF BOARD NO. 2 --}}
+            {{-- END OF PROGRAMMING LANGUAGES WEIGHTS --}}
+
+            {{-- START OF CURRENT ACADEMIC YEAR --}}
+            <div id="lang_weight_1" class="widget-div bg-turquoise mb-3 min-vh-8">
+                <a class="btn col-md-12" data-toggle="modal" data-target="#lang_modal_1">
+                    <span class=" hyperspan-col-4">
+                        <div class="d-flex align-content-center flex-wrap justify-content-center">
+                            <span class="my-3" style="font-size:20px"><strong>Current Academic Year</strong></span>
+                        </div>
+                        <hr>
+                        <div class="row mx-1">
+                            <div class="col-md-12 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-2x mb-0 line-h-initial">{{$current_academic_year}}</span>
+                            </div>
+                        </div>
+                    </span>
+                </a>
+            </div>
+            {{-- END OF CURRENT ACADEMIC YEAR --}}
+        </div>  {{-- END OF 2ND COLUMN --}}
+
+        <div class="col-md-4"> {{-- START OF 3RD COLUMN --}}
+            {{-- START OF MODULE REPETITION --}}
+            <div id="lang_weight_1" class="widget-div bg-violet mb-3 min-vh-8">
+                <a class="btn col-md-12" data-toggle="modal" data-target="#lang_modal_1">
+                    <span class=" hyperspan-col-4">
+                        <div class="d-flex align-content-center flex-wrap justify-content-center">
+                            <span class="my-3" style="font-size:20px"><strong>Module Repetition Weights</strong></span>
+                        </div>
+                        <hr>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-4x mb-0 line-h-initial">{{$current_module_repeatition_weights[0]->repeated_times_5}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>Assisted 5x or more before</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$current_module_repeatition_weights[0]->repeated_times_4}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>Assisted 4x before</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$current_module_repeatition_weights[0]->repeated_times_3}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>Assisted 3x before</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$current_module_repeatition_weights[0]->repeated_times_2}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>Assisted 2x before</p>
+                            </div>
+                        </div>
+                        <div class="row mx-1">
+                            <div class="col-md-4 d-flex align-content-center flex-wrap justify-content-center">
+                                <span class="fa-3x mb-0 line-h-initial">{{$current_module_repeatition_weights[0]->repeated_times_1}}</span>
+                            </div>
+                            <div class="col-md-8 pl-0 d-flex align-content-center flex-wrap justify-content-left">
+                                <p>Assisted once before</p>
+                            </div>
+                        </div>
+                    </span>
+                </a>
+            </div>
+        </div>  {{-- END OF MODULE REPETITION --}}
+
+    </div> {{-- END OF BOARD NO. 1 --}}
 
 
     {{-- START OF MODALS --}}

@@ -98,6 +98,14 @@ class WeightsClass
         }
 
     }
+
+    function getAllCurrentModuleRepetitionWeights()
+    {
+        return DB::table('module_repeatition_weights')
+                    ->select('repeated_times_1', 'repeated_times_2', 'repeated_times_3', 'repeated_times_4', 'repeated_times_5')
+                    ->where('type', '=', 'current')
+                    ->get();
+    }
     /**
      * Give the weight according to the priority of the module in the TA's ROL
      *
@@ -152,7 +160,11 @@ class WeightsClass
 
     function getWeightsForAllModulePriorities()
     {
-        return DB::table('module_priority_weights')->where('type', '=', 'current')->get();
+        return DB::table('module_priority_weights')
+                ->select('module_weight_1', 'module_weight_2', 'module_weight_3', 'module_weight_4','module_weight_5',
+                        'module_weight_6', 'module_weight_7', 'module_weight_8', 'module_weight_9','module_weight_10')
+                ->where('type', '=', 'current')
+                ->get();
     }
 
     function object_to_array($data)
