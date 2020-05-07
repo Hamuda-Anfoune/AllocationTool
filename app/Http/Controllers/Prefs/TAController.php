@@ -11,10 +11,11 @@ use Illuminate\Support\Facades\DB;
 use App\module; // BRINGING THE MODEL
 use App\ta_module_choice;
 use App\language;
+use App\Libraries\AllocationsClass;
 use App\Libraries\BasicDBClass;
+use App\Libraries\PrefsClass;
 use App\Ta_language_choice;
 use App\TA_preference;
-use Illuminate\Database\QueryException;
 use Mockery\Matcher\HasValue;
 
 /*
@@ -33,17 +34,21 @@ class TAController extends Controller
      */
     public function index()
     {
+        $basic_DB_class = new BasicDBClass();
+
         // Get the current academic year
-        $current_academic_year = DB::table('Academic_years')->select('year')->where('current', '=', 1)->first();
+        $current_academic_year = $basic_DB_class->getCurrentAcademicYear();
 
         // Get logged in user's email
         $email = session()->get('email');
 
 
         // Get the TA's preferences
-        $TAs_preferences = ta_preference::where('ta_email', '=', $email)->get();
+        $TAs_preferences = ta_preference::where('ta_email', '=', $email)
+                                            ->where('academic_year', '=', $current_academic_year)
+                                            ->get();
 
-        return view('TA/index')->with('TAs_preferences', $TAs_preferences);
+        return view('TA.index')->with('TAs_preferences', $TAs_preferences);
     }
 
 
@@ -69,12 +74,8 @@ class TAController extends Controller
             // Get a list of all the prgorammimg languages
             $languages = language::all();
 
-            // Get current year => method 1
-            // $current_academic_year = Academic_year::all()->where('current', '1');                    // Returns a complex JSON object
-
-            // Get current year => method 2
-            $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();    // - first(): Returns a simple object,
-                                                                                                        // - get():   Returns a JSON array
+            // Get current year
+            $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();
 
             // Get a list of all midules in database
             // $modules = Module::all();
@@ -115,11 +116,7 @@ class TAController extends Controller
             // Only one module choice is mandatory
         ]);
 
-
-        // $request->session()->flashInput($request->all());
-        // session()->flash('max_modules', $request->input('max_modules'));
-        // $request->flashExcept('academic_year');
-
+        $prefs_class = new PrefsClass();
 
         // Get username form session, NOT WHOLE EMAIL
         // Will be used to create  preference_id
@@ -135,185 +132,23 @@ class TAController extends Controller
 
 
         // Check, if TA already submitted preferences for this semester then interrupt, and advice to go to update preferences
-        // One way is by checking if preference ID exists
-
-        if(ta_preference::where('preference_id', '=', $preference_id)->count() > 0)
+        // One way is by checking if preference ID exists in the
+        if($prefs_class->taPreferenceExists($preference_id))
         {
                 return back()->withInput($request->input())->with('alert', 'Sorry, seems like you have already submitted your prefernces for this semester!'); //
         }
         else
         {
-            /*
-             Handling ta_preferences table data
-            */
-
-            // creating a new instance of Module_preference to save to DB
-            $ta_pref = new ta_preference();
-
-            // Adding the posted attributes to the created instance
-            $ta_pref->preference_id = $preference_id;
-            $ta_pref->ta_email = $email;
-            $ta_pref->max_modules = $request->input('max_modules');
-            $ta_pref->max_contact_hours = $request->input('max_contact_hours');
-            $ta_pref->max_marking_hours = $request->input('max_marking_hours');
-            $ta_pref->academic_year = $request->input('academic_year');
-            // $ta_pref->semester = $request->input('semester');
-             $ta_pref->have_tier4_visa = ($request->input('have_tier4_visa') == Null) ? false : true;
-
-            //  return $ta_pref;
-
-            /*
-                Handling ta_module_choices table data
-            */
-
-            /*
-             * Will delete the gaps in the choice if any,
-             * This will be done by creating a variabel to use for array keys
-             * the variable's value will be calculated as such:
-             *  counting the length of the array and adding 1 to it
-             *
-             * This should apply if the length of the array is 0
-             */
-            // Creating an array to save ta_module_choice instances
-            $module_choices_array = [];
-            // Counting the lenght of the array
-            $arrayLength = count($module_choices_array);
-
-            //for loop: Check module choices and save
-            for($i=1; $i<=10; $i++)
+            // Call method to store prefs
+            if($prefs_class->storeTaPrefrences($request, $preference_id))
             {
-                // Creating an instance of the ta_module_choices
-                $current_ta_module_choice = new ta_module_choice();
-
-                // Will loop and get IDs of submitted choices
-                $current_ta_module_choice_id =  $request->input('module_'.$i.'_id');
-
-                if($current_ta_module_choice_id != NULL) // if ID is not null
-                {
-                    $current_ta_module_choice->preference_id = $preference_id;
-                    $current_ta_module_choice->ta_email = $email;
-                    $current_ta_module_choice->module_id = $request->input('module_'.$i.'_id');
-                    $current_ta_module_choice->priority = $i;
-                    $current_ta_module_choice->did_before = ($request->input('done_before_'.$i) == Null) ? false : true;
-
-                    // Checking the length of the array to calculate the array key at which the instance will be saved
-                    // Counting the lenght of the array
-                    $arrayLength = count($module_choices_array);
-
-                    if($arrayLength == 0) // If array is now empty
-                    {
-                        // Add to array WITHOUT chaning the key
-                        $module_choices_array[$arrayLength] = $current_ta_module_choice;
-                    }
-                    else // if array is not empty
-                    {
-                        // Add WITH changing the key
-                        $module_choices_array[$arrayLength] = $current_ta_module_choice;
-                    }
-                }
-                else // once we get a null current_ta_module_choice_id
-                {
-                    // Do nothing
-                }
+                return redirect('TA/')->with('success', 'Preference Stored'); // success: type of message, Preference Created: msg body
+            }
+            else
+            {
+                return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try submitting again later.');
             }
 
-
-            // -------------------------------------
-            //      LANGUAGE PREFERENCES START
-            // -------------------------------------
-
-
-            // Creating an array to save ta_module_choice instances
-            $preferred_languages_array = [];
-            // Counting the lenght of the array
-            // $array2Length = count($preferred_languages_array);
-
-            //for loop: Check module choices and save
-            for($i=1; $i<=3; $i++)
-            {
-                // Creating an instance of the ta_language_choice
-                $preferred_language_choice = new Ta_language_choice();
-
-                // Will get IDs of submitted choices
-                $preferred_language_choice_id =  $request->input('preferred_language_'.$i.'_id');
-
-
-                if($preferred_language_choice_id != NULL) // if ID is not null
-                {
-                    $preferred_language_choice->preference_id = $preference_id;
-                    $preferred_language_choice->language_id = $preferred_language_choice_id;
-
-                    echo $preferred_language_choice;
-
-                    // Checking the length of the array to calculate the array key at which the instance will be saved
-                    // Counting the lenght of the array
-
-
-                    // if($array2Length == 0) // If array is now empty
-                    // {
-                    //     // Add to array WITHOUT chaning the key
-                    //     // $preferred_languages_array[$array2Length] = $preferred_language_choice;
-                    // }
-                    // else // if array is not empty
-                    // {
-                        // ADD TO ARRAY
-                        $preferred_languages_array[] = $preferred_language_choice;
-                    // }
-                }
-                else // once we get a null preferred_languages_array_id
-                {
-                    // Do nothing
-                }
-            }
-
-            // ------------------------------------
-            //      LANGUAGE PREFERENCES END
-            // ------------------------------------
-
-            // return $preferred_languages_array;
-
-            /*
-             * All saving will be in the try catch
-             */
-            try
-            {
-                // Save to ta_preferences table
-                $ta_pref->save();
-
-                // Save to ta_module_choices table
-                for($j = 0; $j <= $arrayLength; $j++)
-                {
-                        $ta_module_choice_to_save = $module_choices_array[$j];
-                        $ta_module_choice_to_save->priority = $j+1;
-                        $ta_module_choice_to_save->save();
-                }
-
-                // Save to TA language choices
-                // get the length of the array where language choices are saved
-                $array2Length = count($preferred_languages_array);
-
-                // use legth to loop and save language choices
-                for($l = 0; $l < $array2Length; $l++)
-                {
-                        $ta_preferred_languages_to_save = $preferred_languages_array[$l];
-                        $ta_preferred_languages_to_save->save();
-                }
-            }
-            catch (QueryException $e)
-            {
-                return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: '. $e); //
-            }
-
-            // Getting the convenor email from the session sign in data
-            // $ta_pref->convenor_email = session()->get('email'); // NOW IN THE MODULE TABLE, IT IS A PROPERTY NOT A PREFERENCE
-
-            // ALL THREE STATEMENTS BELOW WORK!
-            // echo $request->session()->get('email');
-            // echo session()->get('email');
-            // echo session('email');
-            // session()->flash('Success', 'Preferences saved successfully!');
-
-            return redirect('TA/')->with('success', 'Preference Stored'); // success: type of message, Preference Created: msg body
         }
     }
 
@@ -323,49 +158,20 @@ class TAController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($preference_id)
     {
-        $current_ta_preferences = DB::table('ta_preferences')->where('preference_id','=', $id)->get();
 
-        /* Below: Gets the modules but not the priority
-         $current_module_choices = DB::table('modules')
-                                    ->whereExists(function ($query) use($id)
-                                    {
-                                        $query->select(DB::raw(100))
-                                            ->from('ta_module_choices')
-                                            ->whereRaw('ta_module_choices.module_id = modules.module_id')
-                                            ->where('preference_id','=', $id);
-                                    })
-                                    ->get();
-        */
+        $basic_db_class = new BasicDBClass();
 
-        $id = 'salimY2019-2020-02';
+        // Get the preference data
+        $current_ta_preferences = $basic_db_class->getTAPreferenceData($preference_id);
 
-        // $target_academic_year = substr($id, 0, strpos($id, "Y")); // Gets what's before the Y
-        $target_academic_year = substr($id, strpos($id, "Y") + 1); // Gets what's after the Y
-
-        $current_module_choices_without_names = DB::table('ta_module_choices')->where('preference_id','=',$id)->get();
-
-        // DONE: Get an array of the chosen modules' based on id in ta_module_choices, add priority to array elements
-        $current_module_choices = [];
-        for($i=0; $i<count($current_module_choices_without_names); $i++)
-        {
-            $current_module_choices[$i] = DB::table('modules')
-                                                        ->where('modules.module_id','=', $current_module_choices_without_names[$i]->module_id)
-                                                        ->where('modules.academic_year','=', $target_academic_year)
-                                                        ->first();
-
-            $current_module_choices[$i]->priority = $current_module_choices_without_names[$i]->priority;
-        }
+        // Get the module choises for the TA based on preference
+        $current_module_choices = $basic_db_class->getModuleChoicesForTAForYear($preference_id);
 
         // Get language choices from ta_language_choices and their names from languages
-        $current_language_choices = DB::table('ta_language_choices')->where('preference_id','=',$id)->get();
-        for($j = 0; $j <count($current_language_choices); $j++)
-        {
-            $get_name = DB::table('languages')->select('language_name')->where('language_id', '=', $current_language_choices[$j]->language_id)->first();
-            $current_language_choices[$j]->language_name = $get_name->language_name;
-           // print_r($current_language_choices);
-        }
+         $current_language_choices = $basic_db_class->getTaLanguageChoicesForPreference($preference_id);
+
 
         return view('TA.show')
                             ->with('current_ta_preferences', $current_ta_preferences)
@@ -379,8 +185,46 @@ class TAController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($preference_id)
     {
+        if (session()->get('account_type_id')== 003 || session()->get('account_type_id')== 004) // session value is assigned in authenticated() in AuthenticatesUsers.php
+        {
+            $basic_db_class = new BasicDBClass();
+
+            // Get the preference data
+            $current_ta_preferences = $basic_db_class->getTAPreferenceData($preference_id);
+
+            // Get the module choises for the TA based on preference
+            $current_module_choices = $basic_db_class->getModuleChoicesForTAForYear($preference_id);
+
+            // Get language choices from ta_language_choices and their names from languages
+            $current_language_choices = $basic_db_class->getTaLanguageChoicesForPreference($preference_id);
+
+            // Get a list of all the prgorammimg languages
+            $languages = language::all();
+
+            // Get current year
+            $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();
+
+            // Get a list of all midules in database
+            // $modules = Module::all();
+            $modules = $basic_db_class->getAllModulesForYear($current_academic_year->year);
+
+            // pass modules to view, will be shown in a select element in the view
+            return view ('TA.edit')
+                                ->with('current_ta_preferences', $current_ta_preferences)
+                                ->with('current_module_choices', $current_module_choices)
+                                ->with('current_language_choices', $current_language_choices)
+                                ->with('modules', $modules)
+                                ->with('current_academic_year', $current_academic_year)
+                                ->with('languages', $languages);
+
+        }else
+        {
+            return redirect('home');
+        }
+
+        // Suggestion
         // Pobulate a form based on a model
         // https://laravelcollective.com/docs/6.0/html#form-model-binding
     }
@@ -392,9 +236,62 @@ class TAController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $req)
     {
-        //
+        //check if current user is GTA or TA
+        if (session()->get('account_type_id') != 003 && session()->get('account_type_id') != 004) // session value is assigned in authenticated() in AuthenticatesUsers.php
+        {
+            // Redirect to home
+            return redirect('home');
+        }
+
+        // Validate
+        $this->validate($req, [
+            // Array of rules
+            // at least one module choice is required
+            'module_1_id' => ['required','string', 'exists:modules,module_id'],
+            'max_modules' => ['required', 'integer'],
+            'max_contact_hours' => ['required', 'integer'],
+            'max_marking_hours' => ['required', 'integer'],
+            'academic_year' => ['required','string', 'exists:academic_years,year'],
+            // 'semester' => ['required'],
+
+            // Only one module choice is mandatory
+        ]);
+
+        $basic_db_class = new BasicDBClass();
+        $allocation_class = new AllocationsClass();
+        $prefs_class = new PrefsClass();
+
+        // Check if requested academic year is current
+        if($basic_db_class->getCurrentAcademicYear() != $req['academic_year'])
+            return back()->with('alert', 'Sorry, Only current semesters\'s preferences can be edited!');
+
+        // Check if requested year has not been allocated yet
+        if($allocation_class->allocationExistsForYear($req['academic_year']))
+            return back()->with('alert', 'Sorry, Cannot edit current semesters\'s preferences, TA roles have already been allocated!');
+
+
+        // Get the pref ID from the req
+        $preference_id = $req['preference_id'];
+
+        // Clear the current pref from the DB
+        $prefs_class->clear_ta_language_choices($req['preference_id']);
+        $prefs_class->clear_ta_module_choices($req['preference_id']);
+        $prefs_class->clear_ta_preference($req['preference_id']);
+
+        // Insert the new data
+        if($prefs_class->storeTaPrefrences($req, $preference_id))
+        {
+            return redirect('TA/')->with('success', 'Your preference have been updated!'); // success: type of message, Preference Created: msg body
+        }
+        else
+        {
+            return back()->withInput($req->input())->with('alert', 'Error updating your preferences, please try submitting again later.');
+        }
+
+        // Return
+        // return redirect('/TA')->with('success', 'Your preferences updated for the acdemic year ' . $req['academic_year']);
     }
 
     /**
@@ -403,8 +300,14 @@ class TAController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($preference_id)
     {
-        //
+        $prefs_class = new PrefsClass();
+
+        $prefs_class->clear_ta_language_choices($preference_id);
+        $prefs_class->clear_ta_module_choices($preference_id);
+        $prefs_class->clear_ta_preference($preference_id);
+
+        return redirect('TA/prefs/add')->with('success', 'Your preferences have been deleted');
     }
 }

@@ -20,8 +20,15 @@
                   <a class="nav-link" href="/about">Contact us</a>
                 </li>
                 @if (session('account_type_id') == 002)
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Module/add">Convenors</a>
+                    <li class="nav-item  dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('Convenors') }}
+                          </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="nav-link" href="/module/prefs/add">{{ __('Submit Preferences') }}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link" href="/module/convenor">{{ __('All Your Modules') }}</a>
+                        </div>
                     </li>
                 @endif
                 @if (session('account_type_id') == 003 || session('account_type_id') == 004)
@@ -32,7 +39,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="nav-link" href="/modules/prefs/all">{{ __('Modules\' Preferences') }}</a>
                             <div class="dropdown-divider"></div>
-                            <a class="nav-link" href="/TA/add">{{ __('Submit Preferences') }}</a>
+                            <a class="nav-link" href="/TA/prefs/add">{{ __('Submit Preferences') }}</a>
                         </div>
                     </li>
                 @endif
@@ -44,13 +51,13 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="nav-link" href="/allocations">{{ __('Admins') }}</a>
                             <div class="dropdown-divider"></div>
-                            <a class="nav-link" href="/config">{{ __('Configuration') }}</a>
+                            <a class="nav-link" href="/admin/config">{{ __('Configuration') }}</a>
                             <div class="dropdown-divider"></div>
                             <a class="nav-link" href="/modules/prefs/all">{{ __('Modules\' Preferences') }}</a>
                         </div>
                     </li>
-                  @endif
-                </ul>
+                @endif
+            </ul>
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
@@ -67,7 +74,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('User') }}</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="nav-link" href="/Admin/university/signup ">{{ __('Univesity') }}</a>
+                                    <a class="nav-link" href="/admin/university/signup ">{{ __('Univesity') }}</a>
                                 </div>
                         </li>
                     @endif

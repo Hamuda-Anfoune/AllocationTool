@@ -81,22 +81,6 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- <div class="form-group row">
-                            <label for="semester" class="col-md-4 col-form-label text-md-right">{{ __('Semester') }}</label>
-
-                            <div class="col-md-6">
-                                {{-- <input id="semester" type="text" class="form-control @error('semester') is-invalid @enderror" name="semester" value="{{ old('semester') }}" required autocomplete="semester" autofocus> --}}
-                                {{-- <select name="semester" id="semester" class="custom-select">
-                                    <option value="01" {{ old('semester') == 01 ? 'selected' : '' }}>First</option>
-                                    <option value="02" {{ old('semester') == 02 ? 'selected' : '' }}>Second</option>
-                                </select>
-                                @error('semester')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div> --}}
 
                         {{-- ------------------------
                             VISA STATUS
@@ -112,7 +96,6 @@
                         <br>
 
                         <div class="form-group row justify-content-center">
-                            {{-- <label for="have_tier4_visa" class="col-form-label text-md-right">{{ __('I am on a tier 4 visa') }}</label> --}}
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="have_tier4_visa[]" name="have_tier4_visa[]" value="true" {{ (is_array(old('have_tier4_visa')) && in_array(true, old('have_tier4_visa'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="have_tier4_visa">
@@ -387,7 +370,7 @@
                             </div>
                         </div>
                         <div class="form-group row ">
-                            <label for="preferred_language_2_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 1') }}</label>
+                            <label for="preferred_language_2_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 2') }}</label>
 
                             <div class="col-md-6">
                                 <select name="preferred_language_2_id" id="preferred_language_2_id" class="custom-select">
@@ -420,6 +403,93 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="form-group row ">
+                            <label for="preferred_language_4_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 4') }}</label>
+                            <div class="col-md-6">
+                                <select name="preferred_language_4_id" id="preferred_language_4_id" class="custom-select">
+                                    <option value="">Choice #4</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('preferred_language_4_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('preferred_language_4_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="preferred_language_5_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 5') }}</label>
+
+                            <div class="col-md-6">
+                                <select name="preferred_language_5_id" id="preferred_language_5_id" class="custom-select">
+                                    <option value="">Choice #5</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('preferred_language_5_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('preferred_language_5_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="preferred_language_6_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 6') }}</label>
+
+                            <div class="col-md-6">
+                                <select name="preferred_language_6_id" id="preferred_language_6_id" class="custom-select">
+                                    <option value="">Choice #6</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('preferred_language_6_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('preferred_language_6_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="preferred_language_7_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. 7') }}</label>
+
+                            <div class="col-md-6">
+                                <select name="preferred_language_7_id" id="preferred_language_7_id" class="custom-select">
+                                    <option value="">Choice #7</option>
+                                    @foreach ($languages as $language)
+                                        <option value="{{$language->language_id}}" {{ old('preferred_language_7_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('preferred_language_7_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- @for($i = 1; $i >=7; $i++)
+                            <div class="form-group row ">
+                                <label for="preferred_language_{{$i}}_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. ' . $i) }}</label>
+
+                                <div class="col-md-6">
+                                    <select name="preferred_language_{{$i}}_id" id="preferred_language_{{$i}}_id" class="custom-select">
+                                        <option value="">Choice #{{$i}}</option>
+                                        @foreach ($languages as $language)
+                                            <option value="{{$language->language_id}}" {{ old('preferred_language_'.$i.'_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('preferred_language_{{$i}}_id')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endfor --}}
 
                         <br>
                         <hr>

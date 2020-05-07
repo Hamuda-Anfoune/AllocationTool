@@ -99,7 +99,7 @@ class AllocationController extends Controller
         // Redirect to show missing prefs in case there are any!
         if(count($tas_without_prefs) > 0 || count($modules_without_prefs) > 0)
         {
-            return redirect('/allocations/missing-prefs');
+            return redirect('/admin/allocations/missing-prefs');
         }
 
         /**
@@ -345,7 +345,7 @@ class AllocationController extends Controller
         // Redirect to show missing prefs in case there are any!
         if(count($tas_without_prefs) > 0 || count($modules_without_prefs) > 0)
         {
-            return redirect('/allocations/missing-prefs');
+            return redirect('/admin/allocations/missing-prefs');
         }
 
 
@@ -429,7 +429,7 @@ class AllocationController extends Controller
 
                 // WEIGHT FOR HAVING PROGRAMMING LANGUAGES IN COMMON
                 // Get a language choices for TA
-                $ta_language_choices = $basic_DB_access->getTaLanguageChoicesForYear($ta->preference_id)->toArray();
+                $ta_language_choices = $basic_DB_access->getTaLanguageChoicesForPreference($ta->preference_id)->toArray();
 
                 foreach($module_used_languages as $language)
                 {

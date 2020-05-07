@@ -37,7 +37,7 @@
                 <div class="card-body">
                     <div class="mb-3 col-md-12 row">
                         <div class="col-md-4">
-                            <a class=" col-md-12 btn btn-success" href="{{ route('createModuleROLs') }}" onclick="return confirm('Press OK to continue?')"> Allocate</a>
+                            <a class=" col-md-12 btn btn-success" href="{{ route('allocate') }}" onclick="return confirm('Press OK to continue?')"> Allocate</a>
                         </div>
                         <div class="col-md-4">
                             <a class=" col-md-12 btn btn-danger" href="{{ route('deleteAllocation') }}" onclick="return confirm('Are you sure?')">Delete Current Year's Allocation</a>
@@ -107,7 +107,7 @@
                 </div>
             </div>
             <div id="no-of-convenors" class="widget-div bg-skyblue mb-3 min-vh-8">
-                <a class="btn col-md-12" href="/Admin/university-users/add">
+                <a class="btn col-md-12" href="/admin/university-users/add">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
                             <p class="widget-title">Active Module Convenors</p>
@@ -118,7 +118,7 @@
                 </a>
             </div>
             <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-8">
-                <a class="btn col-md-12" href="/Admin/university-users/add">
+                <a class="btn col-md-12" href="/admin/university-users/add">
                     <span class=" hyperspan">
                         <p class="widget-title">Covenors Without Prefs</p>
                         <hr>
@@ -173,7 +173,7 @@
                 </div>
             </div>
             <div id="no-of-tas" class="widget-div bg-orange mb-3 min-vh-8">
-                <a class="btn col-md-12" href="/Admin/modules/add">
+                <a class="btn col-md-12" href="/admin/modules/add">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
                             <p class="widget-title">Taught Modules</p>

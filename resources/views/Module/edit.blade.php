@@ -129,7 +129,7 @@
                                     <select name="language_{{$i}}_id" id="language_{{$i}}_id" class="custom-select">
                                         <option value="">Choice # {{$i}}</option>
                                         @if(array_key_exists($i, $module_language_choices))
-                                            <option value="{{$module_language_choices[$i-1]->language_id}}" selected>{{$module_language_choices[1]->Language_name}} (current)</option>
+                                            {{--Need to recheck array keys one is 1 another is $i-1 <option value="{{$module_language_choices[$i-1]->language_id}}" selected>{{$module_language_choices[1]->Language_name}} (current)</option> --}}
                                         @endif
                                         @foreach ($languages as $language)
                                             <option value="{{$language->language_id}}" >{{$language->language_name}}</option>
@@ -145,7 +145,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure?')">
+                                <button type="submit" class="btn btn-primary" onclick="return confirm('Please, click OK to confirm the update!')">
                                     {{ __('Update') }}
                                 </button>
                             </div>

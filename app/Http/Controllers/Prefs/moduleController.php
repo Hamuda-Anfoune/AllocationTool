@@ -26,6 +26,12 @@ class moduleController extends Controller
 
     /**
      * Display a listing of the resource.
+     * Does the same as showAll() below.
+     *
+     * This returns results for the current year.
+     *
+     * This handles get requests
+     * showAll() handles post requests for a specific year
      *
      * @return \Illuminate\Http\Response
      */
@@ -48,6 +54,12 @@ class moduleController extends Controller
 
     /**
      * Display a listing of the resource.
+     * Does the same as index() above.
+     *
+     * This returns results for requested year.
+     *
+     * This handles post requests
+     * index() handles get requests
      *
      * @return \Illuminate\Http\Response
      */

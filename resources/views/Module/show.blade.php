@@ -74,15 +74,12 @@
                         <hr>
                         <br>
 
-                        <div class="form-group row mb-0">
-
-                        </div>
                     </form>
                     <div class="col-md-6 offset-md-4">
-                        <a href="/Module/edit/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-primary">
+                        <a href="/module/prefs/edit/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-primary">
                             {{ __('Edit') }}
                         </a>
-                        <a href="/Module/delete/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                        <a href="/module/prefs/delete/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-danger" onclick="return confirm('Are you sure?')">
                             {{ __('Delete') }}
                         </a>
                     </div>

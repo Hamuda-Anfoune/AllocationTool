@@ -13,9 +13,7 @@
 
 ## TODO:
 -----------------
- * Integrate the Studied module before in the algorithm
-
- * Give GTAs more weight than TAs
+ * Give GTAs more weight than TAs // Not essential
 
  * Finalise show functionality for TA preferences
 

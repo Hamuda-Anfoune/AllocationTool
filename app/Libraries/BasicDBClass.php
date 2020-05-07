@@ -3,6 +3,7 @@
 namespace App\Libraries;
 use Illuminate\Support\Facades\DB;
 use App\Academic_year;
+use PhpParser\NodeVisitor\FirstFindingVisitor;
 
 /**
     * ONLY USE TO READ BASIC PRIMARY DATA FROM DB!. SHOULD NOT USE ANY OTHER CUSTOM CLASS.
@@ -43,6 +44,14 @@ class BasicDBClass
         return DB::table('Academic_years')->select('year')->get();
         //  return Academic_year::all();
     }
+
+    /**
+     *  ----------------------------
+     *
+     *            MODULES
+     *
+     *  ----------------------------
+     */
 
     /**
      * returns all modules in target academic year.
@@ -119,6 +128,15 @@ class BasicDBClass
                     })
                     ->get();
     }
+
+    /**
+     *  ----------------------------
+     *
+     *            MODULES
+     *
+     *  ----------------------------
+     */
+
 
     /**
      * Will return all active TAs
@@ -225,12 +243,63 @@ class BasicDBClass
      * @return array of ta_language_choices
      * @return prepereties: $language_id string
      */
-    function getTaLanguageChoicesForYear(string $preference_id)
+    function getTaLanguageChoicesForPreference(string $preference_id)
     {
-        return DB::table('ta_language_choices')
+        $language_choices = DB::table('ta_language_choices')
                     ->select('language_id')
                     ->where('preference_id', '=', $preference_id)
                     ->get();
+
+        foreach($language_choices as $language)
+        {
+            $language->language_name = DB::table('languages')->select('language_name')->where('language_id', '=', $language->language_id)->first()->language_name;
+        }
+
+        return $language_choices;
+    }
+
+    /**
+     * Returns module choices for TA for a specific year
+     *
+     * @param acdemic_year
+     */
+    function getModuleChoicesForTAForYear(string $preference_id)
+    {
+        // Get the academic year for that preference
+        $target_academic_year = DB::table('ta_preferences')
+                                    ->select('academic_year')
+                                    ->where('preference_id', '=', $preference_id)
+                                    ->first()
+                                    ->academic_year;
+
+
+        $current_module_choices_without_names = DB::table('ta_module_choices')
+                                                    ->select('module_id','priority','did_before')
+                                                    ->where('preference_id','=',$preference_id)
+                                                    ->orderBy('priority','ASC')
+                                                    ->get();
+
+        // DONE: Get an array of the chosen modules' based on preference_id in ta_module_choices, add priority to array elements
+        $current_module_choices = [];
+        for($i=0; $i<count($current_module_choices_without_names); $i++)
+        {
+            $current_module_choices[$i] = DB::table('modules')
+                                                        ->select('module_name')
+                                                        ->where('module_id','=', $current_module_choices_without_names[$i]->module_id)
+                                                        ->where('academic_year','=', $target_academic_year)
+                                                        ->first();
+
+            $current_module_choices[$i]->module_id = $current_module_choices_without_names[$i]->module_id;
+            $current_module_choices[$i]->priority = $current_module_choices_without_names[$i]->priority;
+            $current_module_choices[$i]->did_before = $current_module_choices_without_names[$i]->did_before;
+        }
+
+        return $current_module_choices;
+    }
+
+    function getTAPreferenceData($preference_id)
+    {
+        return DB::table('ta_preferences')->where('preference_id','=', $preference_id)->get();
     }
 
     /**
