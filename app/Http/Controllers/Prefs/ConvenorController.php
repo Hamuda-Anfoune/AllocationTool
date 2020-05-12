@@ -58,16 +58,7 @@ class ConvenorController extends Controller
              *   where the academic year = current academic year ->
              *   which do not exist in module_preferences ->
              */
-            $nonpreferenced_convenor_modules = DB::table('modules')
-                                                            ->where('convenor_email','=', $email)
-                                                            ->where('academic_year','=', $current_academic_year)
-                                                            ->whereNotExists(function ($query)
-                                                            {
-                                                                $query->select(DB::raw(100))
-                                                                    ->from('module_preferences')
-                                                                    ->whereRaw('module_preferences.module_id = modules.module_id');
-                                                            })
-                                                            ->get();
+            $nonpreferenced_convenor_modules = $basic_db_class->getModulesWithoutPrefsForConvenorForYear($email, $current_academic_year);
 
             return view('Module.index')
                             ->with('current_academic_year', $current_academic_year)

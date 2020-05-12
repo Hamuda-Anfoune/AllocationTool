@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class allocations extends Model
+class Allocation extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class allocations extends Model
      * @var array
      */
     protected $fillable = [
-        'allocation_id', 'academic_year', 'password', 'module_id', 'ta_email', 'creator_email',
+        'allocation_id', 'academic_year', 'module_id', 'ta_id', 'creator_email',
     ];
 
     /**
@@ -33,10 +33,9 @@ class allocations extends Model
         // 'email_verified_at' => 'datetime',
     ];
 
-    protected $primaryKey = 'allocation_id'; // Setting PrimaryKey
+    // protected $primaryKey = 'allocation_id'; // Setting PrimaryKey
 
-    public $incrementing = false; // To stop Eloquent from assuming primaryKey is auto incrementing
+    // public $incrementing = false; // To stop Eloquent from assuming primaryKey is auto incrementing
 
-    protected $keyType = 'string'; // To stop Eloquent from assuming primaryKey is an int
-
+    // protected $keyType = 'string'; // To stop Eloquent from assuming primaryKey is an int
 }

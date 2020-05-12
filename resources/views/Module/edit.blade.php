@@ -40,15 +40,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Number of Contact Hours') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Contact Hours Per Week') }}</label>
 
                             <div class="col-md-6">
-                                <select name="no_of_contact_hours" id="no_of_contact_hours" class="custom-select">
-                                    <option value="{{$module_basic_prefs[0]->no_of_contact_hours}}" >{{$module_basic_prefs[0]->no_of_contact_hours}} (current)</option>
-                                    @for($i=1; $i<= 40; $i++)
-                                        <option value="{{$i}}" {{ $module_basic_prefs[0]->no_of_contact_hours == $i ? 'selected' : '' }}>{{$i}}</option>
-                                    @endfor
-                                </select>
+                                <input type="number" name="no_of_contact_hours" id="no_of_contact_hours" class="form-control" value="{{$module_basic_prefs[0]->no_of_contact_hours}}" placeholder="Weekly total, fractions will be round up!" aria-describedby="helpId" >
                                 @error('no_of_contact_hours')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -58,15 +53,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="no_of_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Number of Marking Hours') }}</label>
+                            <label for="no_of_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Total Marking Hours Per Semester') }}</label>
 
                             <div class="col-md-6">
-                                <select name="no_of_marking_hours" id="no_of_marking_hours" class="custom-select">
-                                    <option value="{{$module_basic_prefs[0]->no_of_marking_hours}}" >{{$module_basic_prefs[0]->no_of_marking_hours}} (current)</option>
-                                    @for($i=1; $i<= 40; $i++)
-                                        <option value="{{$i}}" {{ $module_basic_prefs[0]->no_of_marking_hours == $i ? 'selected' : '' }}>{{$i}}</option>
-                                    @endfor
-                                </select>
+                                <input type="number" name="no_of_marking_hours" id="no_of_marking_hours" class="form-control" value="{{$module_basic_prefs[0]->no_of_marking_hours}}" placeholder="Semester total, fractions will be round up!" aria-describedby="helpId" >
                                 @error('no_of_marking_hours')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -96,16 +86,6 @@
                             <h4>{{ __('Programming Languages') }}</h4>
                             <br>
                         </div>
-
-                        {{-- @foreach ($module_language_choices as $language)
-                        <div class="form-group row ">
-                            <label for="language_1_id" class="col-md-4 col-form-label text-md-right">{{ __('Language Choice No. ') }}{{$language->priority}}</label>
-                            <div class="col-md-6">
-                                <input type="text" name="" id="module_id" class="form-control" placeholder="{{$language->Language_name}}" aria-describedby="helpId"  disabled>
-
-                            </div>
-                        </div>
-                        @endforeach --}}
 
                         @foreach ($module_language_choices as $language1)
                         <div class="form-group row ">

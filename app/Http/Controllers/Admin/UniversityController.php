@@ -13,6 +13,10 @@ use App\User;
 
 class UniversityController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     use RegistersUsers;
 

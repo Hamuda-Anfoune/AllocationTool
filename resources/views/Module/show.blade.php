@@ -35,14 +35,14 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Number of Contact Hours') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Contact Hours Per Week') }}</label>
                             <div class="col-md-6">
                                 <input type="text" name="" id="module_id" class="form-control" placeholder="{{$module_basic_prefs[0]->no_of_contact_hours}}" aria-describedby="helpId"  disabled>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="no_of_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Number of Marking Hours') }}</label>
+                            <label for="no_of_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Total Marking Hours Per Semester') }}</label>
                             <div class="col-md-6">
                                 <input type="text" name="" id="module_id" class="form-control" placeholder="{{$module_basic_prefs[0]->no_of_marking_hours}}" aria-describedby="helpId"  disabled>
                             </div>

@@ -13,9 +13,8 @@
 
 ## TODO:
 -----------------
- * Give GTAs more weight than TAs // Not essential
 
- * Finalise show functionality for TA preferences
+ * Give GTAs more weight than TAs // Not essential
 
  * Edit the module preferences submission view to add a new div for each new 'used language'
 

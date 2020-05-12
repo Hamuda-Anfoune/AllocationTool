@@ -25,11 +25,10 @@
                             <div class="col-md-6">
                                 {{-- <input id="max_modules" type="max_modules" class="form-control @error('max_modules') is-invalid @enderror" name="max_modules" value="{{ old('max_modules') }}" required autocomplete="max_modules"> --}}
                                 <select name="max_modules" id="max_modules" class="custom-select" >
-                                    @for($i=1; $i<= 40; $i++)
+                                    @for($i=1; $i<= 20; $i++)
                                         <option value="{{$i}}" {{ old('max_modules') == $i ? 'selected' : '' }}>{{$i}}</option>
                                     @endfor
                                 </select>
-
                                 @error('max_modules')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -39,14 +38,15 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="max_contact_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Contact Hours') }}</label>
+                            <label for="max_contact_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Contact Hours Per Week') }}</label>
 
                             <div class="col-md-6">
-                                <select name="max_contact_hours" id="max_contact_hours" class="custom-select">
-                                    @for($i=1; $i<= 40; $i++)
+                                <input type="number" name="max_contact_hours" id="max_contact_hours" class="form-control" value="{{ old('max_contact_hours') }}" placeholder="Weekly total, fractions will be round up!" aria-describedby="helpId" >
+                                {{-- <select name="max_contact_hours" id="max_contact_hours" class="custom-select">
+                                    @for($i=0; $i<= 50; $i++)
                                         <option value="{{$i}}" {{ old('max_contact_hours') == $i ? 'selected' : '' }}>{{$i}}</option>
                                     @endfor
-                                </select>
+                                </select> --}}
                                 @error('max_contact_hours')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -56,14 +56,15 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="max_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Marking Hours') }}</label>
+                            <label for="max_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Marking Hours Per Semester') }}</label>
 
                             <div class="col-md-6">
-                                <select name="max_marking_hours" id="max_marking_hours" class="custom-select">
-                                    @for($i=1; $i<= 40; $i++)
+                                <input type="number" name="max_marking_hours" id="max_marking_hours" class="form-control" value="{{ old('max_marking_hours') }}" placeholder="Semester total, fractions will be round up!" aria-describedby="helpId" >
+                                {{-- <select name="max_marking_hours" id="max_marking_hours" class="custom-select">
+                                    @for($i=0; $i<= 50; $i++)
                                         <option value="{{$i}}" {{ old('max_marking_hours') == $i ? 'selected' : '' }}>{{$i}}</option>
                                     @endfor
-                                </select>
+                                </select> --}}
                                 @error('max_marking_hours')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -133,7 +134,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_1[]" name="done_before_1[]" {{ (is_array(old('done_before_1')) && in_array(true, old('done_before_1'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_1">
                                   I helped with this module before!
@@ -155,7 +156,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_2[]" name="done_before_2[]" {{ (is_array(old('done_before_2')) && in_array(true, old('done_before_2'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_2">
                                   I helped with this module before!
@@ -177,7 +178,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_3[]" name="done_before_3[]" {{ (is_array(old('done_before_3')) && in_array(true, old('done_before_3'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_3">
                                   I helped with this module before!
@@ -199,7 +200,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_4[]" name="done_before_4[]" {{ (is_array(old('done_before_4')) && in_array(true, old('done_before_4'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_4">
                                   I helped with this module before!
@@ -221,7 +222,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_5[]" name="done_before_5[]" {{ (is_array(old('done_before_5')) && in_array(true, old('done_before_5'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_5">
                                   I helped with this module before!
@@ -243,7 +244,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_6[]" name="done_before_6[]" {{ (is_array(old('done_before_6')) && in_array(true, old('done_before_6'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_6">
                                   I helped with this module before!
@@ -265,7 +266,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_7[]" name="done_before_7[]" {{ (is_array(old('done_before_7')) && in_array(true, old('done_before_7'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_7">
                                   I helped with this module before!
@@ -287,7 +288,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_8[]" name="done_before_8[]" {{ (is_array(old('done_before_8')) && in_array(true, old('done_before_8'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_8">
                                   I helped with this module before!
@@ -309,7 +310,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_9[]" name="done_before_9[]" {{ (is_array(old('done_before_9')) && in_array(true, old('done_before_9'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_9">
                                   I helped with this module before!
@@ -331,7 +332,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-check">
+                            <div class="form-check ml-3">
                                 <input class="form-check-input" type="checkbox" value="true" id="done_before_10[]" name="done_before_10[]" {{ (is_array(old('done_before_10')) && in_array(true, old('done_before_10'))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="done_before_10">
                                   I helped with this module before!
@@ -471,33 +472,13 @@
                             </div>
                         </div>
 
-                        {{-- @for($i = 1; $i >=7; $i++)
-                            <div class="form-group row ">
-                                <label for="preferred_language_{{$i}}_id" class="col-md-4 col-form-label text-md-right">{{ __('Preferred Language No. ' . $i) }}</label>
-
-                                <div class="col-md-6">
-                                    <select name="preferred_language_{{$i}}_id" id="preferred_language_{{$i}}_id" class="custom-select">
-                                        <option value="">Choice #{{$i}}</option>
-                                        @foreach ($languages as $language)
-                                            <option value="{{$language->language_id}}" {{ old('preferred_language_'.$i.'_id') == $language->language_name ? 'selected' : '' }}>{{$language->language_name}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('preferred_language_{{$i}}_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        @endfor --}}
-
                         <br>
                         <hr>
                         <br>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-12 text-center">
-                                <button type="submit" class="btn btn-success col-md-8">
+                                <button type="submit" class="btn btn-outline-success col-md-8">
                                     {{ __('Add Preference') }}
                                 </button>
                             </div>

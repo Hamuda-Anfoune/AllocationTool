@@ -8,7 +8,7 @@
 - ta_preferences:                       2020_03_16_081305_create_ta_preferences_table
 - ta_module_choices:                    2020_03_16_081329_create_ta_module_choices_table
 - module_preferences:                   2020_03_16_081412_create_module_preferences_table
-- allocations:                          2020_03_16_081429_create_allocations_table
+- allocations:                          outcome/2020_05_10_194359_create_allocations_table
 - languages:                            2020_03_16_081238_create_languages_table
 - used_languages:                       2020_03_16_081620_create_used_langauges_table
 - Ta_lanaguage_choices:                 2020_04_04_120824_create_ta_language_choices_table

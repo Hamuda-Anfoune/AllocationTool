@@ -21,7 +21,7 @@
                     @if(($nonpreferenced_convenor_modules->count()) > 0)
                         <ul>
                             @foreach($nonpreferenced_convenor_modules as $module)
-                                <li>{{$module->module_id}} - {{$module->module_name}}</li>
+                                <li><a href="/module/prefs/add">{{$module->module_id}} - {{$module->module_name}}</a></li>
                             @endforeach
                         </ul>
                     @endif

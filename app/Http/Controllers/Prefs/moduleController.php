@@ -6,14 +6,15 @@ use App\Academic_year;
 use App\Http\Controllers\Controller;
 use App\language;
 use App\Libraries\AllocationsClass;
-use App\used_langauge;
 // use Illuminate\Foundation\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\module; // BRINGING THE MODULE MODEL
+use App\used_langauge;
 use App\module_preference;
 use App\Libraries\BasicDBClass;
+use App\Libraries\PrefsClass;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
 
@@ -100,23 +101,23 @@ class moduleController extends Controller
         // Checking if convenor: Admin = 001, Convenor = 002, GTA = 003, Externatl TA = 004
         if (session()->get('account_type_id') == 002) // session value is assigned in authenticated() in AuthenticatesUsers.php
         {
+            $basic_db_class = new BasicDBClass();
+
             // Get the convenor's email
-            $convenor_email = session()->get('email');
+            $convenor_id = session()->get('email');
+
+            // Get current year => method 2
+            $current_academic_year = $basic_db_class->getCurrentAcademicYear();
 
             // Get a list of all midules in database
-            $modules = Module::all()->where('convenor_email', '=', $convenor_email);
+            $convenor_modules_without_prefs =  $basic_db_class->getModulesWithoutPrefsForConvenorForYear($convenor_id, $current_academic_year);
+
             // Get a list of the programming languages
             $languages = language::all();
 
-
-            // Get current year => method 2
-            $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();    // - first(): Returns a simple object,
-                                                                                                        // - get():   Returns a JSON array
-            // echo $current_academic_year->year;
-
             // pass modules to view, will be shown in a select element in the view
             return view ('Module.add')
-                            ->with('modules', $modules)
+                            ->with('modules', $convenor_modules_without_prefs)
                             ->with('current_academic_year', $current_academic_year)
                             ->with('languages', $languages);
 
@@ -147,109 +148,133 @@ class moduleController extends Controller
             // Add a rule to check, if module already has preference this year then interrupt
 
             'no_of_assistants' => ['required'],
-            'no_of_contact_hours' => ['required'],
+            'no_of_contact_hours' => ['required',],
             'no_of_marking_hours' => ['required'],
             'academic_year' => ['required', 'exists:academic_years,year'],
             // 'semester' => ['required'],
         ]);
 
+        $prefs_class = new PrefsClass();
+        $basic_db_class = new BasicDBClass();
+
         // Get current academic year
-        $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();    // - first(): Returns a simple object,
+        $current_academic_year = $basic_db_class->getCurrentAcademicYear();
 
         // check if a preference for this module in this year is submitted
         if(DB::table('module_preferences')
-                                    ->where('academic_year', '=', $current_academic_year->year)
-                                    ->where('module_id','=', $request->input('module_id'))->exists())
+                    ->where('academic_year', '=', $request->input('academic_year'))
+                    ->where('module_id', '=', $request->input('module_id'))
+                    ->exists())
         {
-            return redirect('/preferences/module')->with('alert', 'Preference already submitted for this module for this academic year');
+            return back()
+                    ->withInput()
+                    ->with('alert', 'Preference already submitted for'. $request->input('module_id') . ' for this academic year');
         }
         else
         {
-            // creating a new instance of Module_preference to save to DB
-        $module_pref = new module_preference();
+            $saving_status = $prefs_class->storeModulePreferences($request);
 
-        // Adding the posted attributes to the created instance
-        $module_pref->module_id = $request->input('module_id');
-        $module_pref->no_of_assistants = $request->input('no_of_assistants');
-        $module_pref->no_of_contact_hours = $request->input('no_of_contact_hours');
-        $module_pref->no_of_marking_hours = $request->input('no_of_marking_hours');
-        $module_pref->academic_year = $request->input('academic_year');
-        // $module_pref->semester = $request->input('semester');
-
-
-        ////////////
-            // Creating an array to save ta_module_choice instances
-            $used_languages_array = [];
-            // Counting the lenght of the array
-            $arrayLength = count($used_languages_array);
-
-            //for loop: Check module choices and save
-            for($i=1; $i<=7; $i++)
+            if($saving_status)
             {
-                // Creating an instance of the ta_module_choices
-                $used_language_choice = new used_langauge();
-
-                // Will loop and get IDs of submitted choices
-                $used_languages_choice_id =  $request->input('language_'.$i.'_id');
-
-                if($used_languages_choice_id != NULL) // if ID is not null
-                {
-                    $used_language_choice->module_id = $request->input('module_id');
-                    $used_language_choice->language_id = $used_languages_choice_id;
-                    $used_language_choice->academic_year = $current_academic_year->year;
-
-                    // Checking the length of the array to calculate the array key at which the instance will be saved
-                    // Counting the lenght of the array
-                    $arrayLength = count($used_languages_array);
-
-                    if($arrayLength == 0) // If array is now empty
-                    {
-                        // Add to array WITHOUT chaning the key
-                        $used_languages_array[$arrayLength] = $used_language_choice;
-                    }
-                    else // if array is not empty
-                    {
-                        // Add WITH changing the key
-                        $used_languages_array[$arrayLength] = $used_language_choice;
-                    }
-                }
-                else // once we get a null used_languages_array_id
-                {
-                    // Do nothing
-                }
+                return redirect('/module/convenor')->with('success', 'Preference Saved');
+            }
+            else
+            {
+                return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: ' . $saving_status);
             }
 
-            // $arrayLength = count($used_languages_array);
+
+
+
+
+
             /*
-             * All saving will be in the try catch
-             */
-            try
-            {
-                $used_language_to_save = new used_langauge();
-                // Save to module_preferences table
-                $module_pref->save();
+                // creating a new instance of Module_preference to save to DB
+                $module_pref = new module_preference();
 
-                // If languages have been chosen
-                if(sizeof($used_languages_array) > 0)
+                // Adding the posted attributes to the created instance
+                $module_pref->module_id = $request->input('module_id');
+                $module_pref->no_of_assistants = abs($request->input('no_of_assistants'));
+                $module_pref->no_of_contact_hours = abs(ceil($request->input('no_of_contact_hours')));
+                $module_pref->no_of_marking_hours = abs(ceil($request->input('no_of_marking_hours')));
+                $module_pref->academic_year = $request->input('academic_year');
+                // $module_pref->semester = $request->input('semester');
+
+
+                ////////////
+                // Creating an array to save ta_module_choice instances
+                $used_languages_array = [];
+                // Counting the lenght of the array
+                $arrayLength = count($used_languages_array);
+
+                //for loop: Check module choices and save
+                for($i=1; $i<=7; $i++)
                 {
-                    // Save to ta_module_choices table
-                    for($j = 0; $j <= $arrayLength; $j++)
+                    // Creating an instance of the ta_module_choices
+                    $used_language_choice = new used_langauge();
+
+                    // Will loop and get IDs of submitted choices
+                    $used_languages_choice_id =  $request->input('language_'.$i.'_id');
+
+                    if($used_languages_choice_id != NULL) // if ID is not null
                     {
-                        $used_language_to_save = $used_languages_array[$j];
-                        $used_language_to_save->priority = $j+1;
-                        $used_language_to_save->save();
+                        $used_language_choice->module_id = $request->input('module_id');
+                        $used_language_choice->language_id = $used_languages_choice_id;
+                        $used_language_choice->academic_year = $request->input('academic_year');
+
+                        // Checking the length of the array to calculate the array key at which the instance will be saved
+                        // Counting the lenght of the array
+                        $arrayLength = count($used_languages_array);
+
+                        if($arrayLength == 0) // If array is now empty
+                        {
+                            // Add to array WITHOUT chaning the key
+                            $used_languages_array[$arrayLength] = $used_language_choice;
+                        }
+                        else // if array is not empty
+                        {
+                            // Add WITH changing the key
+                            $used_languages_array[$arrayLength] = $used_language_choice;
+                        }
+                    }
+                    else // once we get a null used_languages_array_id
+                    {
+                        // Do nothing
                     }
                 }
-            }
-            catch (QueryException $e)
-            {
-                return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: '); //
-            }
 
-            ////////////////////
+                // $arrayLength = count($used_languages_array);
 
-        // $module_pref->save();
-        return redirect('Module/add')->with('success', 'Preference Created'); // success: type of message, Preference Created: msg body
+                // All saving will be in the try catch
+
+                try
+                {
+                    $used_language_to_save = new used_langauge();
+                    // Save to module_preferences table
+                    $module_pref->save();
+
+                    // If languages have been chosen
+                    if(sizeof($used_languages_array) > 0)
+                    {
+                        // Save to ta_module_choices table
+                        for($j = 0; $j <= $arrayLength; $j++)
+                        {
+                            $used_language_to_save = $used_languages_array[$j];
+                            $used_language_to_save->priority = $j+1;
+                            $used_language_to_save->save();
+                        }
+                    }
+                }
+                catch (QueryException $e)
+                {
+                    return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: '); //
+                }
+
+                ////////////////////
+
+                // $module_pref->save();
+                return redirect('/module/convenor')->with('success', 'Preference Created'); // success: type of message, Preference Created: msg body
+            */
         }
 
     }
@@ -368,118 +393,151 @@ class moduleController extends Controller
             // 'semester' => ['required'],
         ]);
 
+        $prefs_class = new PrefsClass();
+        $basic_db_class = new BasicDBClass();
+
         // Get current academic year
-        $current_academic_year = DB::table('Academic_years')->where('current', '=', 1)->first();    // - first(): Returns a simple object,
+        $current_academic_year = $basic_db_class->getCurrentAcademicYear();
 
         // check if a preference for this module in this year is submitted
         if(!DB::table('module_preferences')
-                                    ->where('academic_year', '=', $current_academic_year->year)
+                                    ->where('academic_year', '=', $request->input('academic_year'))
                                     ->where('module_id','=', $request->input('module_id'))->exists())
         {
             return redirect('/preferences/module')->with('alert', 'This module dis not submit preferences for this academic year');
         }
         else
         {
-            // creating a new instance of Module_preference to save to DB
-        $module_pref = new module_preference();
+            // Delete previous prefs
+            DB::table('used_langauges')
+                ->where('academic_year', '=', $request->input('academic_year'))
+                ->where('module_id','=', $request->input('module_id'))
+                ->delete();
 
-        // Adding the posted attributes to the created instance
-        $module_pref->module_id = $request->input('module_id');
-        $module_pref->no_of_assistants = $request->input('no_of_assistants');
-        $module_pref->no_of_contact_hours = $request->input('no_of_contact_hours');
-        $module_pref->no_of_marking_hours = $request->input('no_of_marking_hours');
-        $module_pref->academic_year = $request->input('academic_year');
-        // $module_pref->semester = $request->input('semester');
+            DB::table('module_preferences')
+                ->where('academic_year', '=', $request->input('academic_year'))
+                ->where('module_id','=', $request->input('module_id'))
+                ->delete();
 
 
-        ////////////
-            // Creating an array to save ta_module_choice instances
-            $used_languages_array = [];
-            // Counting the lenght of the array
-            $arrayLength = count($used_languages_array);
+            $saving_status = $prefs_class->storeModulePreferences($request);
 
-            //for loop: Check module choices and save
-            for($i=1; $i<=7; $i++)
+            if($saving_status)
             {
-                // Creating an instance of the ta_module_choices
-                $used_language_choice = new used_langauge();
-
-                // Will loop and get IDs of submitted choices
-                $used_languages_choice_id =  $request->input('language_'.$i.'_id');
-
-                if($used_languages_choice_id != NULL) // if ID is not null
+                //Redirect based on user account type
+                if( session()->get('account_type_id') == 000 || session()->get('account_type_id') == 001)
                 {
-                    $used_language_choice->module_id = $request->input('module_id');
-                    $used_language_choice->language_id = $used_languages_choice_id;
-                    $used_language_choice->academic_year = $current_academic_year->year;
-
-                    // Checking the length of the array to calculate the array key at which the instance will be saved
-                    // Counting the lenght of the array
-                    $arrayLength = count($used_languages_array);
-
-                    if($arrayLength == 0) // If array is now empty
-                    {
-                        // Add to array WITHOUT chaning the key
-                        $used_languages_array[$arrayLength] = $used_language_choice;
-                    }
-                    else // if array is not empty
-                    {
-                        // Add WITH changing the key
-                        $used_languages_array[$arrayLength] = $used_language_choice;
-                    }
+                    return redirect('allocations/')->with('success', 'Preference Updated');
                 }
-                else // once we get a null used_languages_array_id
+                else
                 {
-                    // Do nothing
+                    return redirect('/module/convenor')->with('success', 'Preference Updated');
                 }
-            }
-
-            // $arrayLength = count($used_languages_array);
-            /*
-             * All saving will be in the try catch
-             */
-            try
-            {
-                // remove old values
-                used_langauge::where('academic_year', '=', $request->input('academic_year'))
-                                    ->where('module_id', '=', $request->input('module_id'))
-                                    ->delete();
-
-                module_preference::where('module_id', '=', $request->input('module_id'))
-                                    ->where('academic_year', '=', $request->input('academic_year'))
-                                    ->delete();
-
-                $used_language_to_save = new used_langauge();
-                // Save to module_preferences table
-                $module_pref->save();
-
-                // If languages have been chosen
-                if(sizeof($used_languages_array) > 0)
-                {
-                    // Save to ta_module_choices table
-                    for($j = 0; $j <= $arrayLength; $j++)
-                    {
-                        $used_language_to_save = $used_languages_array[$j];
-                        $used_language_to_save->priority = $j+1;
-                        $used_language_to_save->save();
-                    }
-                }
-            }
-            catch (QueryException $e)
-            {
-                return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: ' . $e);
-            }
-
-
-            //Redirect based on user account type
-            if( session()->get('account_type_id') == 000 || session()->get('account_type_id') == 001)
-            {
-                return redirect('allocations/')->with('success', 'Preference Updated');
             }
             else
             {
-                return redirect('/module/convenor')->with('success', 'Preference Updated');
+                return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: ' . $saving_status);
             }
+
+
+
+
+
+
+            /*
+                // creating a new instance of Module_preference to save to DB
+                $module_pref = new module_preference();
+
+                // Adding the posted attributes to the created instance
+                $module_pref->module_id = $request->input('module_id');
+                $module_pref->no_of_assistants = abs($request->input('no_of_assistants'));
+                $module_pref->no_of_contact_hours = abs(ceil($request->input('no_of_contact_hours')));
+                $module_pref->no_of_marking_hours = abs(ceil($request->input('no_of_marking_hours')));
+                $module_pref->academic_year = $request->input('academic_year');
+                // $module_pref->semester = $request->input('semester');
+
+
+                ////////////
+                // Creating an array to save ta_module_choice instances
+                $used_languages_array = [];
+                // Counting the lenght of the array
+                $arrayLength = count($used_languages_array);
+
+                //for loop: Check module choices and save
+                for($i=1; $i<=7; $i++)
+                {
+                    // Creating an instance of the ta_module_choices
+                    $used_language_choice = new used_langauge();
+
+                    // Will loop and get IDs of submitted choices
+                    $used_languages_choice_id =  $request->input('language_'.$i.'_id');
+
+                    if($used_languages_choice_id != NULL) // if ID is not null
+                    {
+                        $used_language_choice->module_id = $request->input('module_id');
+                        $used_language_choice->language_id = $used_languages_choice_id;
+                        $used_language_choice->academic_year = $current_academic_year->year;
+
+                        // Checking the length of the array to calculate the array key at which the instance will be saved
+                        // Counting the lenght of the array
+                        $arrayLength = count($used_languages_array);
+
+
+                        if($arrayLength == 0) // If array is now empty
+                        {
+                            // Add to array WITHOUT chaning the key
+                            $used_languages_array[$arrayLength] = $used_language_choice;
+                        }
+                        else // if array is not empty
+                        {
+                            // Add WITH changing the key
+                            $used_languages_array[$arrayLength] = $used_language_choice;
+                        }
+                    }
+                    else // once we get a null used_languages_array_id
+                    {
+                        // Do nothing
+                    }
+                }
+
+                // $arrayLength = count($used_languages_array);
+
+                // All saving will be in the try catch
+
+                try
+                {
+                    // remove old values
+                    used_langauge::where('academic_year', '=', $request->input('academic_year'))
+                                        ->where('module_id', '=', $request->input('module_id'))
+                                        ->delete();
+
+                    module_preference::where('module_id', '=', $request->input('module_id'))
+                                        ->where('academic_year', '=', $request->input('academic_year'))
+                                        ->delete();
+
+                    $used_language_to_save = new used_langauge();
+                    // Save to module_preferences table
+                    $module_pref->save();
+
+                    // If languages have been chosen
+                    if(sizeof($used_languages_array) > 0)
+                    {
+                        // Save to ta_module_choices table
+                        for($j = 0; $j <= $arrayLength; $j++)
+                        {
+                            $used_language_to_save = $used_languages_array[$j];
+                            $used_language_to_save->priority = $j+1;
+                            $used_language_to_save->save();
+                        }
+                    }
+                }
+                catch (QueryException $e)
+                {
+                    return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: ' . $e);
+                }
+            */
+
+
         }
     }
 

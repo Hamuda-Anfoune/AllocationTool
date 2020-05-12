@@ -9,6 +9,11 @@ use App\Academic_year;
 
 class AcademicYearController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Update the specified resource in storage.
      *

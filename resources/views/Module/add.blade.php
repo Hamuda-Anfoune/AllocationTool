@@ -12,12 +12,11 @@
                         @csrf
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Module') }}</label>
-
                             <div class="col-md-6">
                                 <select name="module_id" id="module_id" class="custom-select" required>
                                     <option value="">Choose a Module</option>
                                     @foreach ($modules as $modules)
-                                        <option value='{{$modules->module_id}}'>{{$modules->module_name}}</option>
+                                        <option value='{{$modules->module_id}}' {{ old('module_id') == $modules->module_id ? 'selected' : '' }}>{{$modules->module_name}}</option>
                                     @endforeach
                                 </select>
                                 @error('module_id')
@@ -30,22 +29,12 @@
 
                         <div class="form-group row">
                             <label for="no_of_assistants" class="col-md-4 col-form-label text-md-right">{{ __('Number of Assistants Required') }}</label>
-
                             <div class="col-md-6">
-                                {{-- <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email"> --}}
-                                <select name="no_of_assistants" id="no_of_assistants" class="custom-select">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
+                                <select name="no_of_assistants" id="no_of_assistants" class="custom-select" required>
+                                    @for($i=0; $i<= 20; $i++)
+                                        <option value="{{$i}}" {{ old('no_of_assistants') == $i ? 'selected' : '' }}>{{$i}}</option>
+                                    @endfor
                                 </select>
-
                                 @error('no_of_assistants')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -55,14 +44,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Number of Contact Hours') }}</label>
-
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Contact Hours Per Week') }}</label>
                             <div class="col-md-6">
-                                <select name="no_of_contact_hours" id="no_of_contact_hours" class="custom-select">
-                                    @for($i=1; $i<= 40; $i++)
-                                        <option value="{{$i}}" {{ old('no_of_contact_hours') == $i ? 'selected' : '' }}>{{$i}}</option>
-                                    @endfor
-                                </select>
+                                <input type="number" name="no_of_contact_hours" id="no_of_contact_hours" class="form-control" value="{{ old('no_of_contact_hours') }}" placeholder="Weekly total, fractions will be round up!" aria-describedby="helpId" >
                                 @error('no_of_contact_hours')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -72,14 +56,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="no_of_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Number of Marking Hours') }}</label>
+                            <label for="no_of_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Total Marking Hours Per Semester') }}</label>
 
                             <div class="col-md-6">
-                                <select name="no_of_marking_hours" id="no_of_marking_hours" class="custom-select">
-                                    @for($i=1; $i<= 40; $i++)
-                                        <option value="{{$i}}" {{ old('no_of_marking_hours') == $i ? 'selected' : '' }}>{{$i}}</option>
-                                    @endfor
-                                </select>
+                                <input type="number" name="no_of_marking_hours" id="no_of_marking_hours" class="form-control" value="{{ old('no_of_marking_hours') }}" placeholder="Semester total, fractions will be round up!" aria-describedby="helpId" >
                                 @error('no_of_marking_hours')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -93,7 +73,7 @@
                             <div class="col-md-6">
                                 {{-- <input id="academic_year" type="text" class="form-control " name="academic_year" value="{{ $current_academic_year->year }}" required> --}}
                                 <select name="academic_year" id="academic_year" class="custom-select">
-                                    <option value="{{ $current_academic_year->year }}">{{ $current_academic_year->year }}</option>
+                                    <option value="{{ $current_academic_year }}">{{ $current_academic_year }}</option>
                                 </select>
                                 {{-- @error('academic_year')
                                     <span class="invalid-feedback" role="alert">

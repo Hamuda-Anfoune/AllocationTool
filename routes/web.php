@@ -25,10 +25,14 @@ Route::get('/admin/university/signup', 'Admin\UniversityController@index');
 Route::post('/admin/university/signup', 'Admin\UniversityController@register')->name('storeUni');
 
 
+Route::get('/admin/university-users', 'Admin\UniversityUsersController@index');
+
 Route::get('/admin/university-users/add', 'Admin\UniversityUsersController@create');
 
 Route::post('/admin/university-users/add', 'Admin\UniversityUsersController@store')->name('storeUniversityUser');
 
+
+Route::get('/admin/show/all-registered-users', 'Admin\UserController@index');
 
 
 Route::get('/admin/modules/add', 'Admin\ModuleController@create');
@@ -46,12 +50,21 @@ Route::get('/admin/config/add', 'Admin\ConfigurationController@create')->name('a
 Route::post('/admin/config/add', 'Admin\ConfigurationController@store')->name('storeConfigs');
 
 
-Route::get('/admin/allocations', 'Allocation\AllocationController@index');
+Route::get('/admin/dashboard', 'Allocation\AllocationController@allocationData');
+
 
 // will finish creating ROLs then allcate
-Route::get('/admin/allocations/module/rol', 'Allocation\AllocationController@createModuleROLs')->name('allocate');
+Route::get('/admin/allocations/allocate', 'Allocation\AllocationController@store')->name('allocate');
 
-Route::get('/admin/allocations/delete', 'Allocation\AllocationController@destroy')->name('deleteAllocation');
+Route::get('/admin/allocations/store', 'Allocation\AllocationController@store');
+
+Route::get('/admin/allocations', 'Allocation\AllocationController@index');
+
+Route::get('admin/allocations/show/{allocation_id}', 'Allocation\AllocationController@show');
+
+Route::get('/admin/allocations/delete/{allocation_id}', 'Allocation\AllocationController@destroy');
+
+Route::get('/admin/allocations/delete', 'Allocation\AllocationController@destroy')->name('deleteCurrentAllocation');
 
 Route::get('/admin/allocations/module/delete-rol', 'Allocation\AllocationController@deleteModuleROLs')->name('deleteModuleROLs');
 

@@ -3,6 +3,7 @@
 namespace App\Libraries;
 use Illuminate\Support\Facades\DB;
 use App\Academic_year;
+use App\User;
 use PhpParser\NodeVisitor\FirstFindingVisitor;
 
 /**
@@ -28,9 +29,9 @@ class BasicDBClass
     /**
      * Returns all system account types
      */
-    function getAccountTypes()
+    function getAccountTypesWithoutTypes()
     {
-        return DB::table('account_types')->select('account_type_id', 'account_type')->get();
+        return DB::table('account_types')->select('account_type_id', 'account_type')->where('account_type_id', '!=', 000)->get();
     }
 
     function getCurrentAcademicYear()
@@ -53,6 +54,16 @@ class BasicDBClass
      *  ----------------------------
      */
 
+     function getAllModulesForConvenorForYear($convenor_id, $academic_year)
+     {
+        return DB::table('modules')
+                    ->select('module_id', 'module_name')
+                    ->where('convenor_email', '=', $convenor_id)
+                    ->where('academic_year', '=', $academic_year)
+                    ->orderBy('module_name', 'ASC')
+                    ->get();
+     }
+
     /**
      * returns all modules in target academic year.
      *
@@ -61,7 +72,10 @@ class BasicDBClass
      */
     function getAllModulesForYear(string $academic_year)
     {
-        return DB::table('modules')->where('academic_year', '=', $academic_year)->get();
+        return DB::table('modules')
+                    ->where('academic_year', '=', $academic_year)
+                    ->orderBy('module_name', 'ASC')
+                    ->get();
     }
 
     /**
@@ -123,6 +137,40 @@ class BasicDBClass
                     ->whereNotExists(function($query)
                     {
                         $query->select(DB::raw(1))
+                            ->from('module_preferences')
+                            ->whereRaw('module_preferences.module_id = modules.module_id');
+                    })
+                    ->get();
+    }
+
+    /**
+     * Will return all modules without preferences for year
+     * @param string $academic_year
+     * @return collection
+     */
+    function getConvenorsWithoutPrefsForYear(string $academic_year)
+    {
+        return DB::table('modules')
+                    ->select('convenor_email')
+                    ->distinct()
+                    ->where('academic_year','=',$academic_year)
+                    ->whereNotExists(function($query)
+                    {
+                        $query->select(DB::raw(1))
+                            ->from('module_preferences')
+                            ->whereRaw('module_preferences.module_id = modules.module_id');
+                    })
+                    ->get();
+    }
+
+    function getModulesWithoutPrefsForConvenorForYear($convenor_id, $academic_year)
+    {
+        return DB::table('modules')
+                    ->where('convenor_email','=', $convenor_id)
+                    ->where('academic_year','=', $academic_year)
+                    ->whereNotExists(function ($query)
+                    {
+                        $query->select(DB::raw(100))
                             ->from('module_preferences')
                             ->whereRaw('module_preferences.module_id = modules.module_id');
                     })
@@ -314,5 +362,68 @@ class BasicDBClass
                 ->where('active','=', 1)
                 ->get();
      }
+
+    function getAllactiveAdmins()
+    {
+        return DB::table('users')
+                ->select('email','name', 'created_at')
+                ->where('active','=', 1)
+                ->where(function($q) {
+                    $q->where('account_type_id', 000)
+                      ->orWhere('account_type_id', 001);
+                })
+                ->get();
+    }
+
+    function getAllUniversityUsers()
+    {
+        $all_users = DB::table('university_users')
+                            ->select('email', 'account_type_id', 'created_at')
+                            ->orderBy('account_type_id', 'ASC')
+                            ->get();
+
+        foreach ($all_users as $user) {
+            $user->account_type = DB::table('account_types')
+                                        ->select('account_type')
+                                        ->where('account_type_id', '=', $user->account_type_id)
+                                        ->first()
+                                        ->account_type;
+        }
+        return $all_users;
+    }
+
+     /**
+      * returns all registered active users
+      * @return array(name, account_type_id, email, created_at)
+      */
+    function getAllActiveRegisteredUsers()
+    {
+        return DB::table('users')
+                            ->select('name', 'account_type_id', 'email', 'active', 'created_at')
+                            ->where('active', '=', 1)
+                            ->orderBy('account_type_id', 'ASC')
+                            ->get();
+    }
+
+
+     /**
+      * returns all registered users emails, thier names and thier states(active - not active)
+      * @return array(name, account_type_id, account_type, email, active, created_at)
+      */
+    function getAllRegisteredUsers()
+    {
+        $all_users = DB::table('users')
+                            ->select('name', 'account_type_id', 'email', 'active', 'created_at')
+                            ->orderBy('account_type_id', 'ASC')->get();
+
+          foreach ($all_users as $user) {
+            $user->account_type = DB::table('account_types')
+                                        ->select('account_type')
+                                        ->where('account_type_id', '=', $user->account_type_id)
+                                        ->first()
+                                        ->account_type;
+        }
+        return $all_users;
+    }
 
 }

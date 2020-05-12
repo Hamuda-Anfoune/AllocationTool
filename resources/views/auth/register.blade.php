@@ -68,6 +68,12 @@
                             </div>
                         </div>
                     </form>
+                    <hr>
+                    <div class="form-group  text-center">
+                        <p>Already have an account? <a  href="{{ route('login') }}">
+                            {{ __('Login') }}
+                        </a></p>
+                    </div>
                 </div>
             </div>
         </div>

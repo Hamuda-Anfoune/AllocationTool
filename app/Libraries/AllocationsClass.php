@@ -92,7 +92,10 @@ class AllocationsClass
 
             $ta_allocations[$ta->email] =
             [
+                'ta_id' =>$ta->email,
                 'weekly_working_hours' => 0,
+                'contact_hours' => 0,
+                'marking_hours' => 0,
                 'modules' => $modules
             ];
         }
@@ -138,8 +141,9 @@ class AllocationsClass
                             ->select('ta_email', 'ta_total_weight')
                             ->where('module_id','=',$module->module_id)
                             ->orderBy('ta_total_weight', 'DESC')
-                            // ->take($module->no_of_assistants)
                             ->get();
+                            // ->take($module->no_of_assistants)
+
 
             // Declare a clear TAs array: $tas
             $tas = [];
@@ -171,7 +175,9 @@ class AllocationsClass
             $modules_ROLs[$module->module_id] =
             [
                 'no_of_assistants' => $module->no_of_assistants,
-                'weekly_working_hours' => $module->no_of_contact_hours + $module->no_of_marking_hours,
+                // 'weekly_working_hours' => $module->no_of_contact_hours + $module->no_of_marking_hours,
+                'contact_hours' => $module->no_of_contact_hours, // are per week
+                'marking_hours' => ceil($module->no_of_marking_hours/$module->no_of_assistants), // 15 weeks in a semester
                 'tas'=> $tas
             ];
         }
@@ -246,6 +252,7 @@ class AllocationsClass
 
             // Calculate max_working_hours
             $max_weekly_working_hours = $ta->max_contact_hours + $ta->max_marking_hours;
+
             // If none is submitted, calculate based on having Tier 4 visa or not.
             if($max_weekly_working_hours == 0)
             {
@@ -280,7 +287,9 @@ class AllocationsClass
             $all_tas_prefs_and_ROLs[$ta_id] =
             [
                 'ta_id' => $ta_id,
-                'max_weekly_working_hours' => $max_weekly_working_hours,
+                // 'max_weekly_working_hours' => $max_weekly_working_hours,
+                'max_contact_hours' => $ta->max_contact_hours,
+                'max_marking_hours' => $ta->max_marking_hours,
                 'max_modules' => $ta->max_modules,
                 'modules'=> $modules
             ];
@@ -304,7 +313,7 @@ class AllocationsClass
 
     }
 
-    function getTaWeightForModule(string $ta_id, string $module_id)
+    function getTaWeightForModuleForCurrentSemester(string $ta_id, string $module_id)
     {
         // Access module_rank_order_lists to get the weight of $ta_id against $module_id in $current_academic_year
         $basic_db_calss = new BasicDBClass();
@@ -312,6 +321,7 @@ class AllocationsClass
         $current_academic_year = $basic_db_calss->getCurrentAcademicYear();
 
         return DB::table('module_rank_order_lists')
+                        ->select('ta_total_weight')
                         ->where('academic_year','=', $current_academic_year)
                         ->where('ta_email','=',$ta_id)
                         ->where('module_id','=',$module_id)
@@ -331,5 +341,82 @@ class AllocationsClass
     function allocationExistsForYear($academic_year)
     {
         return DB::table('allocations')->where('academic_year', '=', $academic_year)->exists();
+    }
+
+    function getAllAllocationIds()
+    {
+        return DB::table('allocations')
+                    ->select('allocation_id')
+                    ->distinct()
+                    ->get();
+    }
+
+    function getAllocationById($allocation_id)
+    {
+        // Create an array to save allocations in it based on TAs
+        $allocation_data = [];
+
+        // get allocated teaching assistants
+        $allocated_tas = DB::table('allocations')
+                            ->select('module_id')
+                            ->distinct()
+                            ->get();
+
+
+        foreach ($allocated_tas as $module) {
+            $allocation_data[] = DB::table('allocations')
+                                        ->select('allocation_id', 'ta_id', 'module_id', 'academic_year', 'creator_email', 'created_at', 'updated_at')
+                                        ->where('module_id', '=', $module->module_id)
+                                        ->where('allocation_id', '=', $allocation_id)
+                                        ->get();
+        }
+
+        return $allocation_data;
+    }
+
+    function getTaAllocationDataById($allocation_id)
+    {
+        return DB::table('ta_allocation_data')
+                    ->where('allocation_id', '=', $allocation_id)
+                    ->get();
+    }
+    /**
+     * Delete all allocations in specified semester
+     *
+     * @param $academic_year
+     *
+     * @return bool
+     */
+    function deleteAllAllocationsForYear($academic_year)
+    {
+        $allocations = DB::table('allocations')
+                            ->where('academic_year','=', $academic_year)
+                            ->delete();
+
+        $ta_data = DB::table('ta_allocation_data')
+                            ->where('academic_year','=', $academic_year)
+                            ->delete();
+
+        return ($allocations && $ta_data)? true : false;
+    }
+
+    /**
+     * Delete an allocation by its ID
+     *
+     * @param $allocation_id
+     *
+     * @return bool
+     */
+    function deleteAllocationById($allocation_id)
+    {
+        $allocations = DB::table('allocations')
+                        ->where('allocation_id', '=', $allocation_id)
+                        ->delete();
+
+        $ta_data = DB::table('ta_allocation_data')
+                        ->where('allocation_id', '=', $allocation_id)
+                        ->delete();
+
+        return ($allocations && $ta_data)? true : false;
     }
 }

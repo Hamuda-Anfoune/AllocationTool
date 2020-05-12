@@ -27,7 +27,7 @@
                             <div class="col-md-6">
                                 <select name="account_type_id" id="account_type_id" class="custom-select" required>
                                     <option value="">Choose a type</option>
-                                    @foreach ($account_types as $type)
+                                    @foreach ($account_types_without_super as $type)
                                         <option value="{{$type->account_type_id}}" {{ old('account_type_id') == $type->account_type_id ? 'selected' : '' }}>{{$type->account_type}}</option>
                                     @endforeach
                                 </select>

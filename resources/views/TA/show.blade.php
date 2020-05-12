@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="max_contact_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Contact Hours') }}</label>
+                            <label for="max_contact_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Contact Hours per week') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" name="" id="module_id" class="form-control" placeholder="{{$current_ta_preferences[0]->max_contact_hours }}" aria-describedby="helpId"  disabled>
@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="max_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Marking Hours') }}</label>
+                            <label for="max_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of marking Hours per semester') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" name="" id="module_id" class="form-control" placeholder="{{ $current_ta_preferences[0]->max_marking_hours}}" aria-describedby="helpId"  disabled>
@@ -59,11 +59,10 @@
                         <br>
 
                         <div class="form-group row justify-content-center">
-                            {{-- <label for="have_tier4_visa" class="col-form-label text-md-right">{{ __('I am on a tier 4 visa') }}</label> --}}
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="have_tier4_visa[]" name="have_tier4_visa[]" value="true" {{ $current_ta_preferences[0]->have_tier4_visa== 1 ? 'checked' : '' }} disabled>
                                 <label class="form-check-label" for="have_tier4_visa">
-                                  I am on a tier 4 visa
+                                    {{ __('I am on a tier 4 visa') }}
                                 </label>
                             </div>
                         </div>

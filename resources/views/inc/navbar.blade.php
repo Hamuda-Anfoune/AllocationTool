@@ -4,7 +4,7 @@
             {{ config('app.name', 'Laravel') }}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -37,22 +37,25 @@
                             {{ __('Teaching Assistants') }}
                           </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="nav-link" href="/modules/prefs/all">{{ __('Modules\' Preferences') }}</a>
-                            <div class="dropdown-divider"></div>
                             <a class="nav-link" href="/TA/prefs/add">{{ __('Submit Preferences') }}</a>
+                            <a class="nav-link" href="/modules/prefs/all">{{ __('Modules\' Preferences') }}</a>
                         </div>
                     </li>
                 @endif
                 @if (session('account_type_id') == 000 || session('account_type_id') == 001)
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Allocation
+                        {{ __('Admins') }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="nav-link" href="/allocations">{{ __('Admins') }}</a>
+                            <a class="nav-link" href="/admin/dashboard">{{ __('Dashboard') }}</a>
                             <div class="dropdown-divider"></div>
                             <a class="nav-link" href="/admin/config">{{ __('Configuration') }}</a>
                             <div class="dropdown-divider"></div>
+                            @if (session('account_type_id') == 000)
+                                <a class="nav-link" href="/admin/university-users/add">{{ __('Add New University User' ) }}</a>
+                            @endif
+                            <a class="nav-link" href="/admin/modules/add">{{ __('Add New Modules' ) }}</a>
                             <a class="nav-link" href="/modules/prefs/all">{{ __('Modules\' Preferences') }}</a>
                         </div>
                     </li>

@@ -70,6 +70,13 @@
                             </div>
                         </div>
                     </form>
+
+                    <hr>
+                    <div class="form-group text-center">
+                        <p>Don't have an account? <a  href="{{ route('register') }}">
+                            {{ __('Create account') }}
+                        </a></p>
+                    </div>
                 </div>
             </div>
         </div>
