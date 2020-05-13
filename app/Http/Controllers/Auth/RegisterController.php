@@ -62,6 +62,9 @@ class RegisterController extends Controller
             // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             // 'account_type_id' => ['required', 'string', 'max:10'],
+        ],
+        [
+            'email.exists' => 'This email is not registered as a university user.'
         ]);
     }
 

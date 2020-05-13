@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Libraries\BasicDBClass;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -90,8 +91,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($email)
     {
-        //
+
+        try {
+            DB::table('users')->where('email', '=', $email)->delete();
+            return back()->with('success', 'User deleted');
+
+          } catch (\Illuminate\Database\QueryException $e) {
+            //   var_dump($e->errorInfo);
+            return back()->with('alert', 'Sorry, this user has already submitted data which the system used to generate other data,
+                                the user cannot be deleted before deleting all that data!');
+          }
+
     }
 }

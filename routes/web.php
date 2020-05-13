@@ -34,6 +34,8 @@ Route::post('/admin/university-users/add', 'Admin\UniversityUsersController@stor
 
 Route::get('/admin/show/all-registered-users', 'Admin\UserController@index');
 
+Route::get('/admin/delete/user/{email}', 'Admin\UserController@destroy');
+
 
 Route::get('/admin/modules/add', 'Admin\ModuleController@create');
 

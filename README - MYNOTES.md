@@ -20,8 +20,6 @@
 
  * Edit the TA preferences submission view to add a new div for each new 'module choice'
 
- * Edit error msg when attempting to register with an email that does not exist in university_users table
-
  * Add foreign key drop statements to down() in the migrations
 
 ****************************

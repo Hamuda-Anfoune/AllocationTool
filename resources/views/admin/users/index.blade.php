@@ -11,16 +11,24 @@
                     @if(sizeof($all_users) > 0)
                         {{-- <h6>{{ __('Users') }}</h6> --}}
                         @foreach($all_users as $user)
-                            <ul>
-                                <li><a href="#">{{$user->name}}</a>
+                            <div class="row">
+                                <div class="col-md-9">
                                     <ul>
-                                        <li>University ID: {{$user->email}}</li>
-                                        <li>Account Type: {{$user->account_type}}</li>
-                                        <li>Account Active? {{$user->active}}</li>
-                                        <li>Registered At: {{$user->created_at}}</li>
+                                        <li>{{$user->name}}&emsp;
+                                            <ul>
+                                                <li>University ID: {{$user->email}}</li>
+                                                <li>Account Type: {{$user->account_type}}</li>
+                                                <li>Account Active? {{$user->active}}</li>
+                                                <li>Registered At: {{$user->created_at}}</li>
+                                            </ul>
+                                        </li>
                                     </ul>
-                                </li>
-                            </ul>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <a class="btn btn-sm btn-danger" href="/admin/delete/user/{{$user->email}}">Delete</a>
+                                </div>
+                            </div>
+                            <hr>
                         @endforeach
                     @endif
                 </div>

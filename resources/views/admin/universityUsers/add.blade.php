@@ -6,6 +6,31 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
+                <div class="card-header text-md-center">
+                    <a class="btn btn-info btn-sm" data-toggle="collapse" href="#instructions" role="button" aria-expanded="false" aria-controls="instructions">
+                        University Users
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="collapse" id="instructions">
+                        <div class="mb-3 text-center">
+                            <i class="fab fa-balance-scale fa-2x fa-fw"></i>
+                        </div>
+                        <ul>
+                            <li>You can add new university users from here.</li>
+                            <li>Only users you add can register to use this tool.</li>
+                            <li>Adding user emails here does not mean they can directly use the tool.</li>
+                            <li>They need to register to be able to use it.</li>
+                            <li>This serves as a university databasea and keeps unauthorised usage of the tool.</li>
+                        </ul>
+                        <br>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="card">
                 <div class="card-header text-md-center"><h4>{{ __('Add New University User') }}</h4></div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('storeUniversityUser') }}">
