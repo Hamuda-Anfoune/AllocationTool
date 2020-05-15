@@ -195,6 +195,20 @@ class TAController extends Controller
         if (session()->get('account_type_id')== 003 || session()->get('account_type_id')== 004) // session value is assigned in authenticated() in AuthenticatesUsers.php
         {
             $basic_db_class = new BasicDBClass();
+            $prefs_class = new PrefsClass();
+
+            //Check if prefs exist, handles when prefs were deleted then user goes back in the browser and tries to edit
+            if(!$prefs_class->taPreferenceExists($preference_id))
+            {
+                if(session()->get('account_type_id') == 000 || session()->get('account_type_id') == 001 )
+                {
+                    return redirect('/modules/prefs/all')->with('alert', 'Seems this module has no submitted preferences, please check the list below!');
+                }
+
+                if(session()->get('account_type_id') == 002)
+                    return redirect('/module/convenor')->with('alert', 'Seems this module has no submitted preferences, please check the list below!');
+
+            }
 
             // Get the preference data
             $current_ta_preferences = $basic_db_class->getTAPreferenceData($preference_id);

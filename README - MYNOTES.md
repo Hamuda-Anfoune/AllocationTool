@@ -14,13 +14,7 @@
 ## TODO:
 -----------------
 
- * Give GTAs more weight than TAs // Not essential
-
- * Edit the module preferences submission view to add a new div for each new 'used language'
-
- * Edit the TA preferences submission view to add a new div for each new 'module choice'
-
- * Add foreign key drop statements to down() in the migrations
+ * Add foreign key drop statements to down() in the migrations.
 
 ****************************
 

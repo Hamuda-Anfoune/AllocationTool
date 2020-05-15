@@ -21,7 +21,7 @@
                             <li>Only users you add can register to use this tool.</li>
                             <li>Adding user emails here does not mean they can directly use the tool.</li>
                             <li>They need to register to be able to use it.</li>
-                            <li>This serves as a university databasea and keeps unauthorised usage of the tool.</li>
+                            <li>This serves as a university database and prevents unauthorised usage of the tool.</li>
                         </ul>
                         <br>
                     </div>

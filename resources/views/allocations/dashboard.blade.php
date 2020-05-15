@@ -37,7 +37,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="mb-3 col-md-6 text-center">
-                            <a class=" col-md-10 btn btn-success" href="{{ route('allocate') }}" onclick="return confirm('Press OK to continue?')">
+                            <a class=" col-md-10 btn btn-primary" href="{{ route('allocate') }}" onclick="return confirm('Press OK to continue?')">
                                 {{ __('Allocate Current Semester') }}
                             </a>
                         </div>
@@ -65,10 +65,10 @@
                 </div>
             </div>
             <div id="no-of-tas" class="widget-div bg-red mb-3 min-vh-8">
-                <a class="btn col-md-12" data-toggle="modal" data-target="#update_year_modal" data-whatever="@getbootstrap">
+                <a class="btn col-md-12" href="/admin/all-admins/show">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <p class="widget-title">Active Admins</p>
+                            <p class="widget-title">Active Admin Accounts</p>
                         </div>
                         <hr>
                         <span class="fa-4x mb-0 line-h-initial">{{ $data['active_admins_count'] }}</span>
@@ -76,10 +76,10 @@
                 </a>
             </div>
             <div id="no-of-tas" class="widget-div bg-red mb-3 min-vh-8">
-                <a class="btn col-md-12" href="/admin/show/all-registered-users" data-whatever="@getbootstrap">
+                <a class="btn col-md-12" href="/admin/all-registered-users/show" data-whatever="@getbootstrap">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <p class="widget-title">All Active Users</p>
+                            <p class="widget-title">All Active Registered Users</p>
                         </div>
                         <hr>
                         <span class="fa-4x mb-0 line-h-initial">{{ $data['active_users_count'] }}</span>
@@ -109,7 +109,7 @@
                 </div>
             </div>
             <div id="no-of-convenors" class="widget-div bg-skyblue mb-3 min-vh-8">
-                <a class="btn col-md-12" href="/admin/university-users/add">
+                <a class="btn col-md-12" href="/admin/all-convenors/show">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
                             <p class="widget-title">Active Module Convenors</p>
@@ -120,7 +120,7 @@
                 </a>
             </div>
             <div id="lang-weight-3" class="widget-div bg-skyblue mb-3 min-vh-8">
-                <a class="btn col-md-12" href="/admin/university-users/add">
+                <a class="btn col-md-12" href="/admin/convenors-without-prefs/show/{{$data['current_academic_year']}}">
                     <span class=" hyperspan">
                         <p class="widget-title">Covenors Missing Prefs</p>
                         <hr>
@@ -140,7 +140,7 @@
                 </div>
             </div>
             <div id="no-of-tas" class="widget-div bg-green mb-3 min-vh-8">
-                <a class="btn col-md-12" href="http://www.google.com">
+                <a class="btn col-md-12" href="/admin/all-tas/show">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
                             <p class="widget-title">Active Teaching Assistants</p>
@@ -151,7 +151,7 @@
                 </a>
             </div>
             <div id="no-of-tas" class="widget-div bg-green mb-3 min-vh-8">
-                <a class="btn col-md-12" href="http://www.google.com">
+                <a class="btn col-md-12" href="/admin/tas-without-prefs/show/{{$data['current_academic_year']}}">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
                             <p class="widget-title">TAs Without Prefs</p>
@@ -184,7 +184,7 @@
                 </a>
             </div>
             <div id="no-of-tas" class="widget-div bg-orange mb-3 min-vh-8">
-                <a class="btn col-md-12" href="/modules/prefs/all">
+                <a class="btn col-md-12" href="/admin/convenors-without-prefs/show/{{$data['current_academic_year']}}">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
                             <p class="widget-title">Modules Without Prefs</p>
@@ -198,7 +198,7 @@
                 <a class="btn col-md-12" data-toggle="modal" data-target="#update_year_modal" data-whatever="@getbootstrap">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
-                            <p class="widget-title">Current Academic Year</p>
+                            <p class="widget-title">Current Semester</p>
                         </div>
                         <hr>
                         <span class="fa-2x mb-0 line-h-initial">{{ $data['current_academic_year'] }}</span>
@@ -225,7 +225,7 @@
                         @csrf
                         <div class="col-md-12">
                             <select name="new_academic_year" id="new_academic_year" class="custom-select" required>
-                                <option value="">Choose new academic year</option>
+                                <option value="">Choose current semester</option>
                                 @foreach ($data['academicYears'] as $year)
                                 <option value="{{$year->year}}" {{ old('new_academic_year') == $year->year ? 'selected' : '' }}>{{$year->year}}</option>
                                 @endforeach

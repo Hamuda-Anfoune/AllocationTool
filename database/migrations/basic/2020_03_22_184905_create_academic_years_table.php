@@ -86,6 +86,22 @@ class CreateAcademicYearsTable extends Migration
                 [
                     'year' => '2027-2028-02',
                     'current' => 0
+                ],
+                [
+                    'year' => '2028-2029-01',
+                    'current' => 0
+                ],
+                [
+                    'year' => '2028-2029-02',
+                    'current' => 0
+                ],
+                [
+                    'year' => '2029-2030-01',
+                    'current' => 0
+                ],
+                [
+                    'year' => '2029-2030-02',
+                    'current' => 0
                 ]
             )
         );

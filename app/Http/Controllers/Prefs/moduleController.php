@@ -121,7 +121,8 @@ class moduleController extends Controller
                             ->with('current_academic_year', $current_academic_year)
                             ->with('languages', $languages);
 
-        }else
+        }
+        else
         {
             // Reroute to home
             return redirect('home');
@@ -340,13 +341,25 @@ class moduleController extends Controller
 
         $basic_db_class = new BasicDBClass();
         $allocation_class = new AllocationsClass();
+        $prefs_class = new PrefsClass();
 
         // If current year has been allocated
         if($allocation_class->allocationExistsForYear($academic_year))
-        {
-            return back()->with('alert', 'Sorry, TA roles have been already allocated for this semester, prefernces cannot be edited anymore!');
-        }
+        return back()->with('alert', 'Sorry, TA roles have been already allocated for this semester, prefernces cannot be edited anymore!');
 
+
+        //Check if prefs exist, handles when prefs were deleted then user goes back in the browser and tries to edit
+        if(!$prefs_class->modulePreferenceExists($module_id, $academic_year))
+        {
+            if(session()->get('account_type_id') == 000 || session()->get('account_type_id') == 001 )
+            {
+                return redirect('/modules/prefs/all')->with('alert', 'Seems this module has no submitted preferences, please check the list below!');
+            }
+
+            if(session()->get('account_type_id') == 002)
+                return redirect('/module/convenor')->with('alert', 'Seems this module has no submitted preferences, please check the list below!');
+
+        }
 
 
         $convenor_email = session()->get('email');

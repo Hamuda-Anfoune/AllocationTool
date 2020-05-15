@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Libraries\BasicDBClass;
 use App\Libraries\WeightsClass;
+use App\ModulePriorityWeights;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -64,18 +65,91 @@ class ConfigurationController extends Controller
         return view('configurations.add');
     }
 
-    public function updateLanguageWeights(Request $request)
+    public function updateModuleDoneBefore(Request $request)
     {
         // VALIDATE
 
         // get the new
     }
 
-    public function updateModuleDoneBefore(Request $request)
+    public function updateModulePriorityWeights(request $req)
     {
-        // VALIDATE
+        $this->validate($req, [
+            // Array of rules
+            'module_priority_weight_1' => ['required', 'integer'],
+            'module_priority_weight_2' => ['required', 'integer'],
+            'module_priority_weight_3' => ['required', 'integer'],
+            'module_priority_weight_4' => ['required', 'integer'],
+            'module_priority_weight_5' => ['required', 'integer'],
+            'module_priority_weight_6' => ['required', 'integer'],
+            'module_priority_weight_7' => ['required', 'integer'],
+            'module_priority_weight_8' => ['required', 'integer'],
+            'module_priority_weight_9' => ['required', 'integer'],
+            'module_priority_weight_10' => ['required', 'integer']
+        ]);
 
-        // get the new
+        $weights_class = new WeightsClass();
+
+        if($weights_class->updateModulePriorityWeights($req))
+        {
+            return back()->with('success', 'Module Priority Weights were updated successfully!');
+        }
+        else
+        {
+            return back()->with('alert', 'Oops, something went wrong, please try again later!');
+        }
+    }
+
+    public function resetModulePriorityWeights()
+    {
+        $weights_class = new WeightsClass();
+
+        if($weights_class->resetModulePriorityWeights())
+        {
+            return back()->with('success', 'Module Priority Weights were reset successfully');
+        }
+        else
+        {
+            return back()->with('alert', 'Oops, something went wrong, please try again later!');
+        }
+    }
+
+    public function updateLanguageWeights(request $req)
+    {
+        $this->validate($req, [
+            // Array of rules
+            'language_weight_1' => ['required', 'integer'],
+            'language_weight_2' => ['required', 'integer'],
+            'language_weight_3' => ['required', 'integer'],
+            'language_weight_4' => ['required', 'integer'],
+            'language_weight_5' => ['required', 'integer'],
+        ]);
+
+        $weights_class = new WeightsClass();
+
+        if($weights_class->updateLanguageWeights($req))
+        {
+            return back()->with('success', 'Programming Languages Weights were updated successfully!');
+        }
+        else
+        {
+            return back()->with('alert', 'Oops, something went wrong, please try again later!');
+        }
+    }
+
+    public function resetLanguageWeights()
+    {
+        $weights_class = new WeightsClass();
+        // return $weights_class->resetLanguageWeights();
+
+        if($weights_class->resetLanguageWeights())
+        {
+            return back()->with('success', 'Programming Languages Weights were reset successfully');
+        }
+        else
+        {
+            return back()->with('alert', 'Oops, something went wrong, please try again later!');
+        }
     }
 
     /**

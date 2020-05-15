@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    {{-- Favicon --}}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon-180x180.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon-16x16.png') }}">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -17,7 +22,7 @@
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> --}}
 
-    <script src="{{ asset('js/additionalDivs.css') }}" defer></script>
+    <script src="{{ asset('js/additionalDivs.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -40,54 +45,7 @@
         </main>
     </div>
 
-
-
-
     <script>
-
-        // function showDiv(id, selff) {
-        //     document.getElementById(id).style.display = 'block';
-        //     document.getElementById(selff).style.display = 'none';
-        //     // this.style.visibility = 'hidden';
-        // }
-
-        // var moduleDivCounter = 0;
-        // // Contains IDs of the programming module choices hidden divs in both preferences submission pages
-        // let moduleDivs = [
-        //     'module_4_div',
-        //     'module_5_div',
-        //     'module_6_div',
-        //     'module_7_div',
-        //     'module_8_div',
-        //     'module_9_div',
-        //     'module_10_div',
-        // ]
-        // function showModuleDivs()
-        // {
-        //     document.getElementById(moduleDivs[moduleDivCounter]).style.display = 'block';
-        //     if(moduleDivCounter == 6) document.getElementById('mod_btn').style.display = 'none';
-
-        //     moduleDivCounter++;
-        // }
-
-
-        // var languageDivCounter = 0;
-        // // Contains IDs of the programming language choices hidden divs in both preferences submission pages
-        // let langDivs = [
-        //     'language_4_div',
-        //     'language_5_div',
-        //     'language_6_div',
-        //     'language_7_div',
-        // ]
-        // function showLangDivs()
-        // {
-        //     document.getElementById(langDivs[languageDivCounter]).style.display = 'block';
-        //     if(languageDivCounter == 3) document.getElementById('lang_btn').style.display = 'none';
-
-        //     languageDivCounter++;
-        // }
-
-
         $(document).ready(
             function() {
 

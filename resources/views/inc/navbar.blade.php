@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-md navbar-inverse bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
-            {{ config('app.name', 'Laravel') }}
+            {{-- {{ config('app.name', 'Laravel') }} --}}
+            <img src="{{ asset('images/icon-navbar.png') }}" alt="Allocation Tool logo">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
@@ -17,7 +18,7 @@
                   <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/about">Contact us</a>
+                  <a class="nav-link" href="/about">About</a>
                 </li>
                 @if (session('account_type_id') == 002)
                     <li class="nav-item  dropdown">
@@ -45,19 +46,37 @@
                 @if (session('account_type_id') == '000' || session('account_type_id') == 001)
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ __('Admins') }}
+                        {{ __('Admin') }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="nav-link" href="/admin/dashboard">{{ __('Dashboard') }}</a>
                             <div class="dropdown-divider"></div>
                             <a class="nav-link" href="/admin/config">{{ __('Configuration') }}</a>
-                            <div class="dropdown-divider"></div>
-                            @if (session('account_type_id') == 000)
-                                <a class="nav-link" href="/admin/university-users/add">{{ __('Add New University User' ) }}</a>
-                            @endif
-                            <a class="nav-link" href="/admin/modules/add">{{ __('Add New Modules' ) }}</a>
-                            <a class="nav-link" href="/modules/prefs/all">{{ __('Modules\' Preferences') }}</a>
+                            <a class="nav-link" href="/admin/allocations">{{ __('All Allocations') }}</a>
                         </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('Modules') }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="nav-link" href="/modules/prefs/all">{{ __('All Modules') }}</a>
+                            <a class="nav-link" href="/admin/modules/add">{{ __('Add New Modules' ) }}</a>
+                        </div>
+                        </li>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('Users') }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="nav-link" href="/admin/all-tas/show">{{ __('All TAs') }}</a>
+                            <a class="nav-link" href="/admin/all-convenors/show">{{ __('All Convenors') }}</a>
+                            @if (session('account_type_id') == 000)
+                                <a class="nav-link" href="/admin/university-users/add">{{ __('Add University Users' ) }}</a>
+                            @endif
+                        </div>
+                        </li>
                     </li>
                 @endif
             </ul>

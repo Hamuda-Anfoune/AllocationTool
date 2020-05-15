@@ -19,6 +19,8 @@ Route::get('/', 'HomeController@index'); // the '/' sets the home page
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/about', 'AboutController@welcome')->name('about');
+
 
 Route::get('/admin/university/signup', 'Admin\UniversityController@index');
 
@@ -32,7 +34,17 @@ Route::get('/admin/university-users/add', 'Admin\UniversityUsersController@creat
 Route::post('/admin/university-users/add', 'Admin\UniversityUsersController@store')->name('storeUniversityUser');
 
 
-Route::get('/admin/show/all-registered-users', 'Admin\UserController@index');
+Route::get('/admin/all-registered-users/show', 'Admin\UserController@index');
+
+Route::get('/admin/all-admins/show', 'Admin\UserController@showAllactiveAdmins');
+
+Route::get('/admin/all-tas/show', 'Admin\UserController@showAllactiveTas');
+
+Route::get('/admin/tas-without-prefs/show/{academic_year}', 'Admin\UserController@showTasWithoutPrefsForYear');
+
+Route::get('/admin/convenors-without-prefs/show/{academic_year}', 'Admin\UserController@showConvenorsWithoutPrefsForYear');
+
+Route::get('/admin/all-convenors/show', 'Admin\UserController@showAllactiveConvenors');
 
 Route::get('/admin/delete/user/{email}', 'Admin\UserController@destroy');
 
@@ -51,12 +63,23 @@ Route::get('/admin/config/add', 'Admin\ConfigurationController@create')->name('a
 
 Route::post('/admin/config/add', 'Admin\ConfigurationController@store')->name('storeConfigs');
 
+Route::post('/admin/config/module-priority-weights/update', 'Admin\ConfigurationController@updateModulePriorityWeights')->name('updateModulePriorityWeights');
+
+Route::get('/admin/config/module-priority-weights/reset', 'Admin\ConfigurationController@resetModulePriorityWeights');
+
+Route::post('/admin/config/language-weights/update', 'Admin\ConfigurationController@updateLanguageWeights')->name('updateLanguageWeights');
+
+Route::get('/admin/config/language-weights/reset', 'Admin\ConfigurationController@resetLanguageWeights');
+
+Route::get('/admin/config/module-repetition-weights/reset', 'Admin\ConfigurationController@resetModuleRepetitionWeights');
+
+Route::post('/admin/config/module-repetition-weights/update', 'Admin\ConfigurationController@updateModuleRepetitionWeights')->name('updateModuleRepetitionWeights');
+
 
 Route::get('/admin/dashboard', 'Allocation\AllocationController@allocationData');
 
 
-// will finish creating ROLs then allcate
-Route::get('/admin/allocations/allocate', 'Allocation\AllocationController@store')->name('allocate');
+Route::get('/admin/allocations/allocate', 'Allocation\AllocationController@store')->name('allocate'); // will finish creating ROLs then allcate
 
 Route::get('/admin/allocations/store', 'Allocation\AllocationController@store');
 

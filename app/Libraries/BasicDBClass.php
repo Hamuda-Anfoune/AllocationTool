@@ -154,28 +154,45 @@ class BasicDBClass
                     ->select('convenor_email')
                     ->distinct()
                     ->where('academic_year','=',$academic_year)
-                    ->whereNotExists(function($query)
+                    ->whereNotExists(function($query)use($academic_year)
                     {
                         $query->select(DB::raw(1))
                             ->from('module_preferences')
-                            ->whereRaw('module_preferences.module_id = modules.module_id');
+                            ->whereRaw('module_preferences.module_id = modules.module_id')
+                            ->where('academic_year','=',$academic_year);
                     })
                     ->get();
     }
+
 
     function getModulesWithoutPrefsForConvenorForYear($convenor_id, $academic_year)
     {
         return DB::table('modules')
                     ->where('convenor_email','=', $convenor_id)
                     ->where('academic_year','=', $academic_year)
-                    ->whereNotExists(function ($query)
+                    ->whereNotExists(function ($query)use($academic_year)
                     {
                         $query->select(DB::raw(100))
                             ->from('module_preferences')
-                            ->whereRaw('module_preferences.module_id = modules.module_id');
+                            ->whereRaw('module_preferences.module_id = modules.module_id')
+                            ->where('academic_year','=',$academic_year);
                     })
                     ->get();
     }
+
+    function getConvenorsWithoutPrefsWithModulesForYear($academic_year)
+    {
+        $convenors = $this->getConvenorsWithoutPrefsForYear($academic_year);
+
+        foreach ($convenors as $convenor) {
+            $convenor->name = DB::table('users')->select('name')->where('email', '=', $convenor->convenor_email)->first()->name;
+            $modules = $this->getModulesWithoutPrefsForConvenorForYear($convenor->convenor_email, $academic_year);
+            $convenor->modules = $modules;
+        }
+
+        return $convenors;
+    }
+
 
     /**
      *  ----------------------------
@@ -192,13 +209,22 @@ class BasicDBClass
      */
     function getAllActiveTas()
     {
-        return DB::table('users')
+        $tas = DB::table('users')
                     ->where('active', '=', 1)
                     ->where(function($q) {
                         $q->where('account_type_id', 003)
                           ->orWhere('account_type_id', 004);
                     })
                     ->get();
+        foreach ($tas as $ta) {
+            $ta->account_type = DB::table('account_types')
+                                    ->select('account_type')
+                                    ->where('account_type_id', '=', $ta->account_type_id)
+                                    ->first()
+                                    ->account_type;
+        }
+
+        return $tas;
     }
 
     /**
@@ -225,8 +251,8 @@ class BasicDBClass
      */
     function getActiveTasWithoutPrefsForYear(string $academic_year)
     {
-        return DB::table('users')
-                    ->select('email', 'name')
+        $tas = DB::table('users')
+                    ->select('email', 'name', 'account_type_id')
                     ->where('active', '=', 1)
                     ->where(function($q) {
                         $q->where('account_type_id', 003)
@@ -240,6 +266,16 @@ class BasicDBClass
                             ->where('academic_year','=',$academic_year);
                         })
                     ->get();
+
+        foreach ($tas as $ta) {
+            $ta->account_type = DB::table('account_types')
+                                    ->select('account_type')
+                                    ->where('account_type_id', '=', $ta->account_type_id)
+                                    ->first()
+                                    ->account_type;
+        }
+
+        return $tas;
     }
 
 
@@ -357,7 +393,7 @@ class BasicDBClass
      function getAllActiveConvenors()
      {
         return DB::table('users')
-                ->select('email','name')
+                ->select('email','name', 'created_at')
                 ->where('account_type_id','=', 002)
                 ->where('active','=', 1)
                 ->get();

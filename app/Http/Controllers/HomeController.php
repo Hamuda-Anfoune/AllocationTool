@@ -30,23 +30,18 @@ class HomeController extends Controller
         if(session()->get('account_type_id')== 000 || session()->get('account_type_id')== 001)
         {
             //
-            return redirect('admin/dashboard');
+            return redirect('/admin/dashboard');
         }
         elseif(session()->get('account_type_id')== 002)
         {
             //
-            return redirect('module/convenor');
+            return redirect('/module/convenor');
         }
         elseif(session()->get('account_type_id')== 003 || session()->get('account_type_id')== 004)
         {
             // redirect to TA controller
-            return redirect('TA/');
+            return redirect('/TA/');
         }
-        return view('home');
-    }
-
-    public function welcome()
-    {
-        return view('welcome');
+        return view('about');
     }
 }

@@ -16,6 +16,11 @@ class PrefsClass
         return (ta_preference::where('preference_id', '=', $preference_id)->count() > 0);
     }
 
+    function modulePreferenceExists($module_id, $academic_year)
+    {
+        return DB::table('module_preferences')->where('module_id', $module_id)->where('academic_year', $academic_year)->exists();
+    }
+
     function clear_ta_language_choices($preference_id)
     {
         //

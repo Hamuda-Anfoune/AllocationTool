@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\ModuleRepeatitionWeight;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -205,4 +206,107 @@ class WeightsClass
         $basic = DB::table('language_weights')->where('type', '=', 'current')->get()->toArray();
         return array_column($basic, 'weight', 'order');
     }
+
+    function updateModulePriorityWeights($req)
+    {
+        return DB::table('module_priority_weights')
+                    ->where('type', 'current')
+                    ->update(
+                        [
+                            'type' => 'current',
+                            'module_weight_1' => $req['module_priority_weight_1'],
+                            'module_weight_2' => $req['module_priority_weight_2'],
+                            'module_weight_3' => $req['module_priority_weight_3'],
+                            'module_weight_4' => $req['module_priority_weight_4'],
+                            'module_weight_5' => $req['module_priority_weight_5'],
+                            'module_weight_6' => $req['module_priority_weight_6'],
+                            'module_weight_7' => $req['module_priority_weight_7'],
+                            'module_weight_8' => $req['module_priority_weight_8'],
+                            'module_weight_9' => $req['module_priority_weight_9'],
+                            'module_weight_10' => $req['module_priority_weight_10'],
+                        ]
+                    );
+    }
+
+    /**
+     * Resets the MOdule Priority Weights to default values
+     * Default values are read from the database
+     */
+    function resetModulePriorityWeights()
+    {
+        $default = DB::table('module_priority_weights')
+                        ->select('module_weight_1', 'module_weight_2', 'module_weight_3', 'module_weight_4', 'module_weight_5',
+                                 'module_weight_6', 'module_weight_7', 'module_weight_8', 'module_weight_9', 'module_weight_10')
+                        ->where('type', 'default')
+                        ->first();
+
+         return DB::table('module_priority_weights')
+                    ->where('type', 'current')
+                    ->update(
+                    [
+                        'type' => 'current',
+                        'module_weight_1' => $default->module_weight_1,
+                        'module_weight_2' => $default->module_weight_2,
+                        'module_weight_3' => $default->module_weight_3,
+                        'module_weight_4' => $default->module_weight_4,
+                        'module_weight_5' => $default->module_weight_5,
+                        'module_weight_6' => $default->module_weight_6,
+                        'module_weight_7' => $default->module_weight_7,
+                        'module_weight_8' => $default->module_weight_8,
+                        'module_weight_9' => $default->module_weight_9,
+                        'module_weight_10' => $default->module_weight_10,
+                    ]
+                );
+    }
+
+    function updateLanguageWeights($req)
+    {
+        try
+        {
+            for($i = 1; $i <= 5; $i++)
+            {
+                DB::table('language_weights')
+                        ->where('type', 'current')
+                        ->where('order', '=', $i)
+                        ->update(
+                            [
+                                'weight' => $req['language_weight_'.$i]
+                            ]
+                            );
+            }
+            return true;
+        }
+        catch(QueryException $qe)
+        {
+            return false;
+        }
+    }
+
+    function resetLanguageWeights()
+    {
+        $defaults = DB::table('language_weights')
+                        ->select('weight', 'order')
+                        ->where('type', 'default')
+                        ->get();
+        try
+        {
+            foreach ($defaults as $default) {
+                DB::table('language_weights')
+                    ->where('type', 'current')
+                    ->where('order', '=', $default->order)
+                    ->update(
+                        [
+                            'weight' => $default->weight,
+                        ]
+                    );
+            }
+            return true;
+        }
+        catch(QueryException $qe)
+        {
+            return false;
+        }
+    }
+
+
 }
