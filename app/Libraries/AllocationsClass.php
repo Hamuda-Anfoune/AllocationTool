@@ -17,55 +17,55 @@ class AllocationsClass
     /**
      * Initiates the allocation matrix for modules with empty arrays of TAs
      */
-    function intitiateModuleAllocationMatrix($academic_year)
-    {
-        $basic_db_calss = new BasicDBClass();
+    // function intitiateModuleAllocationMatrix($academic_year)
+    // {
+    //     $basic_db_calss = new BasicDBClass();
 
-        $module_allocation_matrix =[];
+    //     $module_allocation_matrix =[];
 
-        // Get all Modules With prefs for year
-        $all_modules = $basic_db_calss->getAllModulesForYear($academic_year);
+    //     // Get all Modules With prefs for year
+    //     $all_modules = $basic_db_calss->getAllModulesForYear($academic_year);
 
-        foreach($all_modules as $module)
-        {
-            // An empty array of TAs
-            $tas = array();
+    //     foreach($all_modules as $module)
+    //     {
+    //         // An empty array of TAs
+    //         $tas = array();
 
-            $module_allocation_matrix[$module->module_id] =
-            [
-                'tas' => $tas
-            ];
-        }
+    //         $module_allocation_matrix[$module->module_id] =
+    //         [
+    //             'tas' => $tas
+    //         ];
+    //     }
 
-        return $module_allocation_matrix;
-    }
+    //     return $module_allocation_matrix;
+    // }
 
     /**
      * Initiates the allocation matrix for TAs with empty arrays of modules
      */
-    function intitiateTaAllocationMatrix()
-    {
-        $basic_db_calss = new BasicDBClass();
+    // function intitiateTaAllocationMatrix()
+    // {
+    //     $basic_db_calss = new BasicDBClass();
 
-        $ta_allocation_matrix =[];
+    //     $ta_allocation_matrix =[];
 
-        // Get all Modules With prefs for year
-        $all_active_tas = $basic_db_calss->getAllActiveTas();
+    //     // Get all Modules With prefs for year
+    //     $all_active_tas = $basic_db_calss->getAllActiveTas();
 
-        foreach($all_active_tas as $ta)
-        {
-            // An empty array of TAs
-            $modules = array();
+    //     foreach($all_active_tas as $ta)
+    //     {
+    //         // An empty array of TAs
+    //         $modules = array();
 
-            $ta_allocation_matrix[$ta->email] =
-            [
-                'weekly_working_hours' => 0,
-                'modules' => $modules
-            ];
-        }
+    //         $ta_allocation_matrix[$ta->email] =
+    //         [
+    //             'weekly_working_hours' => 0,
+    //             'modules' => $modules
+    //         ];
+    //     }
 
-        return $ta_allocation_matrix;
-    }
+    //     return $ta_allocation_matrix;
+    // }
 
     /**
      * @return array
@@ -141,9 +141,8 @@ class AllocationsClass
                             ->select('ta_email', 'ta_total_weight')
                             ->where('module_id','=',$module->module_id)
                             ->orderBy('ta_total_weight', 'DESC')
+                            ->take($module->no_of_assistants)
                             ->get();
-                            // ->take($module->no_of_assistants)
-
 
             // Declare a clear TAs array: $tas
             $tas = [];

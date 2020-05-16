@@ -13,6 +13,11 @@
 
 ## TODO:
 -----------------
+ * Add a link in the navbar to allow tas to visit the modules prefs
+ 
+ * Add programming language edition and viewing functionaliies
+
+ * Beautify about page
 
  * Add foreign key drop statements to down() in the migrations.
 

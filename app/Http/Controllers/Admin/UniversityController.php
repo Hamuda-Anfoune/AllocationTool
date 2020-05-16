@@ -13,12 +13,17 @@ use App\User;
 
 class UniversityController extends Controller
 {
+    use RegistersUsers;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('guest')->except('logout');
     }
-
-    use RegistersUsers;
 
     /**
      * Display a listing of the resource.
