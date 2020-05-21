@@ -59,7 +59,7 @@ class BasicDBClass
         return DB::table('modules')
                     ->select('module_id', 'module_name')
                     ->where('convenor_email', '=', $convenor_id)
-                    ->where('academic_year', '=', $academic_year)
+                    // ->where('academic_year', '=', $academic_year)
                     ->orderBy('module_name', 'ASC')
                     ->get();
      }
@@ -73,7 +73,7 @@ class BasicDBClass
     function getAllModulesForYear(string $academic_year)
     {
         return DB::table('modules')
-                    ->where('academic_year', '=', $academic_year)
+                    // ->where('academic_year', '=', $academic_year)
                     ->orderBy('module_name', 'ASC')
                     ->get();
     }
@@ -133,12 +133,13 @@ class BasicDBClass
     {
         return DB::table('modules')
                     ->select('module_id', 'module_name')
-                    ->where('academic_year','=',$academic_year)
-                    ->whereNotExists(function($query)
+                    // ->where('academic_year','=',$academic_year)
+                    ->whereNotExists(function($query)use($academic_year)
                     {
                         $query->select(DB::raw(1))
                             ->from('module_preferences')
-                            ->whereRaw('module_preferences.module_id = modules.module_id');
+                            ->whereRaw('module_preferences.module_id = modules.module_id')
+                            ->where('academic_year','=',$academic_year);
                     })
                     ->get();
     }
@@ -153,7 +154,7 @@ class BasicDBClass
         return DB::table('modules')
                     ->select('convenor_email')
                     ->distinct()
-                    ->where('academic_year','=',$academic_year)
+                    // ->where('academic_year','=',$academic_year)
                     ->whereNotExists(function($query)use($academic_year)
                     {
                         $query->select(DB::raw(1))
@@ -169,7 +170,7 @@ class BasicDBClass
     {
         return DB::table('modules')
                     ->where('convenor_email','=', $convenor_id)
-                    ->where('academic_year','=', $academic_year)
+                    // ->where('academic_year','=', $academic_year)
                     ->whereNotExists(function ($query)use($academic_year)
                     {
                         $query->select(DB::raw(100))
@@ -377,7 +378,7 @@ class BasicDBClass
             $current_module_choices[$i] = DB::table('modules')
                                                         ->select('module_name')
                                                         ->where('module_id','=', $current_module_choices_without_names[$i]->module_id)
-                                                        ->where('academic_year','=', $target_academic_year)
+                                                        // ->where('academic_year','=', $target_academic_year)
                                                         ->first();
 
             $current_module_choices[$i]->module_id = $current_module_choices_without_names[$i]->module_id;
