@@ -25,83 +25,123 @@ class CreateAcademicYearsTable extends Migration
             array(
                 [
                     'year' => '2020-2021-01',
-                    'current' => 0
+                    'current' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2020-2021-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2021-2022-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2021-2022-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2022-2023-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2022-2023-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2023-2024-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2023-2024-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2024-2025-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2024-2025-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2025-2026-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2025-2026-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2026-2027-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2026-2027-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2027-2028-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2027-2028-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2028-2029-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2028-2029-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2029-2030-01',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'year' => '2029-2030-02',
-                    'current' => 0
+                    'current' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ]
             )
         );

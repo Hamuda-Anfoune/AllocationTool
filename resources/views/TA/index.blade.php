@@ -8,9 +8,11 @@
             <div class="card">
                 <div class="card-header text-md-center"><h4>{{ __('Your Preferences Per Semester') }}</h4></div>
                 <div class="card-body">
-                    <div class="text-right">
-                        <a class="btn btn-outline-primary" href="/TA/prefs/add">Submit Preferences</a>
-                    </div>
+                    @if(($TAs_preferences->count()) <= 0)
+                        <div class="text-right">
+                            <a class="btn btn-outline-primary" href="/TA/prefs/add">Submit Preferences</a>
+                        </div>
+                    @endif
                     @if(($TAs_preferences->count()) > 0)
                     <h5>Previous Preferences</h5>
                     <ul>

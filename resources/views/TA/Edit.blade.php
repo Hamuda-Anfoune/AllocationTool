@@ -34,12 +34,6 @@
                             <label for="max_contact_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Contact Hours Per Week') }}</label>
                             <div class="col-md-6">
                                 <input type="number" name="max_contact_hours" id="max_contact_hours" class="form-control" value="{{$current_ta_preferences[0]->max_contact_hours }}" placeholder="Weekly total, fractions will be round up!" aria-describedby="helpId" >
-                                {{-- <select name="max_contact_hours" id="max_contact_hours" class="custom-select">
-                                    <option value="{{$current_ta_preferences[0]->max_contact_hours }}">{{$current_ta_preferences[0]->max_contact_hours }} (current)</option>
-                                    @for($i=1; $i<= 40; $i++)
-                                        <option value="{{$i}}" {{ old('max_contact_hours') == $i ? 'selected' : '' }}>{{$i}}</option>
-                                    @endfor
-                                </select> --}}
                                 @error('max_contact_hours')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -51,7 +45,7 @@
                         <div class="form-group row">
                             <label for="max_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Marking Hours Per Semester') }}</label>
                             <div class="col-md-6">
-                                <input type="number" name="max_marking_hours" id="max_marking_hours" class="form-control" value="{{ $current_ta_preferences[0]->max_marking_hours}}" placeholder="Semester total, fractions will be round up!" aria-describedby="helpId" >
+                                <input type="number" min="7" name="max_marking_hours" id="max_marking_hours" class="form-control" value="{{ $current_ta_preferences[0]->max_marking_hours}}" placeholder="Semester total, fractions will be round up!" aria-describedby="helpId" >
                                 {{-- <select name="max_marking_hours" id="max_marking_hours" class="custom-select">
                                     <option value="{{ $current_ta_preferences[0]->max_marking_hours}}">{{ $current_ta_preferences[0]->max_marking_hours}} (current)</option>
                                     @for($i=1; $i<= 40; $i++)
@@ -117,7 +111,7 @@
                             <div class="form-group row ">
                                 <label for="module_{{$module1->priority}}_id" class="col-md-4 col-form-label text-md-right">{{ __('Module Choice No. ' . $module1->priority) }}</label>
                                 <div class="col-md-6 mb-md-3">
-                                    <select name="module_{{$module1->priority}}_id" id="module_{{$module1->priority}}_id" class="custom-select" required>
+                                    <select name="module_{{$module1->priority}}_id" id="module_{{$module1->priority}}_id" class="custom-select" >
                                         <option value="">Choice #{{$module1->priority}}</option>
                                         <option value="{{$module1->module_id}}" selected>{{ $module1->module_name}} (current)</option>
                                         @foreach ($modules as $module)

@@ -14,6 +14,8 @@
 
 Auth::routes();
 
+Route::get('/trial', 'Allocation\AllocationController@trial');
+
 
 Route::get('/', 'HomeController@index'); // the '/' sets the home page
 
@@ -39,6 +41,8 @@ Route::get('/admin/all-registered-users/show', 'Admin\UserController@index');
 Route::get('/admin/all-admins/show', 'Admin\UserController@showAllactiveAdmins');
 
 Route::get('/admin/all-tas/show', 'Admin\UserController@showAllactiveTas');
+
+Route::get('/admin/ta/prefs/show/{email}', 'Admin\TAController@show');
 
 Route::get('/admin/tas-without-prefs/show/{academic_year}', 'Admin\UserController@showTasWithoutPrefsForYear');
 

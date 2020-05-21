@@ -58,9 +58,8 @@
 
                         <div class="form-group row">
                             <label for="max_marking_hours" class="col-md-4 col-form-label text-md-right">{{ __('Maximum Number of Marking Hours Per Semester') }}</label>
-
                             <div class="col-md-6">
-                                <input type="number" name="max_marking_hours" id="max_marking_hours" class="form-control" value="{{ old('max_marking_hours') }}" placeholder="Semester total, fractions will be round up!" aria-describedby="helpId" >
+                                <input type="number" min="7" name="max_marking_hours" id="max_marking_hours" class="form-control" value="{{ old('max_marking_hours') }}" placeholder="Semester total, fractions will be round up!" aria-describedby="helpId" >
                                 {{-- <select name="max_marking_hours" id="max_marking_hours" class="custom-select">
                                     @for($i=0; $i<= 50; $i++)
                                         <option value="{{$i}}" {{ old('max_marking_hours') == $i ? 'selected' : '' }}>{{$i}}</option>

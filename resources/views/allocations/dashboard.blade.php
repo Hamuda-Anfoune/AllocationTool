@@ -36,12 +36,17 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="mb-3 col-md-6 text-center">
+                        <div class="mb-3 col-md-4 text-center">
                             <a class=" col-md-10 btn btn-primary" href="{{ route('allocate') }}" onclick="return confirm('Press OK to continue?')">
                                 {{ __('Allocate Current Semester') }}
                             </a>
                         </div>
-                        <div class="col-md-6 text-center">
+                        <div class="mb-3 col-md-4 text-center">
+                            <a class=" col-md-10 btn btn-primary" href="/admin/allocations">
+                                {{ __('Show All Allocations') }}
+                            </a>
+                        </div>
+                        <div class="col-md-4 text-center">
                             <a class=" col-md-10 btn btn-danger" href="{{ route('deleteCurrentAllocation') }}" onclick="return confirm('Are you sure?')">
                                 {{ __('Clear Current Allocation') }}
                             </a>
@@ -173,7 +178,7 @@
                 </div>
             </div>
             <div id="no-of-tas" class="widget-div bg-orange mb-3 min-vh-8">
-                <a class="btn col-md-12" href="/admin/modules/add">
+                <a class="btn col-md-12" href="/modules/prefs/all">
                     <span class=" hyperspan">
                         <div class="d-flex align-content-center flex-wrap justify-content-center">
                             <p class="widget-title">Taught Modules</p>
@@ -215,7 +220,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Set Academic Year</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Set Academic Semester</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>

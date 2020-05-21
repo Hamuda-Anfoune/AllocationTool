@@ -17,7 +17,7 @@ class CreateModulesTable extends Migration
             $table->string('module_id', 15)->primary();
             $table->string('module_name', 150);
             $table->string('convenor_email', 50);
-            $table->string('academic_year', 15);
+            $table->string('academic_year', 15)->nullable();
             $table->timestamps();
 
             //REALTIONSHIPS

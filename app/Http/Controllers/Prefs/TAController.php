@@ -57,7 +57,6 @@ class TAController extends Controller
     }
 
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -192,7 +191,8 @@ class TAController extends Controller
      */
     public function edit($preference_id)
     {
-        if (session()->get('account_type_id')== 003 || session()->get('account_type_id')== 004) // session value is assigned in authenticated() in AuthenticatesUsers.php
+        if (session()->get('account_type_id') == '000' || session()->get('account_type_id') == '000' ||
+            session()->get('account_type_id') == 003 || session()->get('account_type_id') == 004 ) // session value is assigned in authenticated() in AuthenticatesUsers.php
         {
             $basic_db_class = new BasicDBClass();
             $prefs_class = new PrefsClass();
@@ -258,7 +258,7 @@ class TAController extends Controller
     public function update(Request $req)
     {
         //check if current user is GTA or TA
-        if (session()->get('account_type_id') != 003 && session()->get('account_type_id') != 004) // session value is assigned in authenticated() in AuthenticatesUsers.php
+        if (session()->get('account_type_id') != '000' && session()->get('account_type_id') != '001') // session value is assigned in authenticated() in AuthenticatesUsers.php
         {
             // Redirect to home
             return redirect('home');

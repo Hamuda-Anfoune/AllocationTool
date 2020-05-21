@@ -20,17 +20,10 @@ class Allocator
         // Get all Modules with their prefs and ROLS
         $modules_prefs_and_ROLs =  $allocation_class->createFinalRolsForModulesForYear($academic_year);
 
-        // create an array of removed TAs
+        // Create an array of removed TAs
         $removed_tas = [];
 
-        // allocate the removed TAs if exist
-        if(count($removed_tas) > 0)
-        {
-            foreach($removed_tas as $removed)
-            {
-                $allocations_matrix = $this->allocate($removed, $allocations_matrix);
-            }
-        }
+
 
 
         /** TODO:
@@ -56,9 +49,9 @@ class Allocator
                 // Get module choice ID, $i represents the priority of the module choice in the TA's ROL
                 $module_choice_id = $ta['modules'][$i]['module_id'];
 
-
                 // Check if adding current_module's working hours to TA's working hours will exceed max, OR adding another module will exceed TA's max number of modules
-                if(($allocations_matrix['ta_allocations'][$current_ta_id]['contact_hours'] + $modules_prefs_and_ROLs[$module_choice_id]['contact_hours']) > $ta['max_contact_hours']
+                if(in_array($module_choice_id, $allocations_matrix['ta_allocations'][$current_ta_id]['modules'])
+                    || ($allocations_matrix['ta_allocations'][$current_ta_id]['contact_hours'] + $modules_prefs_and_ROLs[$module_choice_id]['contact_hours']) > $ta['max_contact_hours']
                     || ($allocations_matrix['ta_allocations'][$current_ta_id]['marking_hours'] + $modules_prefs_and_ROLs[$module_choice_id]['marking_hours']) > $ta['max_marking_hours']
                     || $ta['max_modules'] < (count($allocations_matrix['ta_allocations'][$current_ta_id]['modules']) + 1))
                 {
@@ -72,7 +65,7 @@ class Allocator
                     {
                         // Check if there are unallocated positions
                         // if number of allocated TAs is less than no_of_assistants required
-                        if ((sizeof($allocations_matrix['module_allocations'][$module_choice_id]['tas'])) < $modules_prefs_and_ROLs[$module_choice_id]['no_of_assistants'])
+                        if (sizeof($allocations_matrix['module_allocations'][$module_choice_id]['tas']) < $modules_prefs_and_ROLs[$module_choice_id]['no_of_assistants'])
                         {
                             //Get current TA's weight for current module from DB
                             $ta_weight_for_module = $allocation_class->getTaWeightForModuleForCurrentSemester($current_ta_id, $module_choice_id);
@@ -119,8 +112,8 @@ class Allocator
                                     unset($allocations_matrix['ta_allocations'][$ta_id_to_remove]['modules'][$module_key_to_remove]);
 
                                     // Remove module's working hours from TA's weekly_working_hours
-                                    $allocations_matrix['ta_allocations'][$ta['ta_id']]['contact_hours'] -= $modules_prefs_and_ROLs[$module_choice_id]['contact_hours'];
-                                    $allocations_matrix['ta_allocations'][$ta['ta_id']]['marking_hours'] -= $modules_prefs_and_ROLs[$module_choice_id]['marking_hours'];
+                                    $allocations_matrix['ta_allocations'][$current_ta_id]['contact_hours'] -= $modules_prefs_and_ROLs[$module_choice_id]['contact_hours'];
+                                    $allocations_matrix['ta_allocations'][$current_ta_id]['marking_hours'] -= $modules_prefs_and_ROLs[$module_choice_id]['marking_hours'];
 
                                 /**
                                  *      Allocate current TA and module to each other
@@ -138,11 +131,15 @@ class Allocator
                                     $allocations_matrix['ta_allocations'][$current_ta_id]['modules'][] = $module_choice_id;
 
                                     // Add module's working hours to TA's weekly_working_hours
-                                    $allocations_matrix['ta_allocations'][$ta['ta_id']]['contact_hours'] += $modules_prefs_and_ROLs[$module_choice_id]['contact_hours'];
-                                    $allocations_matrix['ta_allocations'][$ta['ta_id']]['marking_hours'] += $modules_prefs_and_ROLs[$module_choice_id]['marking_hours'];
+                                    $allocations_matrix['ta_allocations'][$current_ta_id]['contact_hours'] += $modules_prefs_and_ROLs[$module_choice_id]['contact_hours'];
+                                    $allocations_matrix['ta_allocations'][$current_ta_id]['marking_hours'] += $modules_prefs_and_ROLs[$module_choice_id]['marking_hours'];
 
-                                // Add removed ta to removed tas array
-                                $removed_tas[] = $all_tas_prefs_and_Rols[$ta_id_to_remove];
+                                    if(!(in_array($all_tas_prefs_and_Rols[$ta_id_to_remove]['ta_id'], array_column($allocations_matrix['removed_tas'], 'ta_id'))))
+                                    {
+                                        // Add removed ta to removed tas array
+                                        $removed_tas[] = $all_tas_prefs_and_Rols[$ta_id_to_remove];
+                                        $allocations_matrix['removed_tas'][] = $all_tas_prefs_and_Rols[$ta_id_to_remove];
+                                    }
                             }
                         }
                     }
@@ -153,6 +150,7 @@ class Allocator
                 }
             }
         }
+
 
         return $allocations_matrix;
     }

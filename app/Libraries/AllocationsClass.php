@@ -114,6 +114,9 @@ class AllocationsClass
         $allocations_matrix['ta_allocations'] = $ta_allocations;
         $allocations_matrix ['module_allocations']= $module_allocations;
 
+        // Added Below
+        $allocations_matrix ['removed_tas'] = [];
+
         return $allocations_matrix;
     }
     /**
@@ -174,7 +177,6 @@ class AllocationsClass
             $modules_ROLs[$module->module_id] =
             [
                 'no_of_assistants' => $module->no_of_assistants,
-                // 'weekly_working_hours' => $module->no_of_contact_hours + $module->no_of_marking_hours,
                 'contact_hours' => $module->no_of_contact_hours, // are per week
                 'marking_hours' => ceil($module->no_of_marking_hours/$module->no_of_assistants), // 15 weeks in a semester
                 'tas'=> $tas
@@ -239,13 +241,13 @@ class AllocationsClass
             // Get the modules that TA has not chosen
             $not_preferred_modules_for_ta = DB::table('modules')
                                                 ->select('module_id')
-                                                ->where('academic_year','=',$academic_year)
-                                                ->whereNotExists(function($query)use($academic_year, $ta)
+                                                // ->where('academic_year','=',$academic_year)
+                                                ->whereNotExists(function($query)use($ta)
                                                 {
-                                                    $query->select(DB::raw(1))
+                                                    $query->select('module_id')
                                                         ->from('ta_module_choices')
-                                                        // ->whereRaw('preference_id','=',$ta->preference_id);
-                                                        ->where('preference_id','=',$ta->preference_id);
+                                                        // ->where('preference_id','=','ta5Y2019-2020-02');
+                                                        ->whereRaw('ta_module_choices.preference_id', $ta->preference_id);
                                                     })
                                                 ->get();
 

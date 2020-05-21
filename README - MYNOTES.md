@@ -13,11 +13,21 @@
 
 ## TODO:
 -----------------
- * Add a link in the navbar to allow tas to visit the modules prefs
+ * fix the module year thing
  
- * Add programming language edition and viewing functionaliies
+ * Add validation rules to check if language choices are repeated.
 
- * Beautify about page
+ * Add a rotator to suspend page til allocation results arrive.
+
+ * Add edit allocation functionality.
+
+ * Removed added commented code from allocation functions.
+
+ * Add programming language edition and viewing functionalities OR add default values in migration.
+ 
+ * Add validation rule for max marking hours for ta in add and in edit submission, min value should be 7.
+
+ * Beautify about page.
 
  * Add foreign key drop statements to down() in the migrations.
 

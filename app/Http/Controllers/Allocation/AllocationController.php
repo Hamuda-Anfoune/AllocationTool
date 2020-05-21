@@ -21,6 +21,51 @@ class AllocationController extends Controller
         $this->middleware('auth');
     }
 
+    public function trial()
+    {
+
+        return DB::table('modules')
+                    ->select('module_id')
+                    // ->where('academic_year','=',$academic_year)
+                    ->whereNotExists(function($query)
+                    {
+                        $query->select('module_id')
+                            ->from('ta_module_choices')
+                            // ->where('ta_module_choices.preference_id','=','ta5Y2019-2020-02');
+                            ->whereRaw('preference_id', 'ta5Y2019-2020-02');
+                        })
+                    ->get();
+
+
+                        //////////
+
+
+        return DB::table('ta_module_choices')
+                        ->select('module_id')
+                        ->whereRaw('preference_id = "ta5Y2019-2020-02"')
+                        ->get();
+
+
+                        ///////////////////
+
+
+        return DB::table('modules')
+                    ->select('module_id')
+                    // ->where('academic_year','=',$academic_year)
+                    ->whereNotExists(function($query)
+                    {
+                        $query->select('module_id')
+                            ->from('ta_module_choices')
+                            // ->where('ta_module_choices.preference_id','=','ta5Y2019-2020-02');
+                            ->whereRaw('preference_id = "ta5Y2019-2020-02"');
+                        })
+                    ->get();
+
+                    // DB::select('module_id FROM modules
+                    // WHERE NOT EXISTS (SELECT module_id FROM ta_module_choices
+                    //                   WHERE cities_stores.store_type = stores.store_type')
+    }
+
     /* TODO:
      *  Hange how did_before is calculated to counting how many previous allocations where a TA is allocated to a module
      */
@@ -96,17 +141,6 @@ class AllocationController extends Controller
     }
 
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(request $req)
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -154,7 +188,7 @@ class AllocationController extends Controller
         $all_tas_prefs_and_Rols =  $allocation_class->createTasRolsAndPrefsForYear($academic_year);
 
         // Get all Modules with their prefs and ROLS
-        $modules_prefs_and_ROLs =  $allocation_class->createFinalRolsForModulesForYear($academic_year);
+        // $modules_prefs_and_ROLs =  $allocation_class->createFinalRolsForModulesForYear($academic_year);
 
         // Intitiate allocation matrix
         $allocations_matrix = $allocation_class->initiateAllocationsMatrix($academic_year);
@@ -165,11 +199,32 @@ class AllocationController extends Controller
             $allocations_matrix = $allocator->allocate($ta, $allocations_matrix);
         }
 
+        $basic_db_class = new BasicDBClass();
+
+
+        // while(count($allocations_matrix['removed_tas']) > 0)
+        // for($k = 0; $k <= 100; $k++)
+        for($k = 0; $k <= count($basic_db_class->getAllActiveTas()); $k++) //check for removed tas times the number of all the TAs
+        {
+            if(count($allocations_matrix['removed_tas']) > 0)
+            {
+                // return (string) in_array('CO1008', $allocations_matrix['ta_allocations']['gta4@gmail.com']['modules']);
+                foreach($allocations_matrix['removed_tas'] as $key => $removed)
+                {
+                    // return $allocations_matrix['removed_tas'];
+                    $target = $removed;
+                    unset($allocations_matrix['removed_tas'][$key]);
+                    $allocations_matrix = $allocator->allocate($target, $allocations_matrix);
+                }
+            }
+        }
+
         $allocation_id = $academic_year . '-A-01';
         $creator_email = session()->get('email');
 
         foreach($allocations_matrix['ta_allocations'] as $ta_allocation)
         {
+            // echo $ta_allocation['ta_id'] . 'contact' . $ta_allocation['contact_hours'] . 'marking' . $ta_allocation['marking_hours'];
             foreach($ta_allocation['modules'] as $allocated_module)
             {
                 $allocation = new Allocation();
@@ -389,6 +444,9 @@ class AllocationController extends Controller
             $allocation_class = new AllocationsClass();
 
             $academic_year = $basic_db_class->getCurrentAcademicYear();
+
+            if(!$allocation_class->allocationExistsForYear($academic_year))
+            return back()->with('alert', 'No allocation found for the current semester, roles have not been allocated yet or allocation has been deleted already!');
 
             if(!$allocation_class->deleteAllAllocationsForYear($academic_year))
             return back()->with('alert', 'Could not delete allocation, please try again later!');

@@ -244,6 +244,13 @@ class BasicDBClass
                     ->get();
     }
 
+    function getAllPrefsForTAEmail($email)
+    {
+        return DB::table('ta_preferences')
+                    ->where('ta_email', '=', $email)
+                    ->get();
+    }
+
     /**
      * Will return all TAs without preferences for year
      * @param string $academic_year

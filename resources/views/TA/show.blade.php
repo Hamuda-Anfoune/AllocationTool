@@ -125,9 +125,11 @@
 
                     </form>
                     <div class="col-md-6 offset-md-4">
-                        <a href="/TA/prefs/edit/{{$current_ta_preferences[0]->preference_id}}" class="btn btn-primary">
-                            {{ __('Edit') }}
-                        </a>
+                        @if(session()->get('account_type_id') == 003 || session()->get('account_type_id') == 004)
+                            <a href="/TA/prefs/edit/{{$current_ta_preferences[0]->preference_id}}" class="btn btn-primary">
+                                {{ __('Edit') }}
+                            </a>
+                        @endif
                         <a href="/TA/prefs/delete/{{$current_ta_preferences[0]->preference_id}}" class="btn btn-danger" onclick="return confirm('Are you sure?')">
                             {{ __('Delete') }}
                         </a>

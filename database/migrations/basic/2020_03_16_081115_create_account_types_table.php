@@ -17,6 +17,7 @@ class CreateAccountTypesTable extends Migration
         Schema::create('account_types', function (Blueprint $table) {
             $table->string('account_type_id', 10)->primary();
             $table->string('account_type', 20)->unique();
+            $table->timestamps();
         });
 
         DB::table('account_types')->insert(

@@ -15,7 +15,6 @@ DROP TABLE `allocationtool`.`trials`;
 SELECT * FROM users WHERE unique_id='';
 
 
-
-## adding unversity account
+## adding university account
 
 DELETE FROM `allocationtool`.`university_users` WHERE `email`='hamuda@gmail.com';
