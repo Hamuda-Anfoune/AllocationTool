@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers\Prefs;
 
-use App\Academic_year;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\language;
 use App\Libraries\AllocationsClass;
-// use Illuminate\Foundation\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\module; // BRINGING THE MODULE MODEL
-use App\used_langauge;
-use App\module_preference;
 use App\Libraries\BasicDBClass;
 use App\Libraries\PrefsClass;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
 
 class moduleController extends Controller
@@ -89,15 +84,6 @@ class moduleController extends Controller
      */
     public function create(Request $request)
     {
-        /*
-        ---------------------------------------------------------------------
-        THIS PAGE SHOULD ONLY SHOW TO A SIGNED IN MODULE CONVENOR ACCOUNT
-        ---------------------------------------------------------------------
-        */
-        // echo $request->session()->get('email');
-        // echo session()->get('email');
-        // echo session('account_type_id');
-
         // Checking if convenor: Admin = 001, Convenor = 002, GTA = 003, Externatl TA = 004
         if (session()->get('account_type_id') == 002) // session value is assigned in authenticated() in AuthenticatesUsers.php
         {
@@ -141,19 +127,7 @@ class moduleController extends Controller
         // Check if signed in user is a convenor
         // if not reroute to home
         //
-
-        $this->validate($request, [
-            // Array of rules
-            'module_id' => ['required', 'exists:modules,module_id'],
-
-            // Add a rule to check, if module already has preference this year then interrupt
-
-            'no_of_assistants' => ['required'],
-            'no_of_contact_hours' => ['required',],
-            'no_of_marking_hours' => ['required'],
-            'academic_year' => ['required', 'exists:academic_years,year'],
-            // 'semester' => ['required'],
-        ]);
+        $this->validator($request->all())->validate();
 
         $prefs_class = new PrefsClass();
         $basic_db_class = new BasicDBClass();
@@ -331,10 +305,8 @@ class moduleController extends Controller
      */
     public function edit($module_id, $academic_year)
     {
-        // Only Admins and convenors can edit preferences
-        if( session()->get('account_type_id') != 000 &&
-            session()->get('account_type_id') != 001 &&
-            session()->get('account_type_id') != 002 )
+        // Only convenors can edit preferences
+        if( session()->get('account_type_id') != 002 )
         {
             return redirect('/');
         }
@@ -393,18 +365,7 @@ class moduleController extends Controller
         // if not reroute to home
         //
 
-        $this->validate($request, [
-            // Array of rules
-            'module_id' => ['required', 'exists:modules,module_id'],
-
-            // Add a rule to check, if module already has preference this year then interrupt
-
-            'no_of_assistants' => ['required'],
-            'no_of_contact_hours' => ['required'],
-            'no_of_marking_hours' => ['required'],
-            'academic_year' => ['required', 'exists:academic_years,year'],
-            // 'semester' => ['required'],
-        ]);
+        $this->validator($request->all())->validate();
 
         $prefs_class = new PrefsClass();
         $basic_db_class = new BasicDBClass();
@@ -453,102 +414,6 @@ class moduleController extends Controller
             }
 
 
-
-
-
-
-            /*
-                // creating a new instance of Module_preference to save to DB
-                $module_pref = new module_preference();
-
-                // Adding the posted attributes to the created instance
-                $module_pref->module_id = $request->input('module_id');
-                $module_pref->no_of_assistants = abs($request->input('no_of_assistants'));
-                $module_pref->no_of_contact_hours = abs(ceil($request->input('no_of_contact_hours')));
-                $module_pref->no_of_marking_hours = abs(ceil($request->input('no_of_marking_hours')));
-                $module_pref->academic_year = $request->input('academic_year');
-                // $module_pref->semester = $request->input('semester');
-
-
-                ////////////
-                // Creating an array to save ta_module_choice instances
-                $used_languages_array = [];
-                // Counting the lenght of the array
-                $arrayLength = count($used_languages_array);
-
-                //for loop: Check module choices and save
-                for($i=1; $i<=7; $i++)
-                {
-                    // Creating an instance of the ta_module_choices
-                    $used_language_choice = new used_langauge();
-
-                    // Will loop and get IDs of submitted choices
-                    $used_languages_choice_id =  $request->input('language_'.$i.'_id');
-
-                    if($used_languages_choice_id != NULL) // if ID is not null
-                    {
-                        $used_language_choice->module_id = $request->input('module_id');
-                        $used_language_choice->language_id = $used_languages_choice_id;
-                        $used_language_choice->academic_year = $current_academic_year->year;
-
-                        // Checking the length of the array to calculate the array key at which the instance will be saved
-                        // Counting the lenght of the array
-                        $arrayLength = count($used_languages_array);
-
-
-                        if($arrayLength == 0) // If array is now empty
-                        {
-                            // Add to array WITHOUT chaning the key
-                            $used_languages_array[$arrayLength] = $used_language_choice;
-                        }
-                        else // if array is not empty
-                        {
-                            // Add WITH changing the key
-                            $used_languages_array[$arrayLength] = $used_language_choice;
-                        }
-                    }
-                    else // once we get a null used_languages_array_id
-                    {
-                        // Do nothing
-                    }
-                }
-
-                // $arrayLength = count($used_languages_array);
-
-                // All saving will be in the try catch
-
-                try
-                {
-                    // remove old values
-                    used_langauge::where('academic_year', '=', $request->input('academic_year'))
-                                        ->where('module_id', '=', $request->input('module_id'))
-                                        ->delete();
-
-                    module_preference::where('module_id', '=', $request->input('module_id'))
-                                        ->where('academic_year', '=', $request->input('academic_year'))
-                                        ->delete();
-
-                    $used_language_to_save = new used_langauge();
-                    // Save to module_preferences table
-                    $module_pref->save();
-
-                    // If languages have been chosen
-                    if(sizeof($used_languages_array) > 0)
-                    {
-                        // Save to ta_module_choices table
-                        for($j = 0; $j <= $arrayLength; $j++)
-                        {
-                            $used_language_to_save = $used_languages_array[$j];
-                            $used_language_to_save->priority = $j+1;
-                            $used_language_to_save->save();
-                        }
-                    }
-                }
-                catch (QueryException $e)
-                {
-                    return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: ' . $e);
-                }
-            */
 
 
         }
@@ -603,5 +468,35 @@ class moduleController extends Controller
             return redirect('/module/convenor')
             ->with('success', 'Preferences for ' . $module_id . ' for semester ' . $academic_year . ' have been deleted!');
         }
+    }
+
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'module_id' => ['required', 'exists:modules,module_id'],
+            'no_of_assistants' => ['required'],
+            'no_of_contact_hours' => ['required'],
+            'no_of_marking_hours' => ['required', 'integer'],
+            'academic_year' => ['required', 'exists:academic_years,year'],
+            'language_2_id' => ['nullable', 'different:language_1_id'],
+            'language_3_id' => ['nullable', 'different:language_1_id', 'different:language_2_id'],
+            'language_4_id' => ['nullable', 'different:language_1_id', 'different:language_2_id', 'different:language_3_id'],
+            'language_5_id' => ['nullable', 'different:language_1_id', 'different:language_2_id', 'different:language_3_id',
+            'different:language_4_id',],
+            'language_6_id' => ['nullable', 'different:language_1_id', 'different:language_2_id', 'different:language_3_id',
+            'different:language_4_id', 'different:language_5_id',],
+            'language_7_id' => ['nullable', 'different:language_1_id', 'different:language_2_id', 'different:language_3_id',
+            'different:language_4_id', 'different:language_5_id', 'different:language_6_id'],
+        ],
+        [
+            // 'email.exists' => 'This email is not registered as a university user.'
+        ]);
     }
 }

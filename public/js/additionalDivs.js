@@ -35,3 +35,16 @@ function showLangDivs()
 
     languageDivCounter++;
 }
+
+function dismissAllocatedDiv()
+{
+    document.getElementById('allocated_div').style.display = 'none';
+}
+
+// function showAllocatedDiv()
+// {
+//     var myVal = '@Session["allocated"]';
+//     if (myval){
+//         document.getElementById('allocated_div').style.display = 'block';
+//     }
+// }

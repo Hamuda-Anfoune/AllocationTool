@@ -197,3 +197,97 @@ function initiateAllocationsMatrix(string $academic_year)
 
         return $allocations_matrix;
     }
+
+
+    /*
+                // creating a new instance of Module_preference to save to DB
+                $module_pref = new module_preference();
+
+                // Adding the posted attributes to the created instance
+                $module_pref->module_id = $request->input('module_id');
+                $module_pref->no_of_assistants = abs($request->input('no_of_assistants'));
+                $module_pref->no_of_contact_hours = abs(ceil($request->input('no_of_contact_hours')));
+                $module_pref->no_of_marking_hours = abs(ceil($request->input('no_of_marking_hours')));
+                $module_pref->academic_year = $request->input('academic_year');
+                // $module_pref->semester = $request->input('semester');
+
+
+                ////////////
+                // Creating an array to save ta_module_choice instances
+                $used_languages_array = [];
+                // Counting the lenght of the array
+                $arrayLength = count($used_languages_array);
+
+                //for loop: Check module choices and save
+                for($i=1; $i<=7; $i++)
+                {
+                    // Creating an instance of the ta_module_choices
+                    $used_language_choice = new used_langauge();
+
+                    // Will loop and get IDs of submitted choices
+                    $used_languages_choice_id =  $request->input('language_'.$i.'_id');
+
+                    if($used_languages_choice_id != NULL) // if ID is not null
+                    {
+                        $used_language_choice->module_id = $request->input('module_id');
+                        $used_language_choice->language_id = $used_languages_choice_id;
+                        $used_language_choice->academic_year = $current_academic_year->year;
+
+                        // Checking the length of the array to calculate the array key at which the instance will be saved
+                        // Counting the lenght of the array
+                        $arrayLength = count($used_languages_array);
+
+
+                        if($arrayLength == 0) // If array is now empty
+                        {
+                            // Add to array WITHOUT chaning the key
+                            $used_languages_array[$arrayLength] = $used_language_choice;
+                        }
+                        else // if array is not empty
+                        {
+                            // Add WITH changing the key
+                            $used_languages_array[$arrayLength] = $used_language_choice;
+                        }
+                    }
+                    else // once we get a null used_languages_array_id
+                    {
+                        // Do nothing
+                    }
+                }
+
+                // $arrayLength = count($used_languages_array);
+
+                // All saving will be in the try catch
+
+                try
+                {
+                    // remove old values
+                    used_langauge::where('academic_year', '=', $request->input('academic_year'))
+                                        ->where('module_id', '=', $request->input('module_id'))
+                                        ->delete();
+
+                    module_preference::where('module_id', '=', $request->input('module_id'))
+                                        ->where('academic_year', '=', $request->input('academic_year'))
+                                        ->delete();
+
+                    $used_language_to_save = new used_langauge();
+                    // Save to module_preferences table
+                    $module_pref->save();
+
+                    // If languages have been chosen
+                    if(sizeof($used_languages_array) > 0)
+                    {
+                        // Save to ta_module_choices table
+                        for($j = 0; $j <= $arrayLength; $j++)
+                        {
+                            $used_language_to_save = $used_languages_array[$j];
+                            $used_language_to_save->priority = $j+1;
+                            $used_language_to_save->save();
+                        }
+                    }
+                }
+                catch (QueryException $e)
+                {
+                    return back()->withInput($request->input())->with('alert', 'Error saving the preferences, please try again. Error: ' . $e);
+                }
+            */

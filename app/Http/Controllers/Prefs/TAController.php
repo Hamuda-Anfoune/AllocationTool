@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Prefs;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -107,18 +108,18 @@ class TAController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            // Array of rules
-            // at least one module choice is required
-            'module_1_id' => ['required', 'exists:modules,module_id'],
-            'max_modules' => ['required'],
-            'max_contact_hours' => ['required'],
-            'max_marking_hours' => ['required'],
-            'academic_year' => ['required', 'exists:academic_years,year'],
-            // 'semester' => ['required'],
+        $this->validator($request->all())->validate();
 
-            // Only one module choice is mandatory
-        ]);
+        /* $this->validate($request, [
+             // Array of rules
+             // at least one module choice is required
+             'module_1_id' => ['required', 'exists:modules,module_id'],
+             'max_modules' => ['required'],
+             'max_contact_hours' => ['required'],
+             'max_marking_hours' => ['required', ],
+             'academic_year' => ['required', 'exists:academic_years,year'],
+         ]);
+        */
 
         $prefs_class = new PrefsClass();
 
@@ -196,6 +197,12 @@ class TAController extends Controller
         {
             $basic_db_class = new BasicDBClass();
             $prefs_class = new PrefsClass();
+            $allocation_class = new AllocationsClass();
+
+            $this_academic_year = $basic_db_class->getCurrentAcademicYear();
+            if($allocation_class->allocationExistsForYear($this_academic_year))
+            return back()->with('alert', 'Cannot update oreferences, TA roles have already been allocated for the current semester!');
+
 
             //Check if prefs exist, handles when prefs were deleted then user goes back in the browser and tries to edit
             if(!$prefs_class->taPreferenceExists($preference_id))
@@ -248,6 +255,7 @@ class TAController extends Controller
         // https://laravelcollective.com/docs/6.0/html#form-model-binding
     }
 
+
     /**
      * Update the specified resource in storage.
      *
@@ -258,25 +266,15 @@ class TAController extends Controller
     public function update(Request $req)
     {
         //check if current user is GTA or TA
-        if (session()->get('account_type_id') != '000' && session()->get('account_type_id') != '001') // session value is assigned in authenticated() in AuthenticatesUsers.php
+        if (session()->get('account_type_id') != '003' && session()->get('account_type_id') != '004') // session value is assigned in authenticated() in AuthenticatesUsers.php
         {
             // Redirect to home
             return redirect('home');
         }
 
-        // Validate
-        $this->validate($req, [
-            // Array of rules
-            // at least one module choice is required
-            'module_1_id' => ['required','string', 'exists:modules,module_id'],
-            'max_modules' => ['required', 'integer'],
-            'max_contact_hours' => ['required', 'integer'],
-            'max_marking_hours' => ['required', 'integer'],
-            'academic_year' => ['required','string', 'exists:academic_years,year'],
-            // 'semester' => ['required'],
 
-            // Only one module choice is mandatory
-        ]);
+        // Validate
+        $this->validator($req->all())->validate();
 
         $basic_db_class = new BasicDBClass();
         $allocation_class = new AllocationsClass();
@@ -321,6 +319,13 @@ class TAController extends Controller
      */
     public function destroy($preference_id)
     {
+        $allocation_class = new AllocationsClass();
+        $basic_db_class = new BasicDBClass();
+
+        $academic_year = $basic_db_class->getCurrentAcademicYear();
+        if($allocation_class->allocationExistsForYear($academic_year))
+        return back()->with('alert', 'Cannot delete preferences, TA roles have already been allocated for the current semester!');
+
         $prefs_class = new PrefsClass();
 
         $prefs_class->clear_ta_language_choices($preference_id);
@@ -329,4 +334,47 @@ class TAController extends Controller
 
         return redirect('TA/prefs/add')->with('success', 'Your preferences have been deleted');
     }
+        /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'module_1_id' => ['required','string', 'exists:modules,module_id'],
+            'max_modules' => ['required', 'integer'],
+            'max_contact_hours' => ['required', 'integer'],
+            'max_marking_hours' => ['required', 'integer', 'numeric', 'min:7'],
+            'academic_year' => ['required','string', 'exists:academic_years,year'],
+            'module_2_id' => ['nullable', 'different:module_1_id'],
+            'module_3_id' => ['nullable', 'different:module_1_id', 'different:module_2_id'],
+            'module_4_id' => ['nullable', 'different:module_1_id', 'different:module_2_id', 'different:module_3_id'],
+            'module_5_id' => ['nullable', 'different:module_1_id', 'different:module_2_id', 'different:module_3_id', 'different:module_4_id'],
+            'module_6_id' => ['nullable', 'different:module_1_id', 'different:module_2_id', 'different:module_3_id', 'different:module_4_id', 'different:module_5_id'],
+            'module_7_id' => ['nullable', 'different:module_1_id', 'different:module_2_id', 'different:module_3_id', 'different:module_4_id', 'different:module_5_id',
+                              'different:module_6_id'],
+            'module_8_id' => ['nullable', 'different:module_1_id', 'different:module_2_id', 'different:module_3_id', 'different:module_4_id', 'different:module_5_id',
+                              'different:module_6_id', 'different:module_7_id'],
+            'module_9_id' => ['nullable', 'different:module_1_id', 'different:module_2_id', 'different:module_3_id', 'different:module_4_id', 'different:module_5_id',
+                              'different:module_6_id', 'different:module_7_id', 'different:module_8_id'],
+            'module_10_id' => ['nullable', 'different:module_1_id', 'different:module_2_id', 'different:module_3_id', 'different:module_4_id', 'different:module_5_id',
+            'different:module_6_id', 'different:module_7_id', 'different:module_9_id'],
+            'preferred_language_2_id' => ['nullable', 'different:preferred_language_1_id'],
+            'preferred_language_3_id' => ['nullable', 'different:preferred_language_1_id', 'different:preferred_language_2_id'],
+            'preferred_language_4_id' => ['nullable', 'different:preferred_language_1_id', 'different:preferred_language_2_id', 'different:preferred_language_3_id'],
+            'preferred_language_5_id' => ['nullable', 'different:preferred_language_1_id', 'different:preferred_language_2_id', 'different:preferred_language_3_id',
+            'different:preferred_language_4_id',],
+            'preferred_language_6_id' => ['nullable', 'different:preferred_language_1_id', 'different:preferred_language_2_id', 'different:preferred_language_3_id',
+            'different:preferred_language_4_id', 'different:preferred_language_5_id',],
+            'preferred_language_7_id' => ['nullable', 'different:preferred_language_1_id', 'different:preferred_language_2_id', 'different:preferred_language_3_id',
+            'different:preferred_language_4_id', 'different:preferred_language_5_id', 'different:preferred_language_6_id'],
+        ],
+        [
+            // 'email.exists' => 'This email is not registered as a university user.'
+        ]);
+    }
+
+
 }

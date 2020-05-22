@@ -37,7 +37,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="mb-3 col-md-4 text-center">
-                            <a class=" col-md-10 btn btn-primary" href="{{ route('allocate') }}" onclick="return confirm('Press OK to continue?')">
+                            <a class=" col-md-10 btn btn-primary" href="{{ route('allocate') }}" onclick="return confirm('This process may take a few minutes.\nMeanwhile, you may continue working normally and we\'ll notify you once we\'re done!\nPress OK to continue?')">
                                 {{ __('Allocate Current Semester') }}
                             </a>
                         </div>

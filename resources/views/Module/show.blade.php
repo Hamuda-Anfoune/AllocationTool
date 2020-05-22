@@ -76,9 +76,11 @@
 
                     </form>
                     <div class="col-md-6 offset-md-4">
-                        <a href="/module/prefs/edit/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-primary">
-                            {{ __('Edit') }}
-                        </a>
+                        @if(session()->get('account_type_id') == 002)
+                            <a href="/module/prefs/edit/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-primary">
+                                {{ __('Edit') }}
+                            </a>
+                        @endif
                         <a href="/module/prefs/delete/{{$module_basic_prefs[0]->module_id}}/{{$academic_year}}" class="btn btn-danger" onclick="return confirm('Are you sure?')">
                             {{ __('Delete') }}
                         </a>

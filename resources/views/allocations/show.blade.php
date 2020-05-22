@@ -26,34 +26,39 @@
                                 </ul>
                             @endforeach
                         @endif
+                        <div>
+                            <a href="/admin/allocations/delete/{{$allocation_id}}" class="btn btn-danger btn-sm col-md-3" onclick="return confirm('Are you sure to delete?')">Delete this allocation</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <hr>
-            <div class="card">
-                <div class="card-header text-md-center">
-                    <a class="btn btn-info btn-sm" data-toggle="collapse" href="#ta_allocation_data" role="button" aria-expanded="false" aria-controls="ta_allocation_data">
-                        {{ __('Teaching Assistants Allocation Data') }}
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="collapse" id="ta_allocation_data">
-                        @if(sizeof($ta_allocation_data) > 0)
-                            <h6></h6>
-                            @foreach($ta_allocation_data as $ta)
-                                <ul>
-                                    <li>{{$ta->ta_id}}
-                                        <ul>
-                                            <li>Allocated contact hours: {{$ta->contact_hours}}</li>
-                                            <li>Allocated marking hours: {{$ta->marking_hours}}</li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            @endforeach
-                        @endif
+            {{--
+                <hr>
+                <div class="card">
+                    <div class="card-header text-md-center">
+                        <a class="btn btn-info btn-sm" data-toggle="collapse" href="#ta_allocation_data" role="button" aria-expanded="false" aria-controls="ta_allocation_data">
+                            {{ __('Teaching Assistants Allocation Data') }}
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="collapse" id="ta_allocation_data">
+                            @if(sizeof($ta_allocation_data) > 0)
+                                <h6></h6>
+                                @foreach($ta_allocation_data as $ta)
+                                    <ul>
+                                        <li>{{$ta->ta_id}}
+                                            <ul>
+                                                <li>Allocated contact hours: {{$ta->contact_hours}}</li>
+                                                <li>Allocated marking hours: {{$ta->marking_hours}}</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
+            --}}
         </div>
     </div>
 </div>

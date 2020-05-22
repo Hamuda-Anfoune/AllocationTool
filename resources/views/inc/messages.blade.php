@@ -20,3 +20,14 @@
         <strong>Alert: </strong>{{session('alert')}}
     </div>
 @endif
+
+@if (session('allocated'))
+    <div id="allocated_div" class="alert alert-warning text-center" role="alert" style="display:block; border:1px solid orange; position: absolute; left:50%; top:50%; transform: translate(-50%, -50%); z-index:10">
+        <div class="col-md-12 text-right">
+            <a class="" type="button" onclick='dismissAllocatedDiv()' id="lang_btn">X</a>
+        </div>
+        <div>
+            <strong>Allocation:<br></strong>{{session('allocated')}}<br>You can view all allocations <a href="/admin/allocations">here</a>.
+        </div>
+    </div>
+@endif

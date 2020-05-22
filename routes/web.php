@@ -83,7 +83,7 @@ Route::post('/admin/config/module-repetition-weights/update', 'Admin\Configurati
 Route::get('/admin/dashboard', 'Allocation\AllocationController@allocationData');
 
 
-Route::get('/admin/allocations/allocate', 'Allocation\AllocationController@store')->name('allocate'); // will finish creating ROLs then allcate
+Route::get('/admin/allocations/allocate', 'Allocation\AllocationController@store')->name('allocate'); // will finish creating ROLs then allocate
 
 Route::get('/admin/allocations/store', 'Allocation\AllocationController@store');
 

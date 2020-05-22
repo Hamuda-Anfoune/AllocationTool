@@ -23,47 +23,8 @@ class AllocationController extends Controller
 
     public function trial()
     {
+       return view('preferences.ta');
 
-        return DB::table('modules')
-                    ->select('module_id')
-                    // ->where('academic_year','=',$academic_year)
-                    ->whereNotExists(function($query)
-                    {
-                        $query->select('module_id')
-                            ->from('ta_module_choices')
-                            // ->where('ta_module_choices.preference_id','=','ta5Y2019-2020-02');
-                            ->whereRaw('preference_id', 'ta5Y2019-2020-02');
-                        })
-                    ->get();
-
-
-                        //////////
-
-
-        return DB::table('ta_module_choices')
-                        ->select('module_id')
-                        ->whereRaw('preference_id = "ta5Y2019-2020-02"')
-                        ->get();
-
-
-                        ///////////////////
-
-
-        return DB::table('modules')
-                    ->select('module_id')
-                    // ->where('academic_year','=',$academic_year)
-                    ->whereNotExists(function($query)
-                    {
-                        $query->select('module_id')
-                            ->from('ta_module_choices')
-                            // ->where('ta_module_choices.preference_id','=','ta5Y2019-2020-02');
-                            ->whereRaw('preference_id = "ta5Y2019-2020-02"');
-                        })
-                    ->get();
-
-                    // DB::select('module_id FROM modules
-                    // WHERE NOT EXISTS (SELECT module_id FROM ta_module_choices
-                    //                   WHERE cities_stores.store_type = stores.store_type')
     }
 
     /* TODO:
@@ -149,7 +110,6 @@ class AllocationController extends Controller
      */
     public function store(Request $request)
     {
-
         $basic_DB_access = new BasicDBClass();
         $allocation_class = new AllocationsClass();
         $allocator = new Allocator();
@@ -159,7 +119,7 @@ class AllocationController extends Controller
 
         // Check if an allocation exists for this year
         if($allocation_class->allocationExistsForYear($academic_year))
-        return back()->with('alert', 'TA roles have already been allocated for the current semester. Delete the old allocation before creating a new one!');
+        return redirect('/admin/allocations')->with('Success', 'TA roles have already been allocated for the current semester. Please check below!');
 
         // Get all modules without submitted preferences
         $modules_without_prefs = $basic_DB_access->getModulesWithoutPrefsForYear($academic_year);
@@ -222,6 +182,10 @@ class AllocationController extends Controller
         $allocation_id = $academic_year . '-A-01';
         $creator_email = session()->get('email');
 
+        // Check if an allocation exists for this year
+        if($allocation_class->allocationExistsForYear($academic_year))
+        return redirect('/admin/allocations')->with('Success', 'TA roles have already been allocated for the current semester. Please check below!');
+
         foreach($allocations_matrix['ta_allocations'] as $ta_allocation)
         {
             // echo $ta_allocation['ta_id'] . 'contact' . $ta_allocation['contact_hours'] . 'marking' . $ta_allocation['marking_hours'];
@@ -245,7 +209,8 @@ class AllocationController extends Controller
             $ta_allocation_data->save();
         }
 
-        return redirect('/admin/allocations')->with('success', 'Teaching assistants roles allocated successfully!');
+        session()->flash('allocated', 'true');
+        return redirect('/admin/allocations')->with('allocated', 'Teaching assistants roles were allocated successfully!');
     }
 
     /*
@@ -403,6 +368,7 @@ class AllocationController extends Controller
         // Print_r($allocation_data[0][1]);
 
         return view('allocations.show')
+                ->with('allocation_id', $allocation_id)
                 ->with('allocation_data', $allocation_data)
                 ->with('ta_allocation_data', $ta_allocation_data);
     }
@@ -438,6 +404,7 @@ class AllocationController extends Controller
      */
     public function destroy($allocation_id = null)
     {
+        // if no id was provided delete current year's allocation
         if($allocation_id == null)
         {
             $basic_db_class = new BasicDBClass();
@@ -459,7 +426,7 @@ class AllocationController extends Controller
             return back()->with('alert', 'Could not delete allocation, please try again later!');
         }
 
-        return back()->with('success', 'Allocation deleted!');
+        return redirect('/admin/dashboard')->with('success', 'Allocation '. $allocation_id . ' was deleted successfully!');
     }
 
     public function missingPrefs()

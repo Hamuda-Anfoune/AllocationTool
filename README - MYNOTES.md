@@ -13,19 +13,12 @@
 
 ## TODO:
 -----------------
- * fix the module year thing
- 
- * Add validation rules to check if language choices are repeated.
 
  * Add a rotator to suspend page til allocation results arrive.
-
- * Add edit allocation functionality.
 
  * Removed added commented code from allocation functions.
 
  * Add programming language edition and viewing functionalities OR add default values in migration.
- 
- * Add validation rule for max marking hours for ta in add and in edit submission, min value should be 7.
 
  * Beautify about page.
 
