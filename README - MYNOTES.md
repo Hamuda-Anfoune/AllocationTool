@@ -13,16 +13,7 @@
 
 ## TODO:
 -----------------
-
- * Add a rotator to suspend page til allocation results arrive.
-
- * Removed added commented code from allocation functions.
-
- * Add programming language edition and viewing functionalities OR add default values in migration.
-
- * Beautify about page.
-
- * Add foreign key drop statements to down() in the migrations.
+ * 
 
 ****************************
 

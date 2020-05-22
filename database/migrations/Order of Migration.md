@@ -15,7 +15,6 @@
 - Ta_lanaguage_choices:                 ta/2020_04_04_120824_create_ta_language_choices_table
 - password_resets:                      2014_10_12_100000_create_password_resets_table
 - failed_jobs:                          2019_08_19_000000_create_failed_jobs_table
-- weigning_factors:          NOPE       2020_04_09_192605_create_weighing_factors_table//
 - language_weights:                     weights/2020_04_10_115827_create_language_weights_table
 - module_priority_weights:              weights/2020_04_15_120715_create_module_priority_weights_table
 - module_rank_order_lists               outcome/2020_04_13_173311_create_module_rank_order_lists_table

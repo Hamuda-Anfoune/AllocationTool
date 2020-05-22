@@ -14,8 +14,6 @@
 
 Auth::routes();
 
-Route::get('/trial', 'Allocation\AllocationController@trial');
-
 
 Route::get('/', 'HomeController@index'); // the '/' sets the home page
 
