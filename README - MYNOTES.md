@@ -1,16 +1,4 @@
 
-## POST-DEVELOPMENT TODO:
------------------
- * Add insertion statement to modules migration with all modules
-
- * Turn on Vue production mode when deploying for production:
-    as it's currently running in development mode.
-    See more tips at https://vuejs.org/guide/deployment.html
-
- * //
-
-****************************
-
 ## TODO:
 -----------------
  * 
@@ -46,16 +34,7 @@
     This covers the cases where the TA and the module have the same language ln with the same priority; (ln == tln == mln) => (ln, lwn)
 
     Incase the language has difirent priorities in the TA's and the module's languages priority list; (ln == mln == tlm); in that case, its actual weight alw equals lwn divided by dwm; alw = lwn/dwm
-        
-
-
-
-****************************
-
-
-## Supervisor Meeting Notes:
------------------
- *  After setting weights to each TA in accordance to the module's preferences
- *  Where to save data while working on allocation: cache or db
- *  match all TA first choices first, the come to seconds; or match all of every TA then go to other TAs
- *  Merge contact and marking hours into working hours
+    
+    
+    
+ 
