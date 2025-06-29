@@ -1,18 +1,21 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Organisation\OrganisationController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/', function () {
+    return json_encode(['message' => 'Welcome to the API!'], JSON_PRETTY_PRINT);
+});
+
+// Route collection for organisation data
+Route::prefix('organisations')->group(function () {
+    // User API resource instead of listing all routes
+    // Route::apiResource('/', OrganisationController::class);
+
+    Route::get('/', [OrganisationController::class, 'index']);
+    Route::get('/{organisation}', [OrganisationController::class, 'show']);
+    Route::post('/', [OrganisationController::class, 'store']);
+    Route::put('/{organisation}', [OrganisationController::class, 'update']);
+    Route::delete('/{organisation}', [OrganisationController::class, 'destroy']);
 });
