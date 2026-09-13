@@ -36,6 +36,31 @@ class UserFactory extends Factory
         ];
     }
 
+    public function superAdmin(): static
+    {
+        return $this->state(['account_type_id' => '000']);
+    }
+
+    public function admin(): static
+    {
+        return $this->state(['account_type_id' => '001']);
+    }
+
+    public function convenor(): static
+    {
+        return $this->state(['account_type_id' => '002']);
+    }
+
+    public function externalTa(): static
+    {
+        return $this->state(['account_type_id' => '003']);
+    }
+
+    public function graduateTa(): static
+    {
+        return $this->state(['account_type_id' => '004']);
+    }
+
     /**
      * Ensure the matching university_users row exists before each user is persisted,
      * since users.email carries a NOT NULL foreign key to university_users.email.

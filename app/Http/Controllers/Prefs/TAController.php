@@ -55,12 +55,8 @@ class TAController extends Controller
         return response()->json(['preference_id' => $preferenceId, 'message' => 'Preference stored.'], 201);
     }
 
-    public function show(Request $request, TaPreference $taPreference): JsonResponse
+    public function show(TaPreference $taPreference): JsonResponse
     {
-        if ($forbidden = $this->authorizeAccessTo($request, $taPreference)) {
-            return $forbidden;
-        }
-
         return response()->json([
             'ta_preference' => new TaPreferenceResource($taPreference),
             'module_choices' => $this->basicDBClass->getModuleChoicesForTAForYear($taPreference->preference_id),
@@ -70,10 +66,6 @@ class TAController extends Controller
 
     public function update(UpdateTaPreferenceRequest $request, TaPreference $taPreference): JsonResponse
     {
-        if ($forbidden = $this->authorizeAccessTo($request, $taPreference)) {
-            return $forbidden;
-        }
-
         $data = $request->validated();
 
         if ($this->basicDBClass->getCurrentAcademicYear() !== $data['academic_year']) {
@@ -100,12 +92,8 @@ class TAController extends Controller
         return response()->json(['message' => 'Your preferences have been updated.']);
     }
 
-    public function destroy(Request $request, TaPreference $taPreference): JsonResponse
+    public function destroy(TaPreference $taPreference): JsonResponse
     {
-        if ($forbidden = $this->authorizeAccessTo($request, $taPreference)) {
-            return $forbidden;
-        }
-
         if ($this->allocationsClass->allocationExistsForYear($taPreference->academic_year)) {
             return response()->json(['message' => 'Cannot delete preferences — TA roles have already been allocated for this semester.'], 409);
         }
@@ -117,23 +105,5 @@ class TAController extends Controller
         $this->prefsClass->clearTaPreference($preferenceId);
 
         return response()->json(['message' => 'Your preferences have been deleted.']);
-    }
-
-    /**
-     * Admins may access any TA preference; a TA/GTA may only access their own. Convenors may not access this at all.
-     */
-    protected function authorizeAccessTo(Request $request, TaPreference $taPreference): ?JsonResponse
-    {
-        $accountTypeId = $request->user()->account_type_id;
-
-        if (in_array($accountTypeId, ['000', '001'], true)) {
-            return null;
-        }
-
-        if (in_array($accountTypeId, ['003', '004'], true) && $request->user()->email === $taPreference->ta_email) {
-            return null;
-        }
-
-        return response()->json(['message' => 'You are not authorized to access this preference.'], 403);
     }
 }

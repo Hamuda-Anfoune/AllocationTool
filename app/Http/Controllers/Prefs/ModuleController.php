@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ModuleController extends Controller
 {
@@ -43,6 +44,9 @@ class ModuleController extends Controller
     {
         $data = $request->validated();
 
+        $module = Module::findOrFail($data['module_id']);
+        Gate::authorize('submitPreferences', $module);
+
         if ($this->prefsClass->modulePreferenceExists($data['module_id'], $data['academic_year'])) {
             return response()->json([
                 'message' => "Preference already submitted for {$data['module_id']} for this academic year.",
@@ -64,10 +68,9 @@ class ModuleController extends Controller
     public function show(Request $request, Module $module, AcademicYear $academicYear): JsonResponse
     {
         $currentAcademicYear = $this->basicDBClass->getCurrentAcademicYear();
-        $accountTypeId = $request->user()->account_type_id;
 
         $editable = $academicYear->year === $currentAcademicYear
-            && in_array($accountTypeId, ['000', '001', '002'], true);
+            && $request->user()->can('update', $module);
 
         return response()->json([
             'editable' => $editable,
@@ -100,14 +103,8 @@ class ModuleController extends Controller
         return response()->json(['message' => 'Preference updated.']);
     }
 
-    public function destroy(Request $request, Module $module, AcademicYear $academicYear): JsonResponse
+    public function destroy(Module $module, AcademicYear $academicYear): JsonResponse
     {
-        $accountTypeId = $request->user()->account_type_id;
-
-        if (! in_array($accountTypeId, ['000', '001', '002'], true)) {
-            return response()->json(['message' => 'You are not authorized to delete this preference.'], 403);
-        }
-
         if ($this->allocationsClass->allocationExistsForYear($academicYear->year)) {
             return response()->json([
                 'message' => 'Sorry, TA roles have already been allocated for this semester — preferences cannot be deleted.',
