@@ -9,7 +9,7 @@ class TaLanguageChoice extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'preference_id', 'language_id',
@@ -18,7 +18,7 @@ class TaLanguageChoice extends Model
     /**
      * The attributes that should be hidden for arrays.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'field_id',

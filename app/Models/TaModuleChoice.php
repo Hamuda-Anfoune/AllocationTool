@@ -9,7 +9,7 @@ class TaModuleChoice extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'preference_id', 'ta_email', 'module_id', 'priority', 'did_before',
@@ -18,16 +18,16 @@ class TaModuleChoice extends Model
     /**
      * The attributes that should be hidden for arrays.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
-        'preference_id',
+        'field_id',
     ];
 
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'did_before' => 'boolean',

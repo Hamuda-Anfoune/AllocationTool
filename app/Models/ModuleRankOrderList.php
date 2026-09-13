@@ -9,7 +9,7 @@ class ModuleRankOrderList extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'academic_year', 'module_id', 'ta_email', 'ta_total_weight', 'did_before_weight',

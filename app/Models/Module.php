@@ -9,7 +9,7 @@ class Module extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'module_id', 'module_name', 'convenor_email', 'academic_year',
