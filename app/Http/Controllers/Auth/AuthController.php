@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AccountType;
 use App\Models\UniversityUser;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -33,6 +36,12 @@ class AuthController extends Controller
             ]);
         }
 
+        if (! AccountType::where('account_type_id', $universityUser->account_type_id)->exists()) {
+            throw ValidationException::withMessages([
+                'email' => 'This university user does not have a valid account type configured. Contact an administrator.',
+            ]);
+        }
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -47,7 +56,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Authenticate an existing user and issue a bearer token.
+     * Authenticate an existing, active user and issue a bearer token.
      */
     public function login(Request $request): JsonResponse
     {
@@ -56,13 +65,33 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        $throttleKey = Str::transliterate(Str::lower($credentials['email']).'|'.$request->ip());
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            throw ValidationException::withMessages([
+                'email' => "Too many login attempts. Please try again in {$seconds} seconds.",
+            ]);
+        }
+
         $user = User::where('email', $credentials['email'])->first();
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
+            RateLimiter::hit($throttleKey, 60);
+
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
+
+        if (! $user->active) {
+            throw ValidationException::withMessages([
+                'email' => ['This account has been deactivated.'],
+            ]);
+        }
+
+        RateLimiter::clear($throttleKey);
 
         return response()->json([
             'user' => $user,

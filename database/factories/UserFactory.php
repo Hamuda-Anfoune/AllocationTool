@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\UniversityUser;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -36,16 +37,21 @@ class UserFactory extends Factory
     }
 
     /**
-     * Ensure the matching university_users row exists before the user is persisted,
+     * Ensure the matching university_users row exists before each user is persisted,
      * since users.email carries a NOT NULL foreign key to university_users.email.
+     *
+     * Overriding store() (rather than an afterMaking hook) scopes this side effect to
+     * create()/createMany(), so a plain ->make() call stays free of database writes.
      */
-    public function configure(): static
+    protected function store(Collection $results): void
     {
-        return $this->afterMaking(function (User $user) {
+        $results->each(function (User $user) {
             UniversityUser::firstOrCreate(
                 ['email' => $user->email],
                 ['account_type_id' => $user->account_type_id],
             );
         });
+
+        parent::store($results);
     }
 }
