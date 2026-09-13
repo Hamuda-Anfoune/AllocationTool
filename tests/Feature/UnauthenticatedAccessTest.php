@@ -13,6 +13,7 @@ class UnauthenticatedAccessTest extends TestCase
         $response->assertUnauthorized();
         $response->assertJsonPath('message', 'Unauthenticated.');
         $response->assertHeaderMissing('Location');
+        $response->assertHeaderMissing('Set-Cookie');
     }
 
     public function test_dropped_web_welcome_route_no_longer_exists(): void
