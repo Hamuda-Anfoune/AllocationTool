@@ -9,7 +9,7 @@ class Language extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'language_id', 'language_name',

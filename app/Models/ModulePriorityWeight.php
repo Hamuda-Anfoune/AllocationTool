@@ -9,7 +9,7 @@ class ModulePriorityWeight extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'type', 'module_weight_1', 'module_weight_2', 'module_weight_3', 'module_weight_4', 'module_weight_5',

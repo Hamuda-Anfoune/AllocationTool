@@ -9,7 +9,7 @@ class TaPreference extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'preference_id', 'ta_email', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'academic_year', 'have_tier4_visa',
@@ -18,7 +18,7 @@ class TaPreference extends Model
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'have_tier4_visa' => 'boolean',

@@ -9,7 +9,7 @@ class AccountType extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'account_type_id', 'account_type',
