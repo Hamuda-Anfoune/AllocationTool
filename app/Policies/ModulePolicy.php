@@ -4,10 +4,13 @@ namespace App\Policies;
 
 use App\Models\Module;
 use App\Models\User;
+use App\Policies\Concerns\AuthorizesWithMessage;
 use Illuminate\Auth\Access\Response;
 
 class ModulePolicy
 {
+    use AuthorizesWithMessage;
+
     /**
      * Determine whether the user can browse modules' preference status (with/without submitted preferences).
      */
@@ -53,10 +56,9 @@ class ModulePolicy
      */
     private function authorizeOwnershipOf(User $user, Module $module): Response
     {
-        if ($user->isAdmin() || ($user->isConvenor() && $user->email === $module->convenor_email)) {
-            return Response::allow();
-        }
-
-        return Response::deny("You are not authorized to modify this module's preferences.");
+        return $this->allowIf(
+            $user->isAdmin() || ($user->isConvenor() && $user->email === $module->convenor_email),
+            "You are not authorized to modify this module's preferences."
+        );
     }
 }

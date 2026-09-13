@@ -3,20 +3,19 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Policies\Concerns\AuthorizesWithMessage;
 use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
+    use AuthorizesWithMessage;
+
     /**
      * Determine whether the user can view admin-only listings (all users, TAs, convenors, missing-preference lists).
      */
     public function viewAny(User $user): Response
     {
-        if ($user->isAdmin()) {
-            return Response::allow();
-        }
-
-        return Response::deny('Sorry, only admins can view this information.');
+        return $this->allowIf($user->isAdmin(), 'Sorry, only admins can view this information.');
     }
 
     /**
@@ -24,11 +23,7 @@ class UserPolicy
      */
     public function viewAdmins(User $user): Response
     {
-        if ($user->isSuperAdmin()) {
-            return Response::allow();
-        }
-
-        return Response::deny('Sorry, only super admins can view this information.');
+        return $this->allowIf($user->isSuperAdmin(), 'Sorry, only super admins can view this information.');
     }
 
     /**
@@ -36,18 +31,17 @@ class UserPolicy
      */
     public function viewTaPreferences(User $user, User $target): Response
     {
-        if ($user->isAdmin() || ($user->isTaOrGta() && $user->email === $target->email)) {
-            return Response::allow();
-        }
-
-        return Response::deny('Sorry, only admins and teaching assistants can view this information.');
+        return $this->allowIf(
+            $user->isAdmin() || ($user->isTaOrGta() && $user->email === $target->email),
+            'Sorry, only admins and teaching assistants can view this information.'
+        );
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete a user account.
      */
-    public function delete(User $user, User $target): bool
+    public function delete(User $user): Response
     {
-        return $user->isAdmin();
+        return $this->allowIf($user->isAdmin(), 'Sorry, only admins can delete users.');
     }
 }

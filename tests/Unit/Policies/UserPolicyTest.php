@@ -90,12 +90,15 @@ class UserPolicyTest extends TestCase
     }
 
     #[DataProvider('nonAdminAccountTypes')]
-    public function test_delete_denies_non_admins(string $accountTypeId): void
+    public function test_delete_denies_non_admins_with_message(string $accountTypeId): void
     {
         $user = User::factory()->make(['account_type_id' => $accountTypeId]);
         $target = User::factory()->make(['account_type_id' => '003']);
 
-        $this->assertFalse(Gate::forUser($user)->allows('delete', $target));
+        $response = Gate::forUser($user)->inspect('delete', $target);
+
+        $this->assertFalse($response->allowed());
+        $this->assertSame('Sorry, only admins can delete users.', $response->message());
     }
 
     public static function adminAccountTypes(): array

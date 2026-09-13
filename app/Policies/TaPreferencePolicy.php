@@ -4,10 +4,13 @@ namespace App\Policies;
 
 use App\Models\TaPreference;
 use App\Models\User;
+use App\Policies\Concerns\AuthorizesWithMessage;
 use Illuminate\Auth\Access\Response;
 
 class TaPreferencePolicy
 {
+    use AuthorizesWithMessage;
+
     /**
      * Determine whether the user can submit a new TA preference for themselves.
      */
@@ -45,10 +48,9 @@ class TaPreferencePolicy
      */
     private function authorizeAccessTo(User $user, TaPreference $taPreference): Response
     {
-        if ($user->isAdmin() || ($user->isTaOrGta() && $user->email === $taPreference->ta_email)) {
-            return Response::allow();
-        }
-
-        return Response::deny('You are not authorized to access this preference.');
+        return $this->allowIf(
+            $user->isAdmin() || ($user->isTaOrGta() && $user->email === $taPreference->ta_email),
+            'You are not authorized to access this preference.'
+        );
     }
 }

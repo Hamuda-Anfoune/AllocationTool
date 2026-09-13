@@ -45,13 +45,16 @@ class UserControllerTest extends TestCase
         $this->getJson('/api/v1/admin/users/admins')->assertOk();
     }
 
-    public function test_destroy_forbids_a_convenor(): void
+    public function test_destroy_forbids_a_convenor_with_message(): void
     {
         $target = User::factory()->externalTa()->create();
 
         Sanctum::actingAs(User::factory()->convenor()->create());
 
-        $this->deleteJson("/api/v1/admin/users/{$target->email}")->assertForbidden();
+        $response = $this->deleteJson("/api/v1/admin/users/{$target->email}");
+
+        $response->assertForbidden();
+        $response->assertJsonPath('message', 'Sorry, only admins can delete users.');
         $this->assertDatabaseHas('users', ['email' => $target->email]);
     }
 
