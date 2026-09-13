@@ -27,9 +27,9 @@ class ModulePolicy
     /**
      * Determine whether the user can submit a module's preferences.
      */
-    public function submitPreferences(User $user): bool
+    public function submitPreferences(User $user, Module $module): Response
     {
-        return $user->isAdmin() || $user->isConvenor();
+        return $this->authorizeOwnershipOf($user, $module);
     }
 
     /**

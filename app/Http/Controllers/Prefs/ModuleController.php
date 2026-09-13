@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ModuleController extends Controller
 {
@@ -42,6 +43,9 @@ class ModuleController extends Controller
     public function store(StoreModulePreferenceRequest $request): JsonResponse
     {
         $data = $request->validated();
+
+        $module = Module::findOrFail($data['module_id']);
+        Gate::authorize('submitPreferences', $module);
 
         if ($this->prefsClass->modulePreferenceExists($data['module_id'], $data['academic_year'])) {
             return response()->json([

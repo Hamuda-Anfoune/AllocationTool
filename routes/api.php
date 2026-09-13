@@ -93,8 +93,9 @@ Route::prefix('admin')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('module-preferences', [ModuleController::class, 'index'])
         ->middleware('can:viewAny,'.ModuleModel::class);
-    Route::post('module-preferences', [ModuleController::class, 'store'])
-        ->middleware('can:submitPreferences,'.ModuleModel::class);
+    // Ownership can't be checked until the module_id is resolved from the request body,
+    // so this ability is authorized inside ModuleController::store() instead of here.
+    Route::post('module-preferences', [ModuleController::class, 'store']);
     Route::get('module-preferences/{module}/{academicYear}', [ModuleController::class, 'show']);
     Route::put('module-preferences/{module}/{academicYear}', [ModuleController::class, 'update'])
         ->middleware('can:update,module');
