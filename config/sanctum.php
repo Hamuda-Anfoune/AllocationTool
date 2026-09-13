@@ -9,6 +9,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Bearer tokens only — no first-party SPA
+    |--------------------------------------------------------------------------
+    |
+    | This app authenticates exclusively via Sanctum bearer tokens (see
+    | AuthController::login()/register()), not cookie-based SPA sessions.
+    | The 'stateful' domains and 'middleware' entries below are Sanctum's
+    | stock config for that cookie/SPA flow: they're inert here, since
+    | bootstrap/app.php never registers the EnsureFrontendRequestsAreStateful
+    | middleware that would make them apply. Left in place, unmodified, in
+    | case first-party cookie auth is ever needed later.
+    |
+    */
+
+    /*
+    |--------------------------------------------------------------------------
     | Stateful Domains
     |--------------------------------------------------------------------------
     |
