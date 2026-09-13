@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\AccountType;
 use App\Models\UniversityUser;
 use App\Models\User;
@@ -18,15 +21,9 @@ class AuthController extends Controller
     /**
      * Register a new user account for an existing university user, returning a bearer token.
      */
-    public function register(Request $request): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'exists:university_users,email', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ], [
-            'email.exists' => 'This email is not registered as a university user.',
-        ]);
+        $data = $request->validated();
 
         $universityUser = UniversityUser::where('email', $data['email'])->first();
 
@@ -50,7 +47,7 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'user' => $user,
+            'user' => new UserResource($user),
             'token' => $user->createToken('api')->plainTextToken,
         ], 201);
     }
@@ -58,12 +55,9 @@ class AuthController extends Controller
     /**
      * Authenticate an existing, active user and issue a bearer token.
      */
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ]);
+        $credentials = $request->validated();
 
         $throttleKey = Str::transliterate(Str::lower($credentials['email']).'|'.$request->ip());
 
@@ -94,7 +88,7 @@ class AuthController extends Controller
         RateLimiter::clear($throttleKey);
 
         return response()->json([
-            'user' => $user,
+            'user' => new UserResource($user),
             'token' => $user->createToken('api')->plainTextToken,
         ]);
     }

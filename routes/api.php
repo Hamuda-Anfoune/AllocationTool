@@ -48,7 +48,6 @@ Route::prefix('admin')->group(function () {
         Route::put('academic-years', [AcademicYearController::class, 'update']);
 
         Route::get('config', [ConfigurationController::class, 'index']);
-        Route::post('config', [ConfigurationController::class, 'store']);
         Route::put('config/module-priority-weights', [ConfigurationController::class, 'updateModulePriorityWeights']);
         Route::post('config/module-priority-weights/reset', [ConfigurationController::class, 'resetModulePriorityWeights']);
         Route::put('config/language-weights', [ConfigurationController::class, 'updateLanguageWeights']);
