@@ -35,4 +35,24 @@ class User extends Authenticatable
             'active' => 'boolean',
         ];
     }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->account_type_id === '000';
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->account_type_id, ['000', '001'], true);
+    }
+
+    public function isConvenor(): bool
+    {
+        return $this->account_type_id === '002';
+    }
+
+    public function isTaOrGta(): bool
+    {
+        return in_array($this->account_type_id, ['003', '004'], true);
+    }
 }
