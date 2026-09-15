@@ -29,13 +29,3 @@ Thumbs.db
 /database/database.sqlite
 
 local-stuff
-
-# old-app (Laravel 6, kept for reference during the port)
-/old-app/.env
-/old-app/.env.backup
-/old-app/.phpunit.result.cache
-/old-app/node_modules
-/old-app/public/hot
-/old-app/public/storage
-/old-app/storage/*.key
-/old-app/vendor
