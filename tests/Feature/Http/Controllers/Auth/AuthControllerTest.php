@@ -4,7 +4,10 @@ namespace Tests\Feature\Http\Controllers\Auth;
 
 use App\Models\UniversityUser;
 use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -155,5 +158,86 @@ class AuthControllerTest extends TestCase
     public function test_logout_requires_authentication(): void
     {
         $this->postJson('/api/v1/logout')->assertUnauthorized();
+    }
+
+    public function test_forgot_password_returns_generic_message_for_unknown_email(): void
+    {
+        $response = $this->postJson('/api/v1/forgot-password', ['email' => 'unknown@example.com']);
+
+        $response->assertOk();
+        $response->assertJsonPath('message', 'If that email is registered, a password reset link has been sent.');
+    }
+
+    public function test_forgot_password_sends_reset_notification_for_known_email(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->create();
+
+        $response = $this->postJson('/api/v1/forgot-password', ['email' => $user->email]);
+
+        $response->assertOk();
+        $response->assertJsonPath('message', 'If that email is registered, a password reset link has been sent.');
+        Notification::assertSentTo($user, ResetPassword::class);
+    }
+
+    public function test_reset_password_updates_password_and_revokes_existing_tokens(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->create(['password' => 'password123']);
+        $user->createToken('api');
+        $this->assertDatabaseCount('personal_access_tokens', 1);
+
+        $this->postJson('/api/v1/forgot-password', ['email' => $user->email]);
+
+        $token = null;
+        Notification::assertSentTo($user, ResetPassword::class, function (ResetPassword $notification) use (&$token) {
+            $token = $notification->token;
+
+            return true;
+        });
+
+        $response = $this->postJson('/api/v1/reset-password', [
+            'token' => $token,
+            'email' => $user->email,
+            'password' => 'new-password123',
+            'password_confirmation' => 'new-password123',
+        ]);
+
+        $response->assertOk();
+        $this->assertTrue(Hash::check('new-password123', $user->fresh()->password));
+        $this->assertDatabaseCount('personal_access_tokens', 0);
+    }
+
+    public function test_reset_password_rejects_an_invalid_token(): void
+    {
+        $user = User::factory()->create(['password' => 'password123']);
+
+        $response = $this->postJson('/api/v1/reset-password', [
+            'token' => 'invalid-token',
+            'email' => $user->email,
+            'password' => 'new-password123',
+            'password_confirmation' => 'new-password123',
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors('email');
+        $this->assertTrue(Hash::check('password123', $user->fresh()->password));
+    }
+
+    public function test_reset_password_rejects_a_mismatched_password_confirmation(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->postJson('/api/v1/reset-password', [
+            'token' => 'irrelevant',
+            'email' => $user->email,
+            'password' => 'new-password123',
+            'password_confirmation' => 'different-password',
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors('password');
     }
 }
