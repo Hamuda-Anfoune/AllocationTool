@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateModuleRepeatitionWeightsTable extends Migration
+class CreateModuleRepetitionWeightsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreateModuleRepeatitionWeightsTable extends Migration
      */
     public function up()
     {
-        Schema::create('module_repeatition_weights', function (Blueprint $table) {
+        Schema::create('module_repetition_weights', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('type', 15); // type of entry: default || current
             $table->float('repeated_times_1');
@@ -26,7 +26,7 @@ class CreateModuleRepeatitionWeightsTable extends Migration
         });
 
         // Inseert default data
-        DB::table('module_repeatition_weights')->insert(
+        DB::table('module_repetition_weights')->insert(
             [[
                 'type' => 'default',
                 'repeated_times_1' => 10,
@@ -56,6 +56,6 @@ class CreateModuleRepeatitionWeightsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('module_repeatition_weights');
+        Schema::dropIfExists('module_repetition_weights');
     }
 }
