@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class ModulePreference extends Model
@@ -16,4 +18,16 @@ class ModulePreference extends Model
     ];
 
     protected $primaryKey = 'field_id';
+
+    #[Scope]
+    protected function joinModule(Builder $query): void
+    {
+        $query->join('modules', 'modules.module_id', '=', 'module_preferences.module_id');
+    }
+
+    #[Scope]
+    protected function forYear(Builder $query, string $academicYear): void
+    {
+        $query->where('module_preferences.academic_year', $academicYear);
+    }
 }

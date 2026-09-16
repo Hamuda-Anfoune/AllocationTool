@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class TaPreference extends Model
@@ -29,4 +31,10 @@ class TaPreference extends Model
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    #[Scope]
+    protected function forYear(Builder $query, string $academicYear): void
+    {
+        $query->where('academic_year', $academicYear);
+    }
 }

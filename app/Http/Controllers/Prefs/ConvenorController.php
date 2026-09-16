@@ -4,22 +4,20 @@ namespace App\Http\Controllers\Prefs;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ModuleResource;
+use App\Models\AcademicYear;
 use App\Models\Module;
-use App\Services\BasicDBClass;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ConvenorController extends Controller
 {
-    public function __construct(protected BasicDBClass $basicDBClass) {}
-
     /**
      * The signed-in convenor's modules for the current academic year, split into those with and without submitted preferences.
      */
     public function index(Request $request): JsonResponse
     {
         $email = $request->user()->email;
-        $currentAcademicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $currentAcademicYear = AcademicYear::currentYear();
 
         $preferencedConvenorModules = Module::query()
             ->where('modules.convenor_email', $email)
@@ -31,7 +29,7 @@ class ConvenorController extends Controller
             })
             ->get();
 
-        $nonpreferencedConvenorModules = $this->basicDBClass->getModulesWithoutPrefsForConvenorForYear($email, $currentAcademicYear);
+        $nonpreferencedConvenorModules = Module::where('convenor_email', $email)->withoutPreferencesForYear($currentAcademicYear)->get();
 
         return response()->json([
             'current_academic_year' => $currentAcademicYear,

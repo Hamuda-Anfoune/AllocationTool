@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class AcademicYear extends Model
@@ -29,4 +31,15 @@ class AcademicYear extends Model
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    #[Scope]
+    protected function current(Builder $query): void
+    {
+        $query->where('current', true);
+    }
+
+    public static function currentYear(): string
+    {
+        return static::query()->current()->value('year');
+    }
 }

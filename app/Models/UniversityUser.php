@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class UniversityUser extends Model
@@ -20,4 +22,10 @@ class UniversityUser extends Model
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    #[Scope]
+    protected function withAccountType(Builder $query): void
+    {
+        $query->join('account_types', 'account_types.account_type_id', '=', 'university_users.account_type_id');
+    }
 }

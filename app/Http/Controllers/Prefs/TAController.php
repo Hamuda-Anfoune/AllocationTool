@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Prefs\StoreTaPreferenceRequest;
 use App\Http\Requests\Prefs\UpdateTaPreferenceRequest;
 use App\Http\Resources\TaPreferenceResource;
+use App\Models\AcademicYear;
+use App\Models\TaLanguageChoice;
+use App\Models\TaModuleChoice;
 use App\Models\TaPreference;
 use App\Services\AllocationsClass;
-use App\Services\BasicDBClass;
 use App\Services\PrefsClass;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -17,14 +19,13 @@ use Illuminate\Http\Request;
 class TAController extends Controller
 {
     public function __construct(
-        protected BasicDBClass $basicDBClass,
         protected AllocationsClass $allocationsClass,
         protected PrefsClass $prefsClass,
     ) {}
 
     public function index(Request $request): JsonResponse
     {
-        $currentAcademicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $currentAcademicYear = AcademicYear::currentYear();
 
         $preferences = TaPreference::where('ta_email', $request->user()->email)
             ->where('academic_year', $currentAcademicYear)
@@ -59,8 +60,13 @@ class TAController extends Controller
     {
         return response()->json([
             'ta_preference' => new TaPreferenceResource($taPreference),
-            'module_choices' => $this->basicDBClass->getModuleChoicesForTAForYear($taPreference->preference_id),
-            'language_choices' => $this->basicDBClass->getTaLanguageChoicesForPreference($taPreference->preference_id),
+            'module_choices' => TaModuleChoice::query()->withModuleName()
+                ->where('ta_module_choices.preference_id', $taPreference->preference_id)
+                ->orderBy('ta_module_choices.priority')
+                ->get(['ta_module_choices.module_id', 'modules.module_name', 'ta_module_choices.priority', 'ta_module_choices.did_before']),
+            'language_choices' => TaLanguageChoice::query()->withLanguageName()
+                ->where('ta_language_choices.preference_id', $taPreference->preference_id)
+                ->get(['ta_language_choices.language_id', 'languages.language_name']),
         ]);
     }
 
@@ -68,7 +74,7 @@ class TAController extends Controller
     {
         $data = $request->validated();
 
-        if ($this->basicDBClass->getCurrentAcademicYear() !== $data['academic_year']) {
+        if (AcademicYear::currentYear() !== $data['academic_year']) {
             return response()->json(['message' => 'Sorry, only the current semester\'s preferences can be edited.'], 422);
         }
 
