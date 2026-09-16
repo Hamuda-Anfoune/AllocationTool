@@ -179,11 +179,11 @@ class BasicDBClass
     public function getUsedLanguagesForModuleForYear(string $moduleId, string $academicYear): Collection
     {
         return UsedLanguage::query()
-            ->join('languages', 'languages.language_id', '=', 'used_langauges.language_id')
-            ->where('used_langauges.academic_year', $academicYear)
-            ->where('used_langauges.module_id', $moduleId)
-            ->orderBy('used_langauges.priority')
-            ->get(['used_langauges.language_id', 'used_langauges.priority', 'languages.language_name as Language_name']);
+            ->join('languages', 'languages.language_id', '=', 'used_languages.language_id')
+            ->where('used_languages.academic_year', $academicYear)
+            ->where('used_languages.module_id', $moduleId)
+            ->orderBy('used_languages.priority')
+            ->get(['used_languages.language_id', 'used_languages.priority', 'languages.language_name as Language_name']);
     }
 
     public function getTaLanguageChoicesForPreference(string $preferenceId): Collection

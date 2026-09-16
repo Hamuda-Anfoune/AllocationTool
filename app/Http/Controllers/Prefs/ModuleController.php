@@ -86,7 +86,7 @@ class ModuleController extends Controller
             return response()->json(['message' => 'This module did not submit preferences for this academic year.'], 404);
         }
 
-        DB::table('used_langauges')->where('academic_year', $academicYear->year)->where('module_id', $module->module_id)->delete();
+        DB::table('used_languages')->where('academic_year', $academicYear->year)->where('module_id', $module->module_id)->delete();
         DB::table('module_preferences')->where('academic_year', $academicYear->year)->where('module_id', $module->module_id)->delete();
 
         $data = array_merge($request->validated(), [
@@ -111,7 +111,7 @@ class ModuleController extends Controller
             ], 409);
         }
 
-        DB::table('used_langauges')->where('module_id', $module->module_id)->where('academic_year', $academicYear->year)->delete();
+        DB::table('used_languages')->where('module_id', $module->module_id)->where('academic_year', $academicYear->year)->delete();
         DB::table('module_preferences')->where('module_id', $module->module_id)->where('academic_year', $academicYear->year)->delete();
 
         return response()->json([
