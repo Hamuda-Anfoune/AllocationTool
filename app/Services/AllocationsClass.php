@@ -2,27 +2,30 @@
 
 namespace App\Services;
 
+use App\Models\AcademicYear;
 use App\Models\Allocation;
+use App\Models\Module;
+use App\Models\ModulePreference;
 use App\Models\TaAllocationData;
 use App\Models\TaModuleChoice;
+use App\Models\TaPreference;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Builds and queries the allocation matrix/ROLs used by the Allocator, and manages persisted allocations.
- * Only used by AllocationController — depends on BasicDBClass.
+ * Only used by AllocationController.
  */
 class AllocationsClass
 {
-    public function __construct(protected BasicDBClass $basicDBClass) {}
-
     /**
      * @return array{ta_allocations: array<string, array<string, mixed>>, module_allocations: array<string, array<string, mixed>>, removed_tas: array<int, mixed>}
      */
     public function initiateAllocationsMatrix(string $academicYear): array
     {
-        $allActiveTas = $this->basicDBClass->getAllActiveTas();
-        $allModules = $this->basicDBClass->getAllModulesForYear($academicYear);
+        $allActiveTas = User::query()->active()->tasAndGtas()->withAccountType()->get(['users.*', 'account_types.account_type']);
+        $allModules = Module::orderBy('module_name')->get();
 
         $taAllocations = [];
         foreach ($allActiveTas as $ta) {
@@ -58,7 +61,13 @@ class AllocationsClass
     {
         $modulesROLs = [];
 
-        $allModulesWithPrefs = $this->basicDBClass->getModulesWithPrefsForYear($academicYear);
+        $allModulesWithPrefs = ModulePreference::query()->joinModule()->forYear($academicYear)->get([
+            'module_preferences.module_id',
+            'module_preferences.no_of_assistants',
+            'module_preferences.no_of_contact_hours',
+            'module_preferences.no_of_marking_hours',
+            'modules.module_name',
+        ]);
 
         foreach ($allModulesWithPrefs as $module) {
             $topTas = DB::table('module_rank_order_lists')
@@ -101,7 +110,8 @@ class AllocationsClass
     {
         $allTasPrefsAndROLs = [];
 
-        $allTasWithPrefs = $this->basicDBClass->getTAsWithPrefsForYear($academicYear);
+        $allTasWithPrefs = TaPreference::forYear($academicYear)->orderBy('max_modules')
+            ->get(['ta_email', 'preference_id', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'have_tier4_visa']);
 
         foreach ($allTasWithPrefs as $ta) {
             $taId = $ta->ta_email;
@@ -145,7 +155,7 @@ class AllocationsClass
 
     public function getTaWeightForModuleForCurrentSemester(string $taId, string $moduleId): int
     {
-        $currentAcademicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $currentAcademicYear = AcademicYear::currentYear();
 
         return DB::table('module_rank_order_lists')
             ->where('academic_year', $currentAcademicYear)

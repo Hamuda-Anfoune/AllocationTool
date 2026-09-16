@@ -8,11 +8,15 @@ use App\Http\Resources\AllocationResource;
 use App\Http\Resources\ModuleResource;
 use App\Http\Resources\TaAllocationDataResource;
 use App\Http\Resources\UserResource;
+use App\Models\AcademicYear;
 use App\Models\Allocation;
+use App\Models\Module;
 use App\Models\TaAllocationData;
+use App\Models\UniversityUser;
+use App\Models\User;
 use App\Services\AllocationsClass;
 use App\Services\Allocator;
-use App\Services\BasicDBClass;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,7 +24,6 @@ use Illuminate\Http\Request;
 class AllocationController extends Controller
 {
     public function __construct(
-        protected BasicDBClass $basicDBClass,
         protected AllocationsClass $allocationsClass,
         protected Allocator $allocator,
     ) {}
@@ -34,20 +37,20 @@ class AllocationController extends Controller
 
     public function allocationData(): JsonResponse
     {
-        $currentAcademicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $currentAcademicYear = AcademicYear::currentYear();
 
         return response()->json([
             'current_academic_year' => $currentAcademicYear,
-            'academic_years' => $this->basicDBClass->getAllAcademicYears(),
-            'university_users_count' => $this->basicDBClass->getAllUniversityUsers()->count(),
-            'active_users_count' => $this->basicDBClass->getAllActiveRegisteredUsers()->count(),
-            'active_admins_count' => $this->basicDBClass->getAllactiveAdmins()->count(),
-            'active_tas_count' => $this->basicDBClass->getAllActiveTas()->count(),
-            'active_tas_without_prefs_count' => $this->basicDBClass->getActiveTasWithoutPrefsForYear($currentAcademicYear)->count(),
-            'active_convenor_count' => $this->basicDBClass->getAllActiveConvenors()->count(),
-            'active_convenors_missing_prefs_count' => $this->basicDBClass->getConvenorsWithoutPrefsForYear($currentAcademicYear)->count(),
-            'current_year_modules_count' => $this->basicDBClass->getAllModulesForYear($currentAcademicYear)->count(),
-            'current_modules_without_prefs_count' => $this->basicDBClass->getModulesWithoutPrefsForYear($currentAcademicYear)->count(),
+            'academic_years' => AcademicYear::get(['year', 'current']),
+            'university_users_count' => UniversityUser::query()->withAccountType()->count(),
+            'active_users_count' => User::active()->count(),
+            'active_admins_count' => User::admins()->active()->count(),
+            'active_tas_count' => User::active()->tasAndGtas()->count(),
+            'active_tas_without_prefs_count' => User::active()->tasAndGtas()->withoutTaPreferencesForYear($currentAcademicYear)->count(),
+            'active_convenor_count' => User::convenors()->active()->count(),
+            'active_convenors_missing_prefs_count' => Module::withoutPreferencesForYear($currentAcademicYear)->distinct()->count('convenor_email'),
+            'current_year_modules_count' => Module::query()->count(),
+            'current_modules_without_prefs_count' => Module::withoutPreferencesForYear($currentAcademicYear)->count(),
         ]);
     }
 
@@ -56,7 +59,7 @@ class AllocationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $academicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $academicYear = AcademicYear::currentYear();
 
         if ($this->allocationsClass->allocationExistsForYear($academicYear)) {
             return response()->json([
@@ -64,8 +67,8 @@ class AllocationController extends Controller
             ], 409);
         }
 
-        $modulesWithoutPrefs = $this->basicDBClass->getModulesWithoutPrefsForYear($academicYear);
-        $tasWithoutPrefs = $this->basicDBClass->getActiveTasWithoutPrefsForYear($academicYear);
+        $modulesWithoutPrefs = $this->modulesWithoutPrefsForYear($academicYear);
+        $tasWithoutPrefs = $this->tasWithoutPrefsForYear($academicYear);
 
         if ($modulesWithoutPrefs->isNotEmpty() || $tasWithoutPrefs->isNotEmpty()) {
             return response()->json([
@@ -88,7 +91,7 @@ class AllocationController extends Controller
             }
 
             // Re-run allocation for any TAs bumped out of a module, bounded by the total number of active TAs.
-            $maxReallocationRounds = $this->basicDBClass->getAllActiveTas()->count();
+            $maxReallocationRounds = User::active()->tasAndGtas()->count();
 
             for ($k = 0; $k <= $maxReallocationRounds; $k++) {
                 if (empty($allocationsMatrix['removed_tas'])) {
@@ -156,7 +159,7 @@ class AllocationController extends Controller
     public function destroy(?string $allocation = null): JsonResponse
     {
         if ($allocation === null) {
-            $academicYear = $this->basicDBClass->getCurrentAcademicYear();
+            $academicYear = AcademicYear::currentYear();
 
             if (! $this->allocationsClass->allocationExistsForYear($academicYear)) {
                 return response()->json([
@@ -176,14 +179,31 @@ class AllocationController extends Controller
 
     public function missingPrefs(): JsonResponse
     {
-        $academicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $academicYear = AcademicYear::currentYear();
 
-        $modulesWithoutPrefs = $this->basicDBClass->getModulesWithoutPrefsForYear($academicYear);
-        $tasWithoutPrefs = $this->basicDBClass->getActiveTasWithoutPrefsForYear($academicYear);
+        $modulesWithoutPrefs = $this->modulesWithoutPrefsForYear($academicYear);
+        $tasWithoutPrefs = $this->tasWithoutPrefsForYear($academicYear);
 
         return response()->json([
             'modules_without_preferences' => ModuleResource::collection($modulesWithoutPrefs),
             'tas_without_preferences' => UserResource::collection($tasWithoutPrefs),
         ]);
+    }
+
+    /**
+     * @return Collection<int, Module>
+     */
+    private function modulesWithoutPrefsForYear(string $academicYear): Collection
+    {
+        return Module::withoutPreferencesForYear($academicYear)->get(['module_id', 'module_name']);
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    private function tasWithoutPrefsForYear(string $academicYear): Collection
+    {
+        return User::query()->active()->tasAndGtas()->withAccountType()->withoutTaPreferencesForYear($academicYear)
+            ->get(['users.email', 'users.name', 'users.account_type_id', 'account_types.account_type']);
     }
 }

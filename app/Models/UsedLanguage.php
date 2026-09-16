@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class UsedLanguage extends Model
@@ -16,4 +18,17 @@ class UsedLanguage extends Model
     ];
 
     protected $primaryKey = 'field_id';
+
+    #[Scope]
+    protected function withLanguageName(Builder $query): void
+    {
+        $query->join('languages', 'languages.language_id', '=', 'used_languages.language_id');
+    }
+
+    #[Scope]
+    protected function forModuleForYear(Builder $query, string $moduleId, string $academicYear): void
+    {
+        $query->where('used_languages.module_id', $moduleId)
+            ->where('used_languages.academic_year', $academicYear);
+    }
 }

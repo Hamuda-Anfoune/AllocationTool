@@ -6,16 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateLanguageWeightsRequest;
 use App\Http\Requests\Admin\UpdateModulePriorityWeightsRequest;
 use App\Http\Resources\AcademicYearResource;
-use App\Services\BasicDBClass;
+use App\Models\AcademicYear;
 use App\Services\WeightsClass;
 use Illuminate\Http\JsonResponse;
 
 class ConfigurationController extends Controller
 {
-    public function __construct(
-        protected BasicDBClass $basicDBClass,
-        protected WeightsClass $weightsClass,
-    ) {}
+    public function __construct(protected WeightsClass $weightsClass) {}
 
     /**
      * The configuration dashboard: current weights and academic years.
@@ -23,8 +20,8 @@ class ConfigurationController extends Controller
     public function index(): JsonResponse
     {
         return response()->json([
-            'current_academic_year' => $this->basicDBClass->getCurrentAcademicYear(),
-            'academic_years' => AcademicYearResource::collection($this->basicDBClass->getAllAcademicYears()),
+            'current_academic_year' => AcademicYear::currentYear(),
+            'academic_years' => AcademicYearResource::collection(AcademicYear::get(['year', 'current'])),
             'module_priority_weights' => $this->weightsClass->getWeightsForAllModulePriorities()->first(),
             'module_repetition_weights' => $this->weightsClass->getAllCurrentModuleRepetitionWeights()->first(),
             'language_weights' => $this->weightsClass->getWeightForAllLanguagePriorities(),

@@ -8,8 +8,9 @@ use App\Http\Requests\Prefs\UpdateModulePreferenceRequest;
 use App\Http\Resources\ModuleResource;
 use App\Models\AcademicYear;
 use App\Models\Module;
+use App\Models\ModulePreference;
+use App\Models\UsedLanguage;
 use App\Services\AllocationsClass;
-use App\Services\BasicDBClass;
 use App\Services\PrefsClass;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,6 @@ use Illuminate\Support\Facades\Gate;
 class ModuleController extends Controller
 {
     public function __construct(
-        protected BasicDBClass $basicDBClass,
         protected AllocationsClass $allocationsClass,
         protected PrefsClass $prefsClass,
     ) {}
@@ -30,13 +30,19 @@ class ModuleController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $academicYear = $request->query('academic_year') ?? $this->basicDBClass->getCurrentAcademicYear();
+        $academicYear = $request->query('academic_year') ?? AcademicYear::currentYear();
 
         return response()->json([
             'academic_year' => $academicYear,
-            'academic_years' => $this->basicDBClass->getAllAcademicYears(),
-            'modules_with_preferences' => $this->basicDBClass->getModulesWithPrefsForYear($academicYear),
-            'modules_without_preferences' => ModuleResource::collection($this->basicDBClass->getModulesWithoutPrefsForYear($academicYear)),
+            'academic_years' => AcademicYear::get(['year', 'current']),
+            'modules_with_preferences' => ModulePreference::query()->joinModule()->forYear($academicYear)->get([
+                'module_preferences.module_id',
+                'module_preferences.no_of_assistants',
+                'module_preferences.no_of_contact_hours',
+                'module_preferences.no_of_marking_hours',
+                'modules.module_name',
+            ]),
+            'modules_without_preferences' => ModuleResource::collection(Module::withoutPreferencesForYear($academicYear)->get(['module_id', 'module_name'])),
         ]);
     }
 
@@ -67,7 +73,7 @@ class ModuleController extends Controller
      */
     public function show(Request $request, Module $module, AcademicYear $academicYear): JsonResponse
     {
-        $currentAcademicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $currentAcademicYear = AcademicYear::currentYear();
 
         $editable = $academicYear->year === $currentAcademicYear
             && $request->user()->can('update', $module);
@@ -75,8 +81,19 @@ class ModuleController extends Controller
         return response()->json([
             'editable' => $editable,
             'academic_year' => $academicYear->year,
-            'module_basic_preferences' => $this->basicDBClass->getBasicPrefsForModuleForYear($module->module_id, $academicYear->year),
-            'module_language_choices' => $this->basicDBClass->getUsedLanguagesForModuleForYear($module->module_id, $academicYear->year),
+            'module_basic_preferences' => ModulePreference::query()->joinModule()->forYear($academicYear->year)
+                ->where('module_preferences.module_id', $module->module_id)
+                ->get([
+                    'module_preferences.module_id',
+                    'module_preferences.no_of_assistants',
+                    'module_preferences.no_of_contact_hours',
+                    'module_preferences.no_of_marking_hours',
+                    'module_preferences.academic_year',
+                    'modules.module_name',
+                ]),
+            'module_language_choices' => UsedLanguage::query()->withLanguageName()->forModuleForYear($module->module_id, $academicYear->year)
+                ->orderBy('used_languages.priority')
+                ->get(['used_languages.language_id', 'used_languages.priority', 'languages.language_name as Language_name']),
         ]);
     }
 

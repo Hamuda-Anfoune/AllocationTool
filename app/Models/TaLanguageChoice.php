@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class TaLanguageChoice extends Model
@@ -25,4 +27,10 @@ class TaLanguageChoice extends Model
     ];
 
     protected $primaryKey = 'field_id';
+
+    #[Scope]
+    protected function withLanguageName(Builder $query): void
+    {
+        $query->join('languages', 'languages.language_id', '=', 'ta_language_choices.language_id');
+    }
 }

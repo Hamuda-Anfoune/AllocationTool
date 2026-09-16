@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class TaModuleChoice extends Model
@@ -34,4 +36,10 @@ class TaModuleChoice extends Model
     ];
 
     protected $primaryKey = 'field_id';
+
+    #[Scope]
+    protected function withModuleName(Builder $query): void
+    {
+        $query->join('modules', 'modules.module_id', '=', 'ta_module_choices.module_id');
+    }
 }

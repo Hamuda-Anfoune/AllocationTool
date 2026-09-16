@@ -3,14 +3,18 @@
 namespace App\Services;
 
 use App\Exceptions\ModuleHasNoPreferencesException;
+use App\Models\AcademicYear;
+use App\Models\ModulePreference;
 use App\Models\ModuleRankOrderList;
+use App\Models\TaLanguageChoice;
+use App\Models\TaPreference;
+use App\Models\UsedLanguage;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
 class Allocator
 {
     public function __construct(
-        protected BasicDBClass $basicDBClass,
         protected AllocationsClass $allocationsClass,
         protected WeightsClass $weightsClass,
     ) {}
@@ -26,7 +30,7 @@ class Allocator
      */
     public function allocate(array $ta, array $allocationsMatrix): array
     {
-        $academicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $academicYear = AcademicYear::currentYear();
 
         $currentTaId = $ta['ta_id'];
 
@@ -107,18 +111,27 @@ class Allocator
      */
     public function createModuleROLs(): true
     {
-        $currentAcademicYear = $this->basicDBClass->getCurrentAcademicYear();
+        $currentAcademicYear = AcademicYear::currentYear();
 
         if (DB::table('module_rank_order_lists')->where('academic_year', $currentAcademicYear)->exists()) {
             DB::table('module_rank_order_lists')->where('academic_year', $currentAcademicYear)->delete();
         }
 
-        $modulesWithPrefs = $this->basicDBClass->getModulesWithPrefsForYear($currentAcademicYear);
-        $tasWithPrefs = $this->basicDBClass->getTAsWithPrefsForYear($currentAcademicYear);
+        $modulesWithPrefs = ModulePreference::query()->joinModule()->forYear($currentAcademicYear)->get([
+            'module_preferences.module_id',
+            'module_preferences.no_of_assistants',
+            'module_preferences.no_of_contact_hours',
+            'module_preferences.no_of_marking_hours',
+            'modules.module_name',
+        ]);
+        $tasWithPrefs = TaPreference::forYear($currentAcademicYear)->orderBy('max_modules')
+            ->get(['ta_email', 'preference_id', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'have_tier4_visa']);
 
         try {
             foreach ($modulesWithPrefs as $module) {
-                $moduleUsedLanguages = $this->basicDBClass->getUsedLanguagesForModuleForYear($module->module_id, $currentAcademicYear);
+                $moduleUsedLanguages = UsedLanguage::query()->withLanguageName()->forModuleForYear($module->module_id, $currentAcademicYear)
+                    ->orderBy('used_languages.priority')
+                    ->get(['used_languages.language_id', 'used_languages.priority', 'languages.language_name as Language_name']);
 
                 foreach ($tasWithPrefs as $ta) {
                     $taId = $ta->ta_email;
@@ -152,7 +165,9 @@ class Allocator
                     }
 
                     // Weight for having programming languages in common between the TA and the module.
-                    $taLanguageChoices = $this->basicDBClass->getTaLanguageChoicesForPreference($ta->preference_id);
+                    $taLanguageChoices = TaLanguageChoice::query()->withLanguageName()
+                        ->where('ta_language_choices.preference_id', $ta->preference_id)
+                        ->get(['ta_language_choices.language_id', 'languages.language_name']);
 
                     foreach ($moduleUsedLanguages as $language) {
                         foreach ($taLanguageChoices as $taLanguageChoice) {
