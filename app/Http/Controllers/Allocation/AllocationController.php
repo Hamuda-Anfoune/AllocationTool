@@ -14,6 +14,7 @@ use App\Models\Module;
 use App\Models\TaAllocationData;
 use App\Models\UniversityUser;
 use App\Models\User;
+use App\Services\Allocation\DeferredAcceptanceMatcher;
 use App\Services\AllocationsClass;
 use App\Services\Allocator;
 use Illuminate\Database\Eloquent\Collection;
@@ -26,6 +27,7 @@ class AllocationController extends Controller
     public function __construct(
         protected AllocationsClass $allocationsClass,
         protected Allocator $allocator,
+        protected DeferredAcceptanceMatcher $deferredAcceptanceMatcher,
     ) {}
 
     public function index(): JsonResponse
@@ -82,27 +84,12 @@ class AllocationController extends Controller
             return response()->json(['message' => 'Failed to create module rank-order-lists. Please try again later.'], 500);
         }
 
+        $moduleCapacities = $this->allocationsClass->createFinalRolsForModulesForYear($academicYear);
+        $weights = $this->allocationsClass->loadWeightsForYear($academicYear);
         $allTasPrefsAndROLs = $this->allocationsClass->createTasRolsAndPrefsForYear($academicYear);
-        $allocationsMatrix = $this->allocationsClass->initiateAllocationsMatrix($academicYear);
 
         try {
-            foreach ($allTasPrefsAndROLs as $ta) {
-                $allocationsMatrix = $this->allocator->allocate($ta, $allocationsMatrix);
-            }
-
-            // Re-run allocation for any TAs bumped out of a module, bounded by the total number of active TAs.
-            $maxReallocationRounds = User::active()->tasAndGtas()->count();
-
-            for ($k = 0; $k <= $maxReallocationRounds; $k++) {
-                if (empty($allocationsMatrix['removed_tas'])) {
-                    break;
-                }
-
-                foreach ($allocationsMatrix['removed_tas'] as $key => $removed) {
-                    unset($allocationsMatrix['removed_tas'][$key]);
-                    $allocationsMatrix = $this->allocator->allocate($removed, $allocationsMatrix);
-                }
-            }
+            $allocationsMatrix = $this->deferredAcceptanceMatcher->run($allTasPrefsAndROLs, $moduleCapacities, $weights);
         } catch (ModuleHasNoPreferencesException $exception) {
             return response()->json(['message' => $exception->getMessage()], 422);
         }

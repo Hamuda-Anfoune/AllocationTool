@@ -2,14 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\AcademicYear;
 use App\Models\Allocation;
-use App\Models\Module;
 use App\Models\ModulePreference;
 use App\Models\TaAllocationData;
 use App\Models\TaModuleChoice;
 use App\Models\TaPreference;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -20,40 +17,11 @@ use Illuminate\Support\Facades\DB;
 class AllocationsClass
 {
     /**
-     * @return array{ta_allocations: array<string, array<string, mixed>>, module_allocations: array<string, array<string, mixed>>, removed_tas: array<int, mixed>}
-     */
-    public function initiateAllocationsMatrix(string $academicYear): array
-    {
-        $allActiveTas = User::query()->active()->tasAndGtas()->withAccountType()->get(['users.*', 'account_types.account_type']);
-        $allModules = Module::orderBy('module_name')->get();
-
-        $taAllocations = [];
-        foreach ($allActiveTas as $ta) {
-            $taAllocations[$ta->email] = [
-                'ta_id' => $ta->email,
-                'weekly_working_hours' => 0,
-                'contact_hours' => 0,
-                'marking_hours' => 0,
-                'modules' => [],
-            ];
-        }
-
-        $moduleAllocations = [];
-        foreach ($allModules as $module) {
-            $moduleAllocations[$module->module_id] = [
-                'tas' => [],
-            ];
-        }
-
-        return [
-            'ta_allocations' => $taAllocations,
-            'module_allocations' => $moduleAllocations,
-            'removed_tas' => [],
-        ];
-    }
-
-    /**
      * Returns an associative array of module ROLs for a specific year, keyed by module_id.
+     *
+     * Loads every ranked TA per module (no top-N truncation) in a single query for the
+     * whole year, since a module's bump eligibility must consider its full ranking, not
+     * just a `no_of_assistants`-sized shortlist.
      *
      * @return array<string, array{no_of_assistants: int, contact_hours: int, marking_hours: float, tas: array<string, array{weight: mixed, ta_id: string, ta_priority: int}>}>
      */
@@ -69,18 +37,19 @@ class AllocationsClass
             'modules.module_name',
         ]);
 
-        foreach ($allModulesWithPrefs as $module) {
-            $topTas = DB::table('module_rank_order_lists')
-                ->select('ta_email', 'ta_total_weight')
-                ->where('module_id', $module->module_id)
-                ->orderByDesc('ta_total_weight')
-                ->take($module->no_of_assistants)
-                ->get();
+        $rolsByModule = DB::table('module_rank_order_lists')
+            ->select('module_id', 'ta_email', 'ta_total_weight')
+            ->whereIn('module_id', $allModulesWithPrefs->pluck('module_id'))
+            ->where('academic_year', $academicYear)
+            ->orderByDesc('ta_total_weight')
+            ->get()
+            ->groupBy('module_id');
 
+        foreach ($allModulesWithPrefs as $module) {
             $tas = [];
             $taPriority = 1;
 
-            foreach ($topTas as $ta) {
+            foreach ($rolsByModule->get($module->module_id, collect()) as $ta) {
                 $tas[$ta->ta_email] = [
                     'weight' => $ta->ta_total_weight,
                     'ta_id' => $ta->ta_email,
@@ -102,6 +71,30 @@ class AllocationsClass
     }
 
     /**
+     * Returns the full module_rank_order_lists weight table for a year, keyed by module_id then ta_email.
+     *
+     * @return array<string, array<string, array{weight: float, module_priority_for_ta: int}>>
+     */
+    public function loadWeightsForYear(string $academicYear): array
+    {
+        $weights = [];
+
+        $rows = DB::table('module_rank_order_lists')
+            ->select('module_id', 'ta_email', 'ta_total_weight', 'module_priority_for_ta')
+            ->where('academic_year', $academicYear)
+            ->get();
+
+        foreach ($rows as $row) {
+            $weights[$row->module_id][$row->ta_email] = [
+                'weight' => (float) $row->ta_total_weight,
+                'module_priority_for_ta' => (int) $row->module_priority_for_ta,
+            ];
+        }
+
+        return $weights;
+    }
+
+    /**
      * Returns a matrix of TAs with their preferences and arrays of all their preferred modules and priorities.
      *
      * @return array<string, array{ta_id: string, max_contact_hours: int, max_marking_hours: int, max_modules: int, modules: array<int, array{module_id: string}>}>
@@ -113,23 +106,18 @@ class AllocationsClass
         $allTasWithPrefs = TaPreference::forYear($academicYear)->orderBy('max_modules')
             ->get(['ta_email', 'preference_id', 'max_contact_hours', 'max_marking_hours', 'max_modules', 'have_tier4_visa']);
 
+        $choicesByPreference = TaModuleChoice::whereIn('preference_id', $allTasWithPrefs->pluck('preference_id'))
+            ->orderBy('priority')
+            ->get(['preference_id', 'module_id', 'priority'])
+            ->groupBy('preference_id');
+
+        $allModuleIds = DB::table('modules')->orderBy('module_id')->pluck('module_id');
+
         foreach ($allTasWithPrefs as $ta) {
             $taId = $ta->ta_email;
 
-            $preferredModulesForCurrentTa = TaModuleChoice::where('ta_email', $taId)
-                ->where('preference_id', $ta->preference_id)
-                ->orderBy('priority')
-                ->get(['module_id', 'priority']);
-
-            $notPreferredModulesForTa = DB::table('modules')
-                ->select('module_id')
-                ->whereNotExists(function ($query) use ($ta) {
-                    $query->select(DB::raw(1))
-                        ->from('ta_module_choices')
-                        ->whereColumn('ta_module_choices.module_id', 'modules.module_id')
-                        ->where('ta_module_choices.preference_id', $ta->preference_id);
-                })
-                ->get();
+            $preferredModulesForCurrentTa = $choicesByPreference->get($ta->preference_id, collect());
+            $preferredModuleIds = $preferredModulesForCurrentTa->pluck('module_id')->all();
 
             $modules = [];
 
@@ -137,8 +125,10 @@ class AllocationsClass
                 $modules[$module->priority] = ['module_id' => $module->module_id];
             }
 
-            foreach ($notPreferredModulesForTa as $module) {
-                $modules[] = ['module_id' => $module->module_id];
+            foreach ($allModuleIds as $moduleId) {
+                if (! in_array($moduleId, $preferredModuleIds, true)) {
+                    $modules[] = ['module_id' => $moduleId];
+                }
             }
 
             $allTasPrefsAndROLs[$taId] = [
@@ -151,17 +141,6 @@ class AllocationsClass
         }
 
         return $allTasPrefsAndROLs;
-    }
-
-    public function getTaWeightForModuleForCurrentSemester(string $taId, string $moduleId): int
-    {
-        $currentAcademicYear = AcademicYear::currentYear();
-
-        return DB::table('module_rank_order_lists')
-            ->where('academic_year', $currentAcademicYear)
-            ->where('ta_email', $taId)
-            ->where('module_id', $moduleId)
-            ->value('ta_total_weight');
     }
 
     public function allocationExistsForYear(string $academicYear): bool
