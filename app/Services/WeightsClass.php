@@ -6,6 +6,7 @@ use App\Models\LanguageWeight;
 use App\Models\ModulePriorityWeight;
 use App\Models\ModuleRepetitionWeight;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Read-only helper for the configurable weights used by the allocation algorithm.
@@ -14,22 +15,66 @@ use Illuminate\Database\Eloquent\Collection;
 class WeightsClass
 {
     /**
+     * @var array<string, mixed>|null
+     */
+    protected ?array $moduleRepetitionWeightsCache = null;
+
+    /**
+     * @var array<int, int>
+     */
+    protected array $modulePriorityWeightCache = [];
+
+    /**
+     * @var array<int, int>
+     */
+    protected array $languagePriorityWeightCache = [];
+
+    /**
      * @return array<string, mixed>|null
      */
     protected function currentModuleRepetitionWeights(): ?array
     {
-        return ModuleRepetitionWeight::where('type', 'current')->first()?->only([
+        return $this->moduleRepetitionWeightsCache ??= ModuleRepetitionWeight::where('type', 'current')->first()?->only([
             'repeated_times_1', 'repeated_times_2', 'repeated_times_3', 'repeated_times_4', 'repeated_times_5',
         ]);
     }
 
     /**
-     * Will calculate how many times a TA has assisted with a module and return the equivalent weight for that.
+     * Batch-computes repetition weights for a set of (ta, module) pairs from real allocation
+     * history, excluding the current academic year. Pairs with no prior allocation get weight 0.
+     *
+     * @param  array<int, array{ta_email: string, module_id: string}>  $pairs
+     * @return array<string, array<string, int>> weight[taEmail][moduleId]
      */
-    public function calculateRepetitionWeightForModuleForTa(string $taEmail, string $moduleId): int
+    public function calculateRepetitionWeightsForPairs(string $currentAcademicYear, array $pairs): array
     {
-        // TODO: calculate the actual repetition count from previous allocations where the TA was allocated to the module.
-        return $this->getOneModuleRepetitionWeight(1);
+        if ($pairs === []) {
+            return [];
+        }
+
+        $taEmails = array_unique(array_column($pairs, 'ta_email'));
+        $moduleIds = array_unique(array_column($pairs, 'module_id'));
+
+        $counts = DB::table('allocations')
+            ->select('ta_id', 'module_id', DB::raw('COUNT(*) as times'))
+            ->where('academic_year', '!=', $currentAcademicYear)
+            ->whereIn('ta_id', $taEmails)
+            ->whereIn('module_id', $moduleIds)
+            ->groupBy('ta_id', 'module_id')
+            ->get();
+
+        $countsByTaAndModule = [];
+        foreach ($counts as $count) {
+            $countsByTaAndModule[$count->ta_id][$count->module_id] = (int) $count->times;
+        }
+
+        $weights = [];
+        foreach ($pairs as $pair) {
+            $times = $countsByTaAndModule[$pair['ta_email']][$pair['module_id']] ?? 0;
+            $weights[$pair['ta_email']][$pair['module_id']] = $this->getOneModuleRepetitionWeight($times);
+        }
+
+        return $weights;
     }
 
     public function getOneModuleRepetitionWeight(int $times): int
@@ -60,10 +105,13 @@ class WeightsClass
             return 0;
         }
 
-        $weights = ModulePriorityWeight::where('type', 'current')->first();
-        $key = 'module_weight_'.min($priority, 10);
+        $key = min($priority, 10);
 
-        return $weights->{$key} ?? 0;
+        return $this->modulePriorityWeightCache[$key] ??= (function () use ($key) {
+            $weights = ModulePriorityWeight::where('type', 'current')->first();
+
+            return $weights->{'module_weight_'.$key} ?? 0;
+        })();
     }
 
     public function getWeightsForAllModulePriorities(): Collection
@@ -76,7 +124,7 @@ class WeightsClass
 
     public function getWeightForOneLanguagePriority(int $languagePriority): int
     {
-        return LanguageWeight::where('order', $languagePriority)
+        return $this->languagePriorityWeightCache[$languagePriority] ??= LanguageWeight::where('order', $languagePriority)
             ->where('type', 'current')
             ->value('weight') ?? 0;
     }
